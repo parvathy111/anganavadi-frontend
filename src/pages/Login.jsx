@@ -22,7 +22,7 @@ export default function LoginPage() {
     console.log(import.meta.env.VITE_BACKEND_URL);
 
     const endpoint =
-      (role.toLowerCase() === "parent" || role.toLowerCase() === "preglactwomen")
+      role.toLowerCase() === "parent" || role.toLowerCase() === "preglactwomen"
         ? "beneficiaries/login"
         : `${role.toLowerCase()}/login`; // Convert role to lowercase for URL
     try {
