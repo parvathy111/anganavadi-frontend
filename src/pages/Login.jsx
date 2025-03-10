@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import api from "../config/axiosinstance";
+import { storeTokenAfterLogin } from "../util";
 
 const roles = ["Supervisor", "Worker", "Parent", "PregLactWomen"];
 
@@ -27,7 +28,8 @@ export default function LoginPage() {
         : `${role.toLowerCase()}/login`; // Convert role to lowercase for URL
     try {
       const res = await api.post(endpoint, { email, password, role });
-      console.log(res);
+      console.log(res.data);
+      storeTokenAfterLogin(res.data.token)
     } catch (error) {
       console.error("Login error:", error);
     }

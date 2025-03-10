@@ -7,6 +7,7 @@ import {
   Paper,
   Box,
   Grid,
+  MenuItem, // ✅ Import MenuItem
 } from "@mui/material";
 import axios from "axios"; // Import axios for API requests
 
@@ -28,31 +29,34 @@ const AddVaccine = () => {
   // Function to handle adding a vaccine
   const handleAddVaccine = async () => {
     try {
-        
       const token = localStorage.getItem("token"); // Retrieve token from localStorage
-  
+
       if (!token) {
         console.error("❌ No authentication token found. Please log in.");
         return;
       }
-  
-      const response = await axios.post("http://localhost:5000/vaccines/add", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Send token in headers
-          "Content-Type": "application/json",
-        },
-      });
-  
+
+      const response = await axios.post(
+        "http://localhost:5000/vaccines/add",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in headers
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       if (response.status === 201) {
         console.log("✅ Vaccine successfully added!", response.data);
       }
     } catch (error) {
-      console.error("❌ Error adding vaccine:", error.response ? error.response.data : error.message);
+      console.error(
+        "❌ Error adding vaccine:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
-  
-  
-  
 
   return (
     <Container maxWidth="sm">
@@ -116,18 +120,28 @@ const AddVaccine = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                select
                 label="Vaccinee Role"
                 name="vaccineeRole"
                 variant="outlined"
                 fullWidth
                 value={formData.vaccineeRole}
                 onChange={handleChange}
-              />
+              >
+                <MenuItem value="Parent">Parent</MenuItem>
+                <MenuItem value="PregLactWomen">
+                  Pregnant/Lactating Women
+                </MenuItem>
+              </TextField>
             </Grid>
           </Grid>
 
           <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-            <Button variant="contained" color="primary" onClick={handleAddVaccine}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddVaccine}
+            >
               Add Vaccine
             </Button>
           </Box>
