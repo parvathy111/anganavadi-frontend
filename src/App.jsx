@@ -6,6 +6,7 @@ import RegistrationForm from "./pages/RegistrationForm";
 import AddEvent from "./pages/AddEvent";
 import { Routes, Route } from "react-router";
 import AddProduct from "./pages/AddProduct";
+import ApproveBeneficiaries from "./pages/ApproveBeneficiaries";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/add-event" element={<AddEvent />} />
         <Route path="/add-product" element={<AddProduct />} />
+        <Route path="/approve-beneficiaries" element={<ApproveBeneficiaries />} />
       </Routes>
     </>
   );
