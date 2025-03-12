@@ -1,12 +1,15 @@
 import "./App.css";
+import { Routes, Route } from "react-router";
 import Login from "./pages/Login";
 import Adminlogin from "./pages/Adminlogin";
 import AddVaccine from "./pages/AddVaccine";
 import RegistrationForm from "./pages/RegistrationForm";
 import AddEvent from "./pages/AddEvent";
-import { Routes, Route } from "react-router";
 import AddProduct from "./pages/AddProduct";
 import ApproveBeneficiaries from "./pages/ApproveBeneficiaries";
+import ViewEvents from "./pages/ViewEvents";
+
+
 
 function App() {
   return (
@@ -19,6 +22,7 @@ function App() {
         <Route path="/add-event" element={<AddEvent />} />
         <Route path="/add-product" element={<AddProduct />} />
         <Route path="/approve-beneficiaries" element={<ApproveBeneficiaries />} />
+        <Route path="/view-events" element={<ViewEvents />} />
       </Routes>
     </>
   );
