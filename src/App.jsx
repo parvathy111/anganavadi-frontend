@@ -8,10 +8,14 @@ import AddEvent from "./pages/AddEvent";
 import AddProduct from "./pages/AddProduct";
 import ApproveBeneficiaries from "./pages/ApproveBeneficiaries";
 import ViewEvents from "./pages/ViewEvents";
+import ViewVaccine from "./pages/ViewVaccine";
+// import VaccineDetails from "./pages/VaccineDetails";
 
+import { useState } from "react";
 
 
 function App() {
+  const [userRole, setUserRole] = useState("Worker");
   return (
     <>
       <Routes>
@@ -23,6 +27,8 @@ function App() {
         <Route path="/add-product" element={<AddProduct />} />
         <Route path="/approve-beneficiaries" element={<ApproveBeneficiaries />} />
         <Route path="/view-events" element={<ViewEvents />} />
+        <Route path="/vaccines" element={<ViewVaccine userRole={userRole} />} />
+        {/* <Route path="/vaccine/:id" element={<VaccineDetails />} /> */}
       </Routes>
     </>
   );
