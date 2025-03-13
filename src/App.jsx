@@ -12,6 +12,7 @@ import ViewVaccine from "./pages/ViewVaccine";
 // import VaccineDetails from "./pages/VaccineDetails";
 
 import { useState } from "react";
+import IndexPage from "./pages/IndexPage";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/" element={<IndexPage />} />
         <Route path="login" element={<Login />} />
         <Route path="/admin/login" element={<Adminlogin />} />
         <Route path="/add-vaccine" element={<AddVaccine />} />
