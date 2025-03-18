@@ -13,6 +13,7 @@ import ViewVaccine from "./pages/ViewVaccine";
 
 import { useState } from "react";
 import IndexPage from "./pages/IndexPage";
+import Dashboard from "./pages/Dashboard";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/" element={<IndexPage />} />
         <Route path="login" element={<Login />} />
         <Route path="/admin/login" element={<Adminlogin />} />
+        <Route path="/dashboard" element={<Dashboard />}></Route>
         <Route path="/add-vaccine" element={<AddVaccine />} />
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/add-event" element={<AddEvent />} />
