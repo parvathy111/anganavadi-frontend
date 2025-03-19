@@ -20,6 +20,7 @@ import ViewVaccine from "./pages/ViewVaccine";
 import { useState } from "react";
 import AddSupervisor from "./pages/Addsupervisor";
 import ViewSupervisorsList from "./pages/ViewSupervisorsList";
+import ViewWorkerList from "./pages/ViewWorkerList";
 
 
 
@@ -47,6 +48,7 @@ function App() {
         
       <Route path="/add-supervisor" element={<AddSupervisor />} />
       <Route path="/view-supervisors" element={<ViewSupervisorsList />} />
+      <Route path="/view-workers" element={<ViewWorkerList />} />
       </Routes>
    
 
