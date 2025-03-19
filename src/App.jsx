@@ -1,9 +1,15 @@
+
 import "./App.css";
 import { Routes, Route } from "react-router";
+import IndexPage from "./pages/IndexPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import SupervisorDashboard from "./pages/SupervisorDashboard";
+import WorkerDashboard from "./pages/WorkerDashboard";
+import BeneficiaryDashboard from "./pages/BeneficiaryDashboard";
+import RegistrationForm from "./pages/RegistrationForm";
 import Login from "./pages/Login";
 import Adminlogin from "./pages/Adminlogin";
 import AddVaccine from "./pages/AddVaccine";
-import RegistrationForm from "./pages/RegistrationForm";
 import AddEvent from "./pages/AddEvent";
 import AddProduct from "./pages/AddProduct";
 import ApproveBeneficiaries from "./pages/ApproveBeneficiaries";
@@ -12,11 +18,9 @@ import ViewVaccine from "./pages/ViewVaccine";
 // import VaccineDetails from "./pages/VaccineDetails";
 
 import { useState } from "react";
-import IndexPage from "./pages/IndexPage";
-import AdminDashboard from "./pages/AdminDashboard";
-import SupervisorDashboard from "./pages/SupervisorDashboard";
-import WorkerDashboard from "./pages/WorkerDashboard";
-import BeneficiaryDashboard from "./pages/BeneficiaryDashboard";
+import AddSupervisor from "./pages/Addsupervisor";
+import ViewSupervisorsList from "./pages/ViewSupervisorsList";
+
 
 
 function App() {
@@ -37,9 +41,15 @@ function App() {
         <Route path="/add-product" element={<AddProduct />} />
         <Route path="/approve-beneficiaries" element={<ApproveBeneficiaries />} />
         <Route path="/view-events" element={<ViewEvents />} />
-        <Route path="/vaccines" element={<ViewVaccine userRole={userRole} />} />
+        <Route path="/view-vaccines" element={<ViewVaccine userRole={userRole} />} />
         {/* <Route path="/vaccine/:id" element={<VaccineDetails />} /> */}
+
+        
+      <Route path="/add-supervisor" element={<AddSupervisor />} />
+      <Route path="/view-supervisors" element={<ViewSupervisorsList />} />
       </Routes>
+   
+
     </>
   );
 }
