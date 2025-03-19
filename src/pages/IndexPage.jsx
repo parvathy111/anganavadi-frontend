@@ -1,4 +1,4 @@
-
+import { useNavigate } from "react-router-dom";
 
 import React from "react";
 import {
@@ -12,7 +12,8 @@ import {
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Info, Login, PersonAdd } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import one from "../assets/one.png";
+import indeximage from "../assets/index.png";
+import aboutimage from "../assets/index1.png";
 
 const theme = createTheme({
   palette: {
@@ -24,6 +25,8 @@ const theme = createTheme({
 });
 
 const IndexPage = () => {
+  const navigate = useNavigate();
+
   return (
     <ThemeProvider theme={theme}>
       <AppBar position="static" sx={{ background: "#ef9a9a" }}>
@@ -31,9 +34,24 @@ const IndexPage = () => {
           <Typography variant="h5" sx={{ flexGrow: 1 }}>
             CareNest
           </Typography>
-          <Button color="inherit" startIcon={<Info />}>About</Button>
-          <Button color="inherit" startIcon={<Login />}>Login</Button>
-          <Button color="inherit" startIcon={<PersonAdd />}>Register</Button>
+          <Button color="inherit" startIcon={<Info />}>
+            About
+          </Button>
+          <Button
+            color="inherit"
+            startIcon={<Login />}
+            onClick={() => navigate("/login")}
+          >
+            {" "}
+            Login
+          </Button>
+          <Button
+            color="inherit"
+            startIcon={<PersonAdd />}
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </Button>
         </Toolbar>
       </AppBar>
 
@@ -51,14 +69,20 @@ const IndexPage = () => {
           padding: 4,
         }}
       >
-        <Container sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <img
-            src="https://images.pexels.com/photos/1148998/pexels-photo-1148998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            // src={one} 
+            src={indeximage}
+            // src={one}
             alt="Hero Image"
             style={{
               width: "100%",
-              maxWidth: "300px",
+              maxWidth: "400px",
               borderRadius: "12px",
               marginTop: "10px",
               marginLeft: "10px",
@@ -98,7 +122,7 @@ const IndexPage = () => {
             interface for managing various tasks efficiently.
           </Typography>
           <img
-            src="https://images.pexels.com/photos/1148998/pexels-photo-1148998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+            src={aboutimage}
             alt="About Image"
             style={{ width: "100%", maxWidth: "400px", borderRadius: "12px" }}
           />

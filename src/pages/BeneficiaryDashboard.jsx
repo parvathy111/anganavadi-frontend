@@ -19,9 +19,10 @@ export default function BeneficiaryDashboard() {
   const cards = [
     {
       id: 1,
-      title: "Food Distribution",
-      description: "Track received food items.",
-      icon: <Package size={32} />,
+      title: "Child Details",
+      description: "View your child's information.",
+      icon: <Baby size={32} />,
+      
     },
     {
       id: 2,
@@ -37,15 +38,15 @@ export default function BeneficiaryDashboard() {
     },
     {
       id: 4,
-      title: "Messages",
-      description: "Messages from Anganwadi Workers.",
-      icon: <MessageSquare size={32} />,
+      title: "Food Distribution",
+      description: "Track received food items.",
+      icon: <Package size={32} />,
     },
     {
       id: 5,
-      title: "Child Details",
-      description: "View your child's information.",
-      icon: <Baby size={32} />,
+      title: "Messages",
+      description: "Messages from Anganwadi Workers.",
+      icon: <MessageSquare size={32} />,
     },
   ];
 

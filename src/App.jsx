@@ -1,6 +1,9 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./App.css";
-import { Routes, Route } from "react-router";
+
+// import { Routes, Route } from "react-router";
+
 import IndexPage from "./pages/IndexPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import SupervisorDashboard from "./pages/SupervisorDashboard";
