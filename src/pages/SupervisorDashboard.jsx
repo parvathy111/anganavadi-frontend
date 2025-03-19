@@ -1,9 +1,8 @@
-
 import { useState } from "react";
-import { Menu, UserPlus, Edit, Eye, LogOut } from "lucide-react";
+import { Menu, UserPlus, Edit, Eye, LogOut, User, Users, Package, Calendar, MessageSquare } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 
-export default function Dashboard() {
+export default function SupervisorDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedCard, setSelectedCard] = useState(0);
 
@@ -12,15 +11,33 @@ export default function Dashboard() {
   const cards = [
     {
       id: 1,
-      title: "Add Supervisor",
-      description: "Create a new supervisor profile.",
+      title: "Add Worker",
+      description: "Add a new Anganwadi worker.",
       icon: <UserPlus size={32} />,
     },
     {
       id: 2,
-      title: "Update Supervisor",
-      description: "Update the supervisor list.",
-      icon: <Edit size={32} />,
+      title: "View Workers",
+      description: "View all workers in the system.",
+      icon: <Users size={32} />,
+    },
+    {
+      id: 3,
+      title: "Food Stock",
+      description: "Manage the food stock inventory.",
+      icon: <Package size={32} />,
+    },
+    {
+      id: 4,
+      title: "Events",
+      description: "Manage and schedule events.",
+      icon: <Calendar size={32} />,
+    },
+    {
+      id: 5,
+      title: "Messages",
+      description: "Send and view messages.",
+      icon: <MessageSquare size={32} />,
     },
   ];
 
@@ -53,14 +70,35 @@ export default function Dashboard() {
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
             >
               <UserPlus />
-              {sidebarOpen && <span>Add Supervisor</span>}
+              {sidebarOpen && <span>Add Worker</span>}
             </a>
             <a
               href="#"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
             >
-              <Eye />
-              {sidebarOpen && <span>View Supervisor</span>}
+              <Users />
+              {sidebarOpen && <span>View Workers</span>}
+            </a>
+            <a
+              href="#"
+              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
+            >
+              <Package />
+              {sidebarOpen && <span>Food Stock</span>}
+            </a>
+            <a
+              href="#"
+              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
+            >
+              <Calendar />
+              {sidebarOpen && <span>Events</span>}
+            </a>
+            <a
+              href="#"
+              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
+            >
+              <MessageSquare />
+              {sidebarOpen && <span>Messages</span>}
             </a>
           </nav>
         </div>
@@ -81,8 +119,12 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col overflow-y-auto">
         {/* Top Navbar */}
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
-          <h2 className="text-2xl font-semibold">Welcome, Admin</h2>
+          <h2 className="text-2xl font-semibold">Welcome, Supervisor</h2>
           <div className="flex items-center space-x-4">
+            {/* Profile Icon */}
+            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
+              <User className="mr-2" /> Edit Profile
+            </button>
             <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
               <LogOut className="mr-2" /> Logout
             </button>
@@ -91,11 +133,11 @@ export default function Dashboard() {
 
         {/* Content Area */}
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-[#ff7043]">Admin Dashboard</h3>
+          <h3 className="text-xl font-semibold text-[#ff7043]">Supervisor Dashboard</h3>
           <p className="mt-2 text-gray-600">Choose an action below:</p>
 
           {/* Cards */}
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {cards.map((card, index) => (
               <div
                 key={card.id}
@@ -119,4 +161,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

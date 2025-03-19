@@ -13,7 +13,10 @@ import ViewVaccine from "./pages/ViewVaccine";
 
 import { useState } from "react";
 import IndexPage from "./pages/IndexPage";
-import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import SupervisorDashboard from "./pages/SupervisorDashboard";
+import WorkerDashboard from "./pages/WorkerDashboard";
+import BeneficiaryDashboard from "./pages/BeneficiaryDashboard";
 
 
 function App() {
@@ -24,7 +27,10 @@ function App() {
         <Route path="/" element={<IndexPage />} />
         <Route path="login" element={<Login />} />
         <Route path="/admin/login" element={<Adminlogin />} />
-        <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
+        <Route path="/supervisor-dashboard" element={<SupervisorDashboard />}></Route>
+        <Route path="/Worker-dashboard" element={<WorkerDashboard />}></Route>
+        <Route path="/beneficiary-dashboard" element={<BeneficiaryDashboard />}></Route>
         <Route path="/add-vaccine" element={<AddVaccine />} />
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/add-event" element={<AddEvent />} />
