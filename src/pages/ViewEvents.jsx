@@ -31,7 +31,7 @@ const ViewEvents = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/events"); // Adjust URL as per backend
+        const response = await axios.get("http://localhost:5000/events/all"); // Adjust URL as per backend
         setEvents(response.data);
         setFilteredEvents(response.data);
       } catch (err) {
