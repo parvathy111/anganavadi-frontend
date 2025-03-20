@@ -1,8 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Menu, UserPlus, Edit, Eye, LogOut, User, Users, Package, Calendar, MessageSquare } from "lucide-react";
+import {
+  Menu,
+  UserPlus,
+  Edit,
+  Eye,
+  LogOut,
+  User,
+  Users,
+  Package,
+  Calendar,
+  MessageSquare,
+} from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 
 export default function SupervisorDashboard() {
+  const navigate = useNavigate();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedCard, setSelectedCard] = useState(0);
 
@@ -14,6 +28,7 @@ export default function SupervisorDashboard() {
       title: "Add Worker",
       description: "Add a new Anganwadi worker.",
       icon: <UserPlus size={32} />,
+      link: "/add-worker",
     },
     {
       id: 2,
@@ -66,28 +81,28 @@ export default function SupervisorDashboard() {
           {/* Nav Links */}
           <nav className="flex flex-col space-y-4 mt-8 px-4">
             <a
-              href="#"
+              href="/add-worker"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
             >
               <UserPlus />
-              {sidebarOpen && <span>Add Worker</span>}
+              {sidebarOpen && <span> Add Worker</span>}
             </a>
             <a
-              href="#"
+              href="/view-workers"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
             >
               <Users />
               {sidebarOpen && <span>View Workers</span>}
             </a>
             <a
-              href="#"
+              href="/add-product"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
             >
               <Package />
               {sidebarOpen && <span>Food Stock</span>}
             </a>
             <a
-              href="#"
+              href="/approve-events"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
             >
               <Calendar />
@@ -133,7 +148,9 @@ export default function SupervisorDashboard() {
 
         {/* Content Area */}
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-[#ff7043]">Supervisor Dashboard</h3>
+          <h3 className="text-xl font-semibold text-[#ff7043]">
+            Supervisor Dashboard
+          </h3>
           <p className="mt-2 text-gray-600">Choose an action below:</p>
 
           {/* Cards */}
@@ -141,12 +158,13 @@ export default function SupervisorDashboard() {
             {cards.map((card, index) => (
               <div
                 key={card.id}
+                onClick={() => {
+                  setSelectedCard(index);
+                  navigate(card.link);
+                }}
                 className={`rounded-xl p-6 cursor-pointer transition-transform transform hover:scale-105 ${
-                  selectedCard === index
-                    ? "bg-[#f4511e]"
-                    : "bg-[#ff7043]"
+                  selectedCard === index ? "bg-[#f4511e]" : "bg-[#ff7043]"
                 } text-white shadow-md`}
-                onClick={() => setSelectedCard(index)}
               >
                 <div className="flex justify-center mb-4">{card.icon}</div>
                 <h4 className="text-lg font-semibold text-center">

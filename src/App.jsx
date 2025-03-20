@@ -24,6 +24,8 @@ import { useState } from "react";
 import AddSupervisor from "./pages/Addsupervisor";
 import ViewSupervisorsList from "./pages/ViewSupervisorsList";
 import ViewWorkerList from "./pages/ViewWorkerList";
+import AddWorker from "./pages/AddWorker";
+import ApproveEvents from "./pages/ApproveEvents";
 
 
 
@@ -52,6 +54,8 @@ function App() {
       <Route path="/add-supervisor" element={<AddSupervisor />} />
       <Route path="/view-supervisors" element={<ViewSupervisorsList />} />
       <Route path="/view-workers" element={<ViewWorkerList />} />
+      <Route path="/add-worker" element={<AddWorker />} />
+      <Route path="/approve-events" element={<ApproveEvents />} />
       </Routes>
    
 
