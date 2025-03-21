@@ -1,41 +1,35 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  TextField,
+  CircularProgress,
   Typography,
+  TextField,
+  Box,
+  InputAdornment,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { CalendarToday } from "@mui/icons-material";
 import {
-  Event,
-  Search,
-  CalendarToday,
-  AccessTime,
-  Group,
-  CheckCircle,
-  Cancel,
-} from "@mui/icons-material";
+  Users,
+  User,
+  CalendarDays,
+  Clock,
+  BadgeCheck,
+} from "lucide-react";
+import WorkerLayout from "../layouts/WorkerLayout";
 
 const ViewEvents = () => {
   const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/events/all"); // Adjust URL as per backend
+        const response = await axios.get("http://localhost:5000/events/all");
         setEvents(response.data);
-        setFilteredEvents(response.data);
-      } catch (err) {
-        setError("Failed to fetch events. Please try again.");
+      } catch (error) {
+        console.error("Error fetching events:", error);
       } finally {
         setLoading(false);
       }
@@ -43,126 +37,124 @@ const ViewEvents = () => {
     fetchEvents();
   }, []);
 
-  useEffect(() => {
-    const lowercasedQuery = searchQuery.toLowerCase();
-    const filtered = events.filter(
-      (event) =>
-        event.eventName?.toLowerCase().includes(lowercasedQuery) ||
-        (Array.isArray(event.participants) &&
-          event.participants.some((participant) =>
-            participant?.toLowerCase().includes(lowercasedQuery)
-          ))
-    );
-    setFilteredEvents(filtered);
-  }, [searchQuery, events]);
+  const filteredEvents = events.filter((event) =>
+    Object.values(event).some((value) =>
+      value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "completed":
-        return "bg-green-500 text-white";
+        return "text-green-600 font-semibold";
       case "upcoming":
-        return "bg-blue-500 text-white";
+        return "text-blue-600 font-semibold";
       case "canceled":
-        return "bg-red-500 text-white";
+        return "text-red-600 font-semibold";
       default:
-        return "bg-gray-500 text-white";
+        return "text-gray-600";
     }
   };
 
   return (
-    <div className="p-6 min-h-screen" style={{ backgroundColor: "#f5f5f5" }}>
-      <Typography
-        variant="h4"
-        className="text-center font-bold mb-6 text-black flex items-center justify-center"
-      >
-        <Event className="mr-2" /> Event List
-      </Typography>
-
-      <div className="mb-4 flex justify-center p-8">
-        <TextField
-          label="Search by Event Name or Participant"
-          variant="outlined"
-          fullWidth
-          className="max-w-lg bg-white rounded"
-          InputProps={{
-            startAdornment: <Search className="mr-2 text-gray-500" />,
-          }}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-
+    <WorkerLayout>
       {loading ? (
-        <p className="text-center text-white">Loading events...</p>
-      ) : error ? (
-        <p className="text-red-500 text-center">{error}</p>
+        <Box display="flex" justifyContent="center" mt={10}>
+          <CircularProgress />
+        </Box>
       ) : (
-        <TableContainer component={Paper} className="shadow-lg">
-          <Table>
-            <TableHead className="bg-gray-200">
-              <TableRow>
-                <TableCell className="font-bold">#</TableCell>
-                <TableCell className="font-bold">Event Name</TableCell>
-                <TableCell className="font-bold">
-                  <Group className="mr-1" />
-                  Participants
-                </TableCell>
-                <TableCell className="font-bold">Organisers</TableCell>
-                <TableCell className="font-bold flex items-center">
-                  <CalendarToday className="mr-1" /> Date
-                </TableCell>
-                <TableCell className="font-bold flex items-center">
-                  <AccessTime className="mr-1" /> Time
-                </TableCell>
-                <TableCell className="font-bold">Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredEvents.length > 0 ? (
-                filteredEvents.map((event, index) => (
-                  <TableRow key={event._id} className="text-center">
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{event.eventName}</TableCell>
-                    <TableCell>
-                      {Array.isArray(event.participants)
-                        ? event.participants.join(", ")
-                        : "N/A"}
-                    </TableCell>
-                    <TableCell>{event.conductedBy}</TableCell>
-                    <TableCell>
-                      {event.date
-                        ? new Date(event.date).toLocaleDateString()
-                        : "N/A"}
-                    </TableCell>
-                    <TableCell>{event.time || "N/A"}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-3 py-1 rounded-lg flex items-center ${getStatusColor(
-                          event.status
-                        )}`}
-                      >
-                        {event.status === "completed" ? (
-                          <CheckCircle className="mr-1" />
-                        ) : (
-                          <Cancel className="mr-1" />
-                        )}
+        <Box>
+          {/* Header */}
+          <Box display="flex" mt={5} alignItems="center" justifyContent="center" mb={3}>
+            <CalendarToday sx={{ color: "#ff7043" }} />
+            <Typography variant="h4" ml={1} fontWeight="bold" sx={{ color: "#ff7043" }}>
+              Event List
+            </Typography>
+          </Box>
+
+          {/* Search Bar */}
+          <Box display="flex" justifyContent="center" mb={4}>
+            <TextField
+              label="Search Event or Participant"
+              variant="outlined"
+              sx={{ width: "400px" }}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon color="action" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+
+          {/* Event Table */}
+          {filteredEvents.length > 0 ? (
+            <div className="mt-6 overflow-x-auto px-6 pb-6">
+              <table className="min-w-full bg-white rounded-xl shadow-md">
+                <thead>
+                  <tr className="bg-gradient-to-r from-orange-400 to-orange-500 text-white">
+                    <th className="py-3 px-4 text-left">
+                       #
+                    </th>
+                    <th className="py-3 px-4 text-left">
+                      <CalendarDays className="inline-block mr-1" size={16} /> Event Name
+                    </th>
+                    <th className="py-3 px-4 text-left">
+                      <Users className="inline-block mr-1" size={16} /> Participants
+                    </th>
+                    <th className="py-3 px-4 text-left">
+                      <User className="inline-block mr-1" size={16} /> Organisers
+                    </th>
+                    <th className="py-3 px-4 text-left">
+                      <CalendarDays className="inline-block mr-1" size={16} /> Date
+                    </th>
+                    <th className="py-3 px-4 text-left">
+                      <Clock className="inline-block mr-1" size={16} /> Time
+                    </th>
+                    <th className="py-3 px-4 text-left">
+                      <BadgeCheck className="inline-block mr-1" size={16} /> Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredEvents.map((event, index) => (
+                    <tr key={event._id} className="hover:bg-blue-50">
+                      <td className="py-2 px-4 font-semibold">{index + 1}</td>
+                      <td className="py-2 px-4">{event.eventName || "N/A"}</td>
+                      <td className="py-2 px-4">
+                        {Array.isArray(event.participants)
+                          ? event.participants.join(", ")
+                          : "N/A"}
+                      </td>
+                      <td className="py-2 px-4">{event.conductedBy || "N/A"}</td>
+                      <td className="py-2 px-4">
+                        {event.date
+                          ? new Date(event.date).toLocaleDateString()
+                          : "N/A"}
+                      </td>
+                      <td className="py-2 px-4">{event.time || "N/A"}</td>
+                      <td className={`py-2 px-4 ${getStatusColor(event.status)}`}>
                         {event.status || "Unknown"}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center p-4">
-                    No events found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              textAlign="center"
+            >
+              No events found.
+            </Typography>
+          )}
+        </Box>
       )}
-    </div>
+    </WorkerLayout>
   );
 };
 

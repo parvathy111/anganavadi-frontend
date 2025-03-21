@@ -26,6 +26,7 @@ import ViewSupervisorsList from "./pages/ViewSupervisorsList";
 import ViewWorkerList from "./pages/ViewWorkerList";
 import AddWorker from "./pages/AddWorker";
 import ApproveEvents from "./pages/ApproveEvents";
+import OrderStack from "./pages/OrderStock";
 
 
 
@@ -56,6 +57,8 @@ function App() {
       <Route path="/view-workers" element={<ViewWorkerList />} />
       <Route path="/add-worker" element={<AddWorker />} />
       <Route path="/approve-events" element={<ApproveEvents />} />
+
+      <Route path="/order-product" element={<OrderStack />} />
       </Routes>
    
 
