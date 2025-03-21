@@ -27,6 +27,8 @@ import ViewWorkerList from "./pages/ViewWorkerList";
 import AddWorker from "./pages/AddWorker";
 import ApproveEvents from "./pages/ApproveEvents";
 import OrderStack from "./pages/OrderStock";
+import PregLactWomenList from "./pages/ViewPregLactWomen";
+import ParentList from "./pages/ViewChildList";
 
 
 
@@ -59,6 +61,9 @@ function App() {
       <Route path="/approve-events" element={<ApproveEvents />} />
 
       <Route path="/order-product" element={<OrderStack />} />
+
+      <Route path="/view-preg-lact-women" element={<PregLactWomenList />} />
+      <Route path="/view-child-parents" element={<ParentList />} />
       </Routes>
    
 

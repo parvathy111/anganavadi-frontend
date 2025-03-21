@@ -93,10 +93,16 @@ function WorkerLayout({ children }) {
                     href="#"
                     className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
                   >
+                    New Registrations
+                  </a>
+                  <a
+                    href="view-child-parents"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
                     Children List
                   </a>
                   <a
-                    href="#"
+                    href="/view-preg-lact-women"
                     className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
                   >
                     Pregnant Women List
