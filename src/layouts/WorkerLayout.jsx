@@ -90,7 +90,7 @@ function WorkerLayout({ children }) {
               {beneficiariesDropdown && sidebarOpen && (
                 <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
                   <a
-                    href="#"
+                    href="/approve-beneficiaries"
                     className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
                   >
                     New Registrations

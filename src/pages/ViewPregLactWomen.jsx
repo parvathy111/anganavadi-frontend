@@ -13,13 +13,17 @@ import {
   CircularProgress,
   Typography,
   TablePagination,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 const PregLactWomenList = () => {
   const [women, setWomen] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchWomen = async () => {
@@ -45,6 +49,10 @@ const PregLactWomenList = () => {
     setPage(0);
   };
 
+  const filteredWomen = women.filter((woman) =>
+    woman.fullname.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -56,15 +64,34 @@ const PregLactWomenList = () => {
   return (
     <WorkerLayout>
       <div className="p-6">
-        <Typography
-          variant="h4"
-          align="left"
-          gutterBottom
-          className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-bold mb-8"
-        >
-          Pregnant and Lactating Women :
-          <p className="mt-3 text-gray-500 mb-4 text-sm">These are the List of all Pregnant women and Lactating women.</p>
-        </Typography>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <Typography
+              variant="h4"
+              align="left"
+              gutterBottom
+              className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-bold"
+            >
+              Pregnant and Lactating Women :
+            </Typography>
+            <p className="mt-1 text-gray-500 text-sm">These are the List of all Pregnant women and Lactating women.</p>
+          </div>
+          {/* Search bar aligned right */}
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
 
         <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
           <TableContainer>
@@ -82,7 +109,7 @@ const PregLactWomenList = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {women.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((woman) => (
+                {filteredWomen.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((woman) => (
                   <TableRow key={woman._id} hover>
                     <TableCell>{woman.fullname}</TableCell>
                     <TableCell>{new Date(woman.deliveryDate).toLocaleDateString()}</TableCell>
@@ -101,7 +128,7 @@ const PregLactWomenList = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={women.length}
+            count={filteredWomen.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

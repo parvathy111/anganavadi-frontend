@@ -1,5 +1,6 @@
-
 import React, { useEffect, useState } from "react";
+import WorkerLayout from '../layouts/WorkerLayout';
+import { User, MapPin, Phone, ShieldCheck, Users, Trash2, CheckCircle } from 'lucide-react';
 import {
   Button,
   Typography,
@@ -13,14 +14,21 @@ import {
   Paper,
   Snackbar,
   Alert,
-  TextField
+  TextField,
+  TablePagination,
+  CircularProgress,
+  InputAdornment
 } from "@mui/material";
 import axios from "axios";
+import SearchIcon from '@mui/icons-material/Search';
 
 const ApproveBeneficiaries = () => {
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBeneficiaries();
@@ -33,6 +41,8 @@ const ApproveBeneficiaries = () => {
       setBeneficiaries(sortedData);
     } catch (error) {
       console.error("Error fetching beneficiaries:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,71 +70,114 @@ const ApproveBeneficiaries = () => {
     (b.fullname || b.childname).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
+
   return (
-    <Container maxWidth="md" className="mt-10 p-5 bg-white shadow-lg rounded-2xl">
-      <Typography variant="h5" className="text-center font-bold mb-4">Approve Beneficiaries</Typography>
+    <WorkerLayout>
+      <Container maxWidth="xl" className="mt-3">
+        <div className="flex justify-between items-center mb-6">
+          <Typography
+            variant="h4"
+            gutterBottom
+            className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-bold"
+          >
+            Approve Beneficiaries
+          </Typography>
 
-      {/* Search Bar */}
-      <TextField
-        label="Search by Name"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+          {/* Search bar with icon */}
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
 
-      <TableContainer component={Paper} className="shadow-md">
-        <Table>
-          <TableHead className="bg-gray-200">
-            <TableRow>
-              <TableCell><b>#</b></TableCell>
-              <TableCell><b>Name</b></TableCell>
-              <TableCell><b>Address</b></TableCell>
-              <TableCell><b>Phone</b></TableCell>
-              <TableCell><b>Category</b></TableCell>
-              <TableCell><b>Status</b></TableCell>
-              <TableCell><b>Approve</b></TableCell>
-              <TableCell><b>Remove</b></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredBeneficiaries.map((beneficiary, index) => (
-              <TableRow key={beneficiary._id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{beneficiary.fullname || beneficiary.childname}</TableCell>
-                <TableCell>{beneficiary.address}</TableCell>
-                <TableCell>{beneficiary.phone}</TableCell>
-                <TableCell>{beneficiary.role === "parent" ? "Parent" : "Pregnant/Lactating Woman"}</TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 text-xs font-bold rounded-md ${beneficiary.status === "Active" ? "bg-green-200 text-green-700" : "bg-yellow-200 text-yellow-700"}`}>
-                    {beneficiary.status === "Active" ? "Approved" : "Pending"}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {beneficiary.status !== "Active" && (
-                    <Button variant="contained" color="success" size="small" onClick={() => handleApprove(beneficiary._id)}>
-                      Approve
-                    </Button>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Button variant="contained" color="error" size="small" onClick={() => handleRemove(beneficiary._id)}>
-                    Remove
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
+                  <TableCell className="text-white font-semibold"><User size={16} className="inline mr-2" />Name</TableCell>
+                  <TableCell className="text-white font-semibold"><MapPin size={16} className="inline mr-2" />Address</TableCell>
+                  <TableCell className="text-white font-semibold"><Phone size={16} className="inline mr-2" />Phone</TableCell>
+                  <TableCell className="text-white font-semibold"><Users size={16} className="inline mr-2" />Category</TableCell>
+                  <TableCell className="text-white font-semibold"><ShieldCheck size={16} className="inline mr-2" />Status</TableCell>
+                  <TableCell className="text-white font-semibold"><CheckCircle size={16} className="inline mr-2" />Approve</TableCell>
+                  <TableCell className="text-white font-semibold"><Trash2 size={16} className="inline mr-2" />Remove</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredBeneficiaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((beneficiary) => (
+                  <TableRow key={beneficiary._id} hover>
+                    <TableCell>{beneficiary.fullname || beneficiary.childname}</TableCell>
+                    <TableCell>{beneficiary.address}</TableCell>
+                    <TableCell>{beneficiary.phone}</TableCell>
+                    <TableCell>{beneficiary.role === "parent" ? "Parent" : "Pregnant/Lactating Woman"}</TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 text-xs font-bold rounded-md ${beneficiary.status === "Active" ? "bg-green-200 text-green-700" : "bg-yellow-200 text-yellow-700"}`}>
+                        {beneficiary.status === "Active" ? "Approved" : "Pending"}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {beneficiary.status !== "Active" && (
+                        <Button variant="contained" color="success" size="small" onClick={() => handleApprove(beneficiary._id)}>
+                          Approve
+                        </Button>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="contained" color="error" size="small" onClick={() => handleRemove(beneficiary._id)}>
+                        Remove
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-      <Snackbar open={openSnackbar.open} autoHideDuration={3000} onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}>
-        <Alert severity={openSnackbar.severity} onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}>
-          {openSnackbar.message}
-        </Alert>
-      </Snackbar>
-    </Container>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredBeneficiaries.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+
+        <Snackbar open={openSnackbar.open} autoHideDuration={3000} onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}>
+          <Alert severity={openSnackbar.severity} onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}>
+            {openSnackbar.message}
+          </Alert>
+        </Snackbar>
+      </Container>
+    </WorkerLayout>
   );
 };
 

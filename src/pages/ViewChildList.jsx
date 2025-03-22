@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import WorkerLayout from '../layouts/WorkerLayout';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, CircularProgress, Typography
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, CircularProgress, Typography, TextField, InputAdornment
 } from '@mui/material';
 import { User, CalendarDays, MapPin, Phone, Mail, ShieldCheck, Users } from 'lucide-react';
+import SearchIcon from '@mui/icons-material/Search';
 
 const ParentList = () => {
   const [parents, setParents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchParents = async () => {
@@ -33,6 +35,10 @@ const ParentList = () => {
     setPage(0);
   };
 
+  const filteredParents = parents.filter((parent) =>
+    parent.childname.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -44,16 +50,35 @@ const ParentList = () => {
   return (
     <WorkerLayout>
       <div className="p-6">
-        <Typography
-          variant="h4"
-          align="left"
-          className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-extrabold mb-2"
-        >
-          Children's Records :
-        </Typography>
-        <p className="mt-2 text-gray-600 mb-5 text-sm text-left">
-          These are the list of all registered Parents.
-        </p>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <Typography
+              variant="h4"
+              align="left"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-extrabold mb-2"
+            >
+              Children's Records :
+            </Typography>
+            <p className="mt-2 text-gray-600 text-sm text-left">
+              These are the list of all registered Parents.
+            </p>
+          </div>
+          {/* Search bar aligned right */}
+          <TextField
+            label="Search by Child Name"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
 
         <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
           <TableContainer>
@@ -72,7 +97,7 @@ const ParentList = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {parents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parent) => (
+                {filteredParents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parent) => (
                   <TableRow key={parent._id} hover>
                     <TableCell>{parent.childname}</TableCell>
                     <TableCell>{new Date(parent.dob).toLocaleDateString()}</TableCell>
@@ -92,7 +117,7 @@ const ParentList = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={parents.length}
+            count={filteredParents.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
