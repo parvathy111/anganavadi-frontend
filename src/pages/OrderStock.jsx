@@ -65,16 +65,26 @@ const OrderStock = () => {
         image: selectedProduct.image,
       };
 
-      const res = await axios.post("http://localhost:5000/orders/create", payload);
+      const res = await axios.post(
+        "http://localhost:5000/orders/create",
+        payload
+      );
 
       if (res.status === 201) {
-        setNotification({ type: "success", message: res.data.message || "Order placed successfully!" });
+        setNotification({
+          type: "success",
+          message: res.data.message || "Order placed successfully!",
+        });
         closeModal();
       } else {
-        setNotification({ type: "error", message: "Something went wrong. Please try again!" });
+        setNotification({
+          type: "error",
+          message: "Something went wrong. Please try again!",
+        });
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || "Failed to place the order.";
+      const errorMsg =
+        error.response?.data?.message || "Failed to place the order.";
       setNotification({ type: "error", message: errorMsg });
     } finally {
       setSubmitting(false);
@@ -89,7 +99,7 @@ const OrderStock = () => {
     <WorkerLayout>
       {notification && (
         <div
-          className={`fixed top-5 right-5 px-4 py-2 rounded-lg text-white shadow-lg z-50 ${
+          className={`fixed top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-lg text-white shadow-lg z-50 ${
             notification.type === "success" ? "bg-green-500" : "bg-red-500"
           }`}
         >

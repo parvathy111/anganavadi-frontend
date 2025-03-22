@@ -10,11 +10,13 @@ import {
   LogOut,
   User,
   LayoutDashboard,
+  ChevronDown,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 
 const SupervisorLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [foodDropdown, setFoodDropdown] = useState(false);
 
   return (
     <div className="flex h-screen">
@@ -41,7 +43,7 @@ const SupervisorLayout = ({ children }) => {
 
           {/* Nav Links */}
           <nav className="flex flex-col space-y-4 mt-8 px-4">
-            {/* Back to Dashboard */}
+            {/* Dashboard */}
             <a
               href="/supervisor-dashboard"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
@@ -52,6 +54,7 @@ const SupervisorLayout = ({ children }) => {
 
             <div className="border-b border-white border-opacity-30 my-2"></div>
 
+            {/* Add Worker */}
             <a
               href="/add-worker"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
@@ -59,6 +62,8 @@ const SupervisorLayout = ({ children }) => {
               <UserPlus />
               {sidebarOpen && <span>Add Worker</span>}
             </a>
+
+            {/* View Workers */}
             <a
               href="/view-workers"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
@@ -66,13 +71,45 @@ const SupervisorLayout = ({ children }) => {
               <Users />
               {sidebarOpen && <span>View Workers</span>}
             </a>
-            <a
-              href="/add-product"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
-            >
-              <Package />
-              {sidebarOpen && <span>Food Stock</span>}
-            </a>
+
+            {/* Food Stock Dropdown */}
+            <div>
+              <button
+                onClick={() => setFoodDropdown(!foodDropdown)}
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2 transition-all duration-200"
+              >
+                <Package />
+                {sidebarOpen && (
+                  <>
+                    <span>Food Stock</span>
+                    <ChevronDown
+                      className={`ml-auto transition-transform duration-300 ${
+                        foodDropdown ? "rotate-180" : ""
+                      }`}
+                      size={16}
+                    />
+                  </>
+                )}
+              </button>
+              {foodDropdown && sidebarOpen && (
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
+                  <a
+                    href="/add-product"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    Add New Stock
+                  </a>
+                  <a
+                    href="/supervisor-orders"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    New Orders
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* Events */}
             <a
               href="/approve-events"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
@@ -80,6 +117,8 @@ const SupervisorLayout = ({ children }) => {
               <Calendar />
               {sidebarOpen && <span>Events</span>}
             </a>
+
+            {/* Messages */}
             <a
               href="#"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"

@@ -30,6 +30,7 @@ import OrderStack from "./pages/OrderStock";
 import PregLactWomenList from "./pages/ViewPregLactWomen";
 import ParentList from "./pages/ViewChildList";
 import ViewOrder from "./pages/ViewOrder";
+import SupervisorViewOrder from "./pages/SupervisorViewOrder";
 
 
 
@@ -63,6 +64,8 @@ function App() {
 
       <Route path="/order-product" element={<OrderStack />} />
       <Route path="/view-order" element={<ViewOrder />} />
+      <Route path="/supervisor-orders" element={<SupervisorViewOrder />} />
+
       <Route path="/view-preg-lact-women" element={<PregLactWomenList />} />
       <Route path="/view-child-parents" element={<ParentList />} />
       </Routes>
