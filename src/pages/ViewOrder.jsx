@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import WorkerLayout from "../layouts/WorkerLayout";
-import { Search, Tag, X, Pencil, PackageCheck, AlertCircle } from "lucide-react";
+import {
+  Search,
+  Tag,
+  X,
+  Pencil,
+  PackageCheck,
+  AlertCircle,
+  Trash2,
+} from "lucide-react";
 
 const ViewOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -77,7 +85,6 @@ const ViewOrder = () => {
     setMessage(null);
 
     try {
-      // Directly call update API (let backend validate anganwadiNo)
       await axios.put(
         `http://localhost:5000/orders/update/${selectedOrder._id}`,
         {
@@ -103,14 +110,33 @@ const ViewOrder = () => {
       setMessage("Order updated successfully!");
       setMessageType("success");
       setUpdating(false);
-      setTimeout(closeModal, 1500); // auto-close modal after success
+      setTimeout(closeModal, 1500);
     } catch (error) {
       console.error("Error updating order:", error);
       const backendMessage =
-        error.response?.data?.message || "Failed to update order. Please try again.";
+        error.response?.data?.message ||
+        "Failed to update order. Please try again.";
       setMessage(backendMessage);
       setMessageType("error");
       setUpdating(false);
+    }
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    const confirmCancel = window.confirm(
+      "Are you sure you want to cancel this order?"
+    );
+    if (!confirmCancel) return;
+
+    try {
+      await axios.delete(`http://localhost:5000/orders/cancel/${orderId}`);
+      const updatedOrders = orders.filter((o) => o._id !== orderId);
+      setOrders(updatedOrders);
+      setFilteredOrders(updatedOrders);
+      alert("Order cancelled successfully!");
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      alert("Failed to cancel order. Please try again.");
     }
   };
 
@@ -125,7 +151,9 @@ const ViewOrder = () => {
           <PackageCheck size={28} className="text-[#ff6f00]" />
           All Stock Orders
         </h1>
-        <p className="text-gray-500 mb-4">Manage and update your placed orders</p>
+        <p className="text-gray-500 mb-4">
+          Manage and update your placed orders
+        </p>
       </div>
 
       {/* Search bar */}
@@ -174,12 +202,21 @@ const ViewOrder = () => {
                   Status: {order.orderStatus}
                 </p>
               </div>
-              <button
-                onClick={() => openUpdateModal(order)}
-                className="flex items-center justify-center gap-2 mt-4 bg-[#ff6f00] text-white text-sm py-2 rounded-lg hover:bg-[#e65100] transition-colors duration-200 w-full"
-              >
-                <Pencil size={16} /> Update
-              </button>
+
+              <div className="flex gap-2 mt-4">
+                <button
+                  onClick={() => openUpdateModal(order)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#ff6f00] text-white text-sm py-2 rounded-lg hover:bg-[#e65100] transition-colors duration-200"
+                >
+                  <Pencil size={16} /> Update
+                </button>
+                <button
+                  onClick={() => handleCancelOrder(order._id)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white text-sm py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+                >
+                  <Trash2 size={16} /> Cancel
+                </button>
+              </div>
             </div>
           ))
         ) : (
@@ -199,7 +236,9 @@ const ViewOrder = () => {
             >
               <X size={20} />
             </button>
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Update Order</h2>
+            <h2 className="text-xl font-bold mb-4 text-gray-800">
+              Update Order
+            </h2>
 
             {/* Message */}
             {message && (
