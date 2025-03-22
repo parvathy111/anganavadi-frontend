@@ -46,6 +46,7 @@ const AddVaccine = () => {
 
   const handleAddVaccine = async () => {
     try {
+      // Get token from localStorage (ensure it's passed if authentication is required)
       const token = localStorage.getItem("token");
 
       if (!token) {
@@ -57,6 +58,7 @@ const AddVaccine = () => {
         return;
       }
 
+      // Make API call to add vaccine
       const response = await axios.post(
         "http://localhost:5000/vaccines/add",
         formData,
@@ -68,6 +70,7 @@ const AddVaccine = () => {
         }
       );
 
+      // Check if the vaccine was added successfully
       if (response.status === 201) {
         setSnackbar({
           open: true,
@@ -84,163 +87,165 @@ const AddVaccine = () => {
         });
       }
     } catch (error) {
-      setSnackbar({
-        open: true,
-        message: error.response ? error.response.data : error.message,
-        severity: "error",
-      });
+      if (error.response) {
+        // If the error is from the server (e.g., vaccine already exists)
+        setSnackbar({
+          open: true,
+          message: error.response.data.message || error.response.data.error,
+          severity: "error",
+        });
+      } else {
+        // If error occurred on the client side (e.g., network issues)
+        setSnackbar({
+          open: true,
+          message: "An error occurred while adding the vaccine.",
+          severity: "error",
+        });
+      }
     }
   };
 
   return (
     <WorkerLayout>
-      <Container maxWidth="sm">
-        <Paper elevation={6} sx={{ padding: 4, marginTop: 5, borderRadius: 3 }}>
-          <Typography
-            variant="h5"
-            gutterBottom
-            textAlign="center"
-            sx={{ color: "#ff7043", fontWeight: "bold" }}
-          >
-            Add Vaccine Details
-          </Typography>
-          <Box component="form" noValidate autoComplete="off">
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  label="Vaccine Name"
-                  name="vaccine"
-                  variant="outlined"
-                  fullWidth
-                  value={formData.vaccine}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <VaccinesIcon sx={{ color: "#ff7043" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Stage"
-                  name="stage"
-                  variant="outlined"
-                  fullWidth
-                  value={formData.stage}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <StageIcon sx={{ color: "#ff7043" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Dose"
-                  name="dose"
-                  variant="outlined"
-                  fullWidth
-                  value={formData.dose}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <DoseIcon sx={{ color: "#ff7043" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Vaccinator"
-                  name="vaccinator"
-                  variant="outlined"
-                  fullWidth
-                  value={formData.vaccinator}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonIcon sx={{ color: "#ff7043" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Last Date"
-                  name="lastDate"
-                  type="date"
-                  variant="outlined"
-                  fullWidth
-                  InputLabelProps={{ shrink: true }}
-                  value={formData.lastDate}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <CalendarIcon sx={{ color: "#ff7043" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  select
-                  label="Vaccinee Role"
-                  name="vaccineeRole"
-                  variant="outlined"
-                  fullWidth
-                  value={formData.vaccineeRole}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <GroupIcon sx={{ color: "#ff7043" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                >
-                  <MenuItem value="Parent">Parent</MenuItem>
-                  <MenuItem value="PregLactWomen">
-                    Pregnant/Lactating Women
-                  </MenuItem>
-                </TextField>
-              </Grid>
-            </Grid>
+  {/* Heading with Icon and Description */}
+  <Box sx={{ mb: 4, display: "flex", alignItems: "center", gap: 2 }}>
+    <VaccinesIcon sx={{ fontSize: 40, color: "#ff7043" }} />
+    <div>
+      <Typography variant="h4" sx={{ fontWeight: "bold", color: "#ff7043" }}>
+        Add New Vaccine
+      </Typography>
+      <Typography variant="body1" sx={{ color: "gray" }}>
+        Register vaccines with complete details for targeted beneficiaries.
+      </Typography>
+    </div>
+  </Box>
 
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={<AddIcon />}
-                onClick={handleAddVaccine}
-                sx={{
-                  background: "linear-gradient(45deg, #ff7043, #ff7043)",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  borderRadius: 2,
-                  px: 4,
-                  "&:hover": {
-                    background: "linear-gradient(45deg, #fb8c00, #ff7043)",
-                  },
-                }}
-              >
-                Add Vaccine
-              </Button>
-            </Box>
-          </Box>
-        </Paper>
-      </Container>
+  {/* Form Section */}
+  <Container maxWidth="sm" sx={{ mt: 1 }}>
+    <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
+      <Box
+        component="form"
+        display="flex"
+        flexDirection="column"
+        gap={2}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleAddVaccine();
+        }}
+      >
+        <TextField
+          label="Vaccine Name"
+          name="vaccine"
+          value={formData.vaccine}
+          onChange={handleChange}
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <VaccinesIcon sx={{ color: "#ff7043" }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <TextField
+          label="Stage"
+          name="stage"
+          value={formData.stage}
+          onChange={handleChange}
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <StageIcon sx={{ color: "#ff7043" }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <TextField
+          label="Dose"
+          name="dose"
+          value={formData.dose}
+          onChange={handleChange}
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <DoseIcon sx={{ color: "#ff7043" }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <TextField
+          label="Vaccinator"
+          name="vaccinator"
+          value={formData.vaccinator}
+          onChange={handleChange}
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PersonIcon sx={{ color: "#ff7043" }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <TextField
+          type="date"
+          name="lastDate"
+          label="Last Date"
+          value={formData.lastDate}
+          onChange={handleChange}
+          required
+          InputLabelProps={{ shrink: true }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <CalendarIcon sx={{ color: "#ff7043" }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <TextField
+          select
+          label="Vaccinee Role"
+          name="vaccineeRole"
+          value={formData.vaccineeRole}
+          onChange={handleChange}
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <GroupIcon sx={{ color: "#ff7043" }} />
+              </InputAdornment>
+            ),
+          }}
+        >
+          <MenuItem value="Parent">Parent</MenuItem>
+          <MenuItem value="PregLactWomen">Pregnant/Lactating Women</MenuItem>
+        </TextField>
+
+        <Button
+          variant="contained"
+          type="submit"
+          size="large"
+          startIcon={<AddIcon />}
+          sx={{
+            background: "linear-gradient(45deg, #ff7043, #ff7043)",
+            color: "#fff",
+            fontWeight: "bold",
+            "&:hover": {
+              background: "linear-gradient(45deg, #fb8c00, #ff7043)",
+            },
+          }}
+        >
+          Add Vaccine
+        </Button>
+      </Box>
 
       {/* Snackbar for success/error messages */}
       <Snackbar
@@ -257,7 +262,10 @@ const AddVaccine = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </WorkerLayout>
+    </Paper>
+  </Container>
+</WorkerLayout>
+
   );
 };
 

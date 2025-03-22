@@ -57,11 +57,22 @@ const AddEvent = () => {
 
   return (
     <WorkerLayout>
-      <Container maxWidth="sm" sx={{ mt: 5 }}>
-        <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
-          <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: "bold", color: "#ff7043" }}>
+      {/* Heading with Icon and Description */}
+      <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <EventIcon sx={{ fontSize: 40, color: "#ff7043" }} />
+        <div>
+          <Typography variant="h4" sx={{ fontWeight: "bold", color: "#ff7043" }}>
             Add New Event
           </Typography>
+          <Typography variant="body1" sx={{ color: "gray" }}>
+            Create and manage events for the Anganwadi, including participant details and schedule.
+          </Typography>
+        </div>
+      </Box>
+
+      <Container maxWidth="sm" sx={{ mt: 5 }}>
+        {/* Event Form */}
+        <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
           {error && <Alert severity="error">{error}</Alert>}
 
           <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={3}>
@@ -167,7 +178,7 @@ const AddEvent = () => {
             </Button>
           </Box>
 
-          <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>
+          <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
             <Alert severity="success" onClose={() => setOpen(false)}>
               Event added successfully, pending supervisor approval!
             </Alert>

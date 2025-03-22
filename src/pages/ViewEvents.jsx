@@ -1,27 +1,29 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import WorkerLayout from "../layouts/WorkerLayout";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TablePagination,
   CircularProgress,
   Typography,
   TextField,
-  Box,
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { CalendarToday } from "@mui/icons-material";
-import {
-  Users,
-  User,
-  CalendarDays,
-  Clock,
-  BadgeCheck,
-} from "lucide-react";
-import WorkerLayout from "../layouts/WorkerLayout";
+import { CalendarDays, Users, User, Clock, BadgeCheck } from "lucide-react";
 
 const ViewEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -37,10 +39,14 @@ const ViewEvents = () => {
     fetchEvents();
   }, []);
 
+  const handleChangePage = (event, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const filteredEvents = events.filter((event) =>
-    Object.values(event).some((value) =>
-      value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    event.eventName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const getStatusColor = (status) => {
@@ -56,104 +62,102 @@ const ViewEvents = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
+
   return (
     <WorkerLayout>
-      {loading ? (
-        <Box display="flex" justifyContent="center" mt={10}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Box>
-          {/* Header */}
-          <Box display="flex" mt={5} alignItems="center" justifyContent="center" mb={3}>
-            <CalendarToday sx={{ color: "#ff7043" }} />
-            <Typography variant="h4" ml={1} fontWeight="bold" sx={{ color: "#ff7043" }}>
-              Event List
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <Typography
+              variant="h4"
+              align="left"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-extrabold mb-2"
+            >
+              Events List :
             </Typography>
-          </Box>
+            <p className="mt-2 text-gray-600 text-sm text-left">
+              This is the list of all events organized by Anganwadi.
+            </p>
+          </div>
+          {/* Search bar aligned right */}
+          <TextField
+            label="Search by Event Name"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
 
-          {/* Search Bar */}
-          <Box display="flex" justifyContent="center" mb={4}>
-            <TextField
-              label="Search Event or Participant"
-              variant="outlined"
-              sx={{ width: "400px" }}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color="action" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-
-          {/* Event Table */}
-          {filteredEvents.length > 0 ? (
-            <div className="mt-6 overflow-x-auto px-6 pb-6">
-              <table className="min-w-full bg-white rounded-xl shadow-md">
-                <thead>
-                  <tr className="bg-gradient-to-r from-orange-400 to-orange-500 text-white">
-                    <th className="py-3 px-4 text-left">
-                       #
-                    </th>
-                    <th className="py-3 px-4 text-left">
-                      <CalendarDays className="inline-block mr-1" size={16} /> Event Name
-                    </th>
-                    <th className="py-3 px-4 text-left">
-                      <Users className="inline-block mr-1" size={16} /> Participants
-                    </th>
-                    <th className="py-3 px-4 text-left">
-                      <User className="inline-block mr-1" size={16} /> Organisers
-                    </th>
-                    <th className="py-3 px-4 text-left">
-                      <CalendarDays className="inline-block mr-1" size={16} /> Date
-                    </th>
-                    <th className="py-3 px-4 text-left">
-                      <Clock className="inline-block mr-1" size={16} /> Time
-                    </th>
-                    <th className="py-3 px-4 text-left">
-                      <BadgeCheck className="inline-block mr-1" size={16} /> Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredEvents.map((event, index) => (
-                    <tr key={event._id} className="hover:bg-blue-50">
-                      <td className="py-2 px-4 font-semibold">{index + 1}</td>
-                      <td className="py-2 px-4">{event.eventName || "N/A"}</td>
-                      <td className="py-2 px-4">
+        <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
+                  <TableCell className="text-white font-semibold">#</TableCell>
+                  <TableCell className="text-white font-semibold"><CalendarDays size={16} className="inline mr-2" />Event Name</TableCell>
+                  <TableCell className="text-white font-semibold"><Users size={16} className="inline mr-2" />Participants</TableCell>
+                  <TableCell className="text-white font-semibold"><User size={16} className="inline mr-2" />Organisers</TableCell>
+                  <TableCell className="text-white font-semibold"><CalendarDays size={16} className="inline mr-2" />Date</TableCell>
+                  <TableCell className="text-white font-semibold"><Clock size={16} className="inline mr-2" />Time</TableCell>
+                  <TableCell className="text-white font-semibold"><BadgeCheck size={16} className="inline mr-2" />Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredEvents
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((event, index) => (
+                    <TableRow key={event._id} hover>
+                      <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                      <TableCell>{event.eventName || "N/A"}</TableCell>
+                      <TableCell>
                         {Array.isArray(event.participants)
                           ? event.participants.join(", ")
                           : "N/A"}
-                      </td>
-                      <td className="py-2 px-4">{event.conductedBy || "N/A"}</td>
-                      <td className="py-2 px-4">
+                      </TableCell>
+                      <TableCell>{event.conductedBy || "N/A"}</TableCell>
+                      <TableCell>
                         {event.date
                           ? new Date(event.date).toLocaleDateString()
                           : "N/A"}
-                      </td>
-                      <td className="py-2 px-4">{event.time || "N/A"}</td>
-                      <td className={`py-2 px-4 ${getStatusColor(event.status)}`}>
-                        {event.status || "Unknown"}
-                      </td>
-                    </tr>
+                      </TableCell>
+                      <TableCell>{event.time || "N/A"}</TableCell>
+                      <TableCell>
+                        <span className={getStatusColor(event.status)}>
+                          {event.status || "Unknown"}
+                        </span>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <Typography
-              variant="h6"
-              color="text.secondary"
-              textAlign="center"
-            >
-              No events found.
-            </Typography>
-          )}
-        </Box>
-      )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredEvents.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </div>
     </WorkerLayout>
   );
 };

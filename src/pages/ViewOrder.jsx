@@ -4,12 +4,12 @@ import WorkerLayout from "../layouts/WorkerLayout";
 import {
   Search,
   Tag,
-  X,
   Pencil,
   PackageCheck,
-  AlertCircle,
   Trash2,
-} from "lucide-react";
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";  // Ensure correct import here
 
 const ViewOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -24,6 +24,10 @@ const ViewOrder = () => {
   const [updating, setUpdating] = useState(false);
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(""); // success / error
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 4;  // Number of orders per page
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -62,6 +66,17 @@ const ViewOrder = () => {
     );
     setFilteredOrders(filtered);
   };
+
+  // Handle page change
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Get orders for the current page
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+  // Total pages
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   const openUpdateModal = (order) => {
     setSelectedOrder(order);
@@ -145,178 +160,137 @@ const ViewOrder = () => {
 
   return (
     <WorkerLayout>
-      {/* Header */}
-      <div className="text-center mb-4">
-        <h1 className="flex items-center justify-center gap-2 text-3xl font-extrabold text-gray-800 mb-2 mt-5">
-          <PackageCheck size={28} className="text-[#ff6f00]" />
-          All Stock Orders
-        </h1>
-        <p className="text-gray-500 mb-4">
-          Manage and update your placed orders
-        </p>
-      </div>
+      <div className="flex flex-col gap-4">
+        
+       {/* Header and Search bar in the same row */}
+<div className="flex justify-between items-center mb-4 px-4">
+  {/* Header */}
+  <div>
+    <h1 className="flex items-left gap-2 text-3xl font-extrabold text-gray-800 mb-3 mt-5">
+      <PackageCheck size={28} className="text-[#ff6f00]" />
+      All Stock Orders
+    </h1>
+    <p className="text-gray-500 mb-4">Manage and update your placed orders</p>
+  </div>
 
-      {/* Search bar */}
-      <div className="flex justify-center mb-6 px-4">
-        <div className="relative w-full max-w-md">
-          <Search className="absolute top-2.5 left-3 text-gray-400" size={20} />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearch}
-            placeholder="Search by product name or item ID..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#ff6f00] focus:outline-none shadow-sm"
-          />
-        </div>
-      </div>
-
-      {/* Order cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-2">
-        {filteredOrders.length > 0 ? (
-          filteredOrders.map((order) => (
-            <div
-              key={order._id}
-              className="bg-white p-4 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between relative group"
-            >
-              <div>
-                <div className="relative">
-                  <img
-                    src={order.image}
-                    alt={order.productname}
-                    className="w-full h-48 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <span className="absolute top-2 left-2 bg-[#ff7043] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md flex items-center gap-1">
-                    <Tag size={14} /> {order.itemid}
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold mt-4 text-gray-800">
-                  {order.productname}
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Quantity: {order.quantity}
-                </p>
-                <p className="text-sm text-gray-600">
-                  Anganwadi No: {order.anganwadiNo}
-                </p>
-                <p className="text-sm text-gray-600">
-                  Status: {order.orderStatus}
-                </p>
-              </div>
-
-              <div className="flex gap-2 mt-4">
-                <button
-                  onClick={() => openUpdateModal(order)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-[#ff6f00] text-white text-sm py-2 rounded-lg hover:bg-[#e65100] transition-colors duration-200"
-                >
-                  <Pencil size={16} /> Update
-                </button>
-                <button
-                  onClick={() => handleCancelOrder(order._id)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white text-sm py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
-                >
-                  <Trash2 size={16} /> Cancel
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="col-span-full text-center text-gray-500">
-            No orders found.
-          </div>
-        )}
-      </div>
-
-      {/* Modal */}
-      {selectedOrder && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative">
-            <button
-              onClick={closeModal}
-              className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
-            >
-              <X size={20} />
-            </button>
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
-              Update Order
-            </h2>
-
-            {/* Message */}
-            {message && (
+  {/* Search bar aligned to the right */}
+  <div className="relative w-full max-w-md">
+    <Search className="absolute top-2.5 left-3 text-gray-400" size={20} />
+    <input
+      type="text"
+      value={searchQuery}
+      onChange={handleSearch}
+      placeholder="Search by product name or item ID..."
+      className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#ff6f00] focus:outline-none shadow-sm"
+    />
+  </div>
+</div>
+      
+        {/* Order cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 px-2">
+          {currentOrders.length > 0 ? (
+            currentOrders.map((order) => (
               <div
-                className={`flex items-center gap-2 text-sm px-3 py-2 mb-3 rounded ${
-                  messageType === "success"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
+                key={order._id}
+                className="bg-white p-4 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between relative group"
               >
-                <AlertCircle size={16} />
-                {message}
-              </div>
-            )}
+                <div>
+                  <div className="relative">
+                    <img
+                      src={order.image}
+                      alt={order.productname}
+                      className="w-full h-48 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <span className="absolute top-2 left-2 bg-[#ff7043] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                      <Tag size={14} /> {order.itemid}
+                    </span>
+                  </div>
+                  <h2 className="text-lg font-bold mt-4 text-gray-800">
+                    {order.productname}
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Quantity: {order.quantity}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Anganwadi No: {order.anganwadiNo}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Status: {order.orderStatus}
+                  </p>
+                </div>
 
-            <form onSubmit={handleUpdateOrder} className="space-y-4">
-              {/* Product Name dropdown */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-600">
-                  Product Name
-                </label>
-                <select
-                  value={newProductName}
-                  onChange={(e) => setNewProductName(e.target.value)}
-                  required
-                  className="w-full mt-1 p-2 rounded-lg border border-gray-300 shadow-sm"
-                >
-                  <option value="">Select a Product</option>
-                  {products.map((prod) => (
-                    <option key={prod._id} value={prod.productname}>
-                      {prod.productname}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={() => openUpdateModal(order)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-[#ff6f00] text-white text-sm py-2 rounded-lg hover:bg-[#e65100] transition-colors duration-200"
+                  >
+                    <Pencil size={16} /> Update
+                  </button>
+                  <button
+                    onClick={() => handleCancelOrder(order._id)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white text-sm py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+                  >
+                    <Trash2 size={16} /> Cancel
+                  </button>
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-500">
+              No orders found.
+            </div>
+          )}
+        </div>
 
-              {/* Quantity */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-600">
-                  Quantity
-                </label>
-                <input
-                  type="number"
-                  value={newQuantity}
-                  onChange={(e) => setNewQuantity(e.target.value)}
-                  required
-                  min="1"
-                  className="w-full mt-1 p-2 rounded-lg border border-gray-300 shadow-sm"
-                />
-              </div>
+        {/* Pagination */}
+        <div className="flex justify-center mt-6 gap-4 items-center">
+          <button
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="flex items-center justify-center gap-2 bg-[#ff6f00] text-white py-2 px-4 rounded-lg hover:bg-[#e65100] disabled:bg-gray-300 transition-all duration-200"
+          >
+            <ArrowLeft size={20} />  {/* Left arrow icon */}
+          </button>
 
-              {/* Anganwadi Number */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-600">
-                  Anganwadi Number
-                </label>
-                <input
-                  type="text"
-                  value={newAnganwadiNo}
-                  onChange={(e) => setNewAnganwadiNo(e.target.value)}
-                  required
-                  className="w-full mt-1 p-2 rounded-lg border border-gray-300 shadow-sm"
-                />
-              </div>
+          <div className="flex items-center gap-3">
+            <span className="text-lg text-gray-700">
+              Page {currentPage} of {totalPages}
+            </span>
+            <span className="text-xs text-gray-500">({filteredOrders.length} orders)</span>
+          </div>
 
-              <button
-                type="submit"
-                disabled={updating}
-                className={`w-full flex items-center justify-center gap-2 mt-2 ${
-                  updating ? "bg-gray-400" : "bg-[#ff6f00] hover:bg-[#e65100]"
-                } text-white py-2 rounded-lg transition-colors duration-200`}
-              >
-                {updating ? "Updating..." : "Update Order"}
-              </button>
-            </form>
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="flex items-center justify-center gap-2 bg-[#ff6f00] text-white py-2 px-4 rounded-lg hover:bg-[#e65100] disabled:bg-gray-300 transition-all duration-200"
+          >
+            <ArrowRight size={20} />  {/* Right arrow icon */}
+          </button>
+        </div>
+
+        {/* Mobile responsiveness */}
+        <div className="lg:hidden flex flex-col items-center gap-4 mt-6">
+          <div className="text-sm text-gray-500">
+            Page {currentPage} of {totalPages}
+          </div>
+          <div className="flex gap-4">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="bg-[#ff6f00] text-white py-2 px-4 rounded-lg hover:bg-[#e65100] disabled:bg-gray-300 transition-all duration-200"
+            >
+              <ArrowLeft size={20} />  {/* Left arrow icon */}
+            </button>
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="bg-[#ff6f00] text-white py-2 px-4 rounded-lg hover:bg-[#e65100] disabled:bg-gray-300 transition-all duration-200"
+            >
+              <ArrowRight size={20} />  {/* Right arrow icon */}
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </WorkerLayout>
   );
 };
