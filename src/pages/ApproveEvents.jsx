@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
 import {
-  Check,
-  X,
   CalendarDays,
   Clock,
   Users,
@@ -11,9 +8,37 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
+import {
+  Button,
+  Typography,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Snackbar,
+  Alert,
+  TextField,
+  TablePagination,
+  CircularProgress,
+  InputAdornment,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import axios from "axios";
 
 const ApproveEvents = () => {
   const [events, setEvents] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,124 +49,215 @@ const ApproveEvents = () => {
     try {
       const res = await axios.get("http://localhost:5000/events/all");
       setEvents(Array.isArray(res.data) ? res.data : []);
-      setLoading(false);
     } catch (err) {
       console.error("Error fetching events:", err);
-      setEvents([]);
+    } finally {
       setLoading(false);
     }
   };
 
-  const approveEvent = async (eventId) => {
+  const handleApprove = async (eventId) => {
     try {
       await axios.put(`/api/events/approve/${eventId}`);
-      fetchEvents();
+      setEvents((prev) =>
+        prev.map((e) =>
+          e._id === eventId ? { ...e, status: "Approved" } : e
+        )
+      );
+      setOpenSnackbar({
+        open: true,
+        message: "Event approved successfully!",
+        severity: "success",
+      });
     } catch (err) {
       console.error("Error approving event:", err);
     }
   };
 
-  const rejectEvent = async (eventId) => {
+  const handleReject = async (eventId) => {
     try {
       await axios.put(`/api/events/reject/${eventId}`);
-      fetchEvents();
+      setEvents((prev) =>
+        prev.map((e) =>
+          e._id === eventId ? { ...e, status: "Rejected" } : e
+        )
+      );
+      setOpenSnackbar({
+        open: true,
+        message: "Event rejected successfully!",
+        severity: "error",
+      });
     } catch (err) {
       console.error("Error rejecting event:", err);
     }
   };
 
-  if (loading) return <p>Loading events...</p>;
+  const filteredEvents = events.filter((event) =>
+    (event.eventName || "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <SupervisorLayout>
-      <div className="p-6">
-        <h3 className="flex gap-2 text-xl font-semibold text-[#ff7043]">
-          <CalendarDays />All Events
-        </h3>
-        <p className="mt-2 text-gray-600">Below is the list of all Events:</p>
-
-        {events.length === 0 ? (
-          <p className="text-gray-500 flex items-center gap-2">
-            <XCircle className="text-red-500" /> No events found
-          </p>
-        ) : (
-          <div className="overflow-x-auto mt-5">
-            <table className="min-w-full table-auto border-collapse bg-white rounded-lg shadow-lg">
-              <thead>
-                <tr className="bg-gradient-to-r from-orange-400 to-orange-400 text-white">
-                  <th className="p-4 text-left">Event Name</th>
-                  <th className="p-4 text-left">
-                    <div className="flex items-center gap-1">
-                      <CalendarDays size={16} /> Date
-                    </div>
-                  </th>
-                  <th className="p-4 text-left">
-                    <div className="flex items-center gap-1">
-                      <Clock size={16} /> Time
-                    </div>
-                  </th>
-                  <th className="p-4 text-left">Status</th>
-                  <th className="p-4 text-left">
-                    <div className="flex items-center gap-1">
-                      <Users size={16} /> Participants
-                    </div>
-                  </th>
-                  <th className="p-4 text-left">
-                    <div className="flex items-center gap-1">
-                      <User size={16} /> Conducted By
-                    </div>
-                  </th>
-                  <th className="p-4 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {events.map((event) => (
-                  <tr key={event._id} className="hover:bg-gray-50">
-                    <td className="p-4 border-b">{event.eventName}</td>
-                    <td className="p-4 border-b">
-                      {new Date(event.date).toLocaleDateString()}
-                    </td>
-                    <td className="p-4 border-b">{event.time}</td>
-                    <td className="p-4 border-b">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          event.status === "Pending Approval"
-                            ? "bg-yellow-400 text-white"
-                            : event.status === "Approved"
-                            ? "bg-green-500 text-white"
-                            : "bg-red-500 text-white"
-                        }`}
-                      >
-                        {event.status}
-                      </span>
-                    </td>
-                    <td className="p-4 border-b">{event.participantCount}</td>
-                    <td className="p-4 border-b">{event.conductedBy}</td>
-                    <td className="p-4 border-b">
-                      {event.status === "Pending Approval" && (
-                        <div className="flex space-x-2">
-                          <button
-                            className="flex items-center gap-1 bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition"
-                            onClick={() => approveEvent(event._id)}
-                          >
-                            <Check size={14} /> Approve
-                          </button>
-                          <button
-                            className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
-                            onClick={() => rejectEvent(event._id)}
-                          >
-                            <X size={14} /> Reject
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <Container maxWidth="xl" className="mt-3">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <Typography
+              variant="h4"
+              gutterBottom
+              className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-bold"
+            >
+              Approve Events
+            </Typography>
+            <p className="text-gray-600 mb-2">
+              Review and manage event requests below.
+            </p>
           </div>
-        )}
-      </div>
+
+          {/* Search bar */}
+          <TextField
+            label="Search by Event Name"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+
+        <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
+                  <TableCell className="text-white font-semibold">
+                    Event Name
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <CalendarDays size={16} className="inline mr-2" />
+                    Date
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <Clock size={16} className="inline mr-2" />
+                    Time
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    Status
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <Users size={16} className="inline mr-2" />
+                    Participants
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <User size={16} className="inline mr-2" />
+                    Conducted By
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredEvents
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((event) => (
+                    <TableRow key={event._id} hover>
+                      <TableCell>{event.eventName}</TableCell>
+                      <TableCell>
+                        {new Date(event.date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>{event.time}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`px-2 py-1 text-xs font-bold rounded-md ${
+                            event.status === "Approved"
+                              ? "bg-green-200 text-green-700"
+                              : event.status === "Rejected"
+                              ? "bg-red-200 text-red-700"
+                              : "bg-yellow-200 text-yellow-700"
+                          }`}
+                        >
+                          {event.status}
+                        </span>
+                      </TableCell>
+                      <TableCell>{event.participantCount}</TableCell>
+                      <TableCell>{event.conductedBy}</TableCell>
+                      <TableCell>
+                        {event.status === "Pending Approval" && (
+                          <div className="flex gap-2">
+                            <Button
+                              variant="contained"
+                              color="success"
+                              size="small"
+                              onClick={() => handleApprove(event._id)}
+                              startIcon={<CheckCircle size={16} />}
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              size="small"
+                              onClick={() => handleReject(event._id)}
+                              startIcon={<XCircle size={16} />}
+                            >
+                              Reject
+                            </Button>
+                          </div>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredEvents.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+
+        <Snackbar
+          open={openSnackbar.open}
+          autoHideDuration={3000}
+          onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}
+        >
+          <Alert
+            severity={openSnackbar.severity}
+            onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}
+          >
+            {openSnackbar.message}
+          </Alert>
+        </Snackbar>
+      </Container>
     </SupervisorLayout>
   );
 };

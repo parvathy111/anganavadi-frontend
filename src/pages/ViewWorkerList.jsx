@@ -1,16 +1,30 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Menu, UserPlus, Users, Package, Calendar, MessageSquare, User, LogOut, Phone, Mail, Home, MapPin, CalendarDays, Trash2
-} from "lucide-react";
 import SupervisorLayout from "../layouts/SupervisorLayout";
-
+import { User, Phone, Mail, MapPin, CalendarDays, Home } from "lucide-react";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CircularProgress,
+  Typography,
+  TablePagination,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { Trash2 } from "lucide-react";
 
 export default function ViewWorkerList() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [workers, setWorkers] = useState([]);
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     fetchWorkers();
@@ -18,10 +32,12 @@ export default function ViewWorkerList() {
 
   const fetchWorkers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/worker/allworkers");
+      const response = await axios.get(
+        "http://localhost:5000/worker/allworkers"
+      );
       setWorkers(response.data || []);
     } catch (err) {
-      setMessage(err.response?.data?.message || "Failed to load workers");
+      console.error("Failed to load workers:", err);
     } finally {
       setLoading(false);
     }
@@ -38,46 +54,118 @@ export default function ViewWorkerList() {
     }
   };
 
-  return (
-    
-      <SupervisorLayout>
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-        {/* Workers Table */}
-        <div className="p-6">
-          <h3 className="text-xl font-semibold text-[#ff7043]">All Workers</h3>
-          <p className="mt-2 text-gray-600">Below is the list of all Anganwadi workers:</p>
-          {loading ? (
-            <p className="text-center text-gray-600 mt-4">Loading workers...</p>
-          ) : message ? (
-            <div className="mb-4 text-center text-red-600 mt-4">{message}</div>
-          ) : workers.length > 0 ? (
-            <div className="mt-6 overflow-x-auto">
-              <table className="min-w-full bg-white rounded-xl shadow-md">
-                <thead>
-                  <tr className="bg-gradient-to-r from-orange-400 bg-orange-500 text-white">
-                    <th className="py-3 px-4 text-left">#</th>
-                    <th className="py-3 px-4 text-left"><User className="inline-block mr-1" size={16} /> Name</th>
-                    <th className="py-3 px-4 text-left"><Mail className="inline-block mr-1" size={16} /> Email</th>
-                    <th className="py-3 px-4 text-left"><Phone className="inline-block mr-1" size={16} /> Phone</th>
-                    <th className="py-3 px-4 text-left"><MapPin className="inline-block mr-1" size={16} /> Anganwadi No</th>
-                    <th className="py-3 px-4 text-left"><User className="inline-block mr-1" size={16} /> Gender</th>
-                    <th className="py-3 px-4 text-left"><CalendarDays className="inline-block mr-1" size={16} /> DOB</th>
-                    <th className="py-3 px-4 text-left"><Home className="inline-block mr-1" size={16} /> Address</th>
-                    <th className="py-3 px-4 text-left">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {workers.map((worker, index) => (
-                    <tr key={worker._id} className="hover:bg-orange-50">
-                      <td className="py-2 px-4 font-semibold">{index + 1}</td>
-                      <td className="py-2 px-4">{worker.name}</td>
-                      <td className="py-2 px-4">{worker.email}</td>
-                      <td className="py-2 px-4">{worker.phone}</td>
-                      <td className="py-2 px-4">{worker.anganwadiNo}</td>
-                      <td className="py-2 px-4 capitalize">{worker.gender}</td>
-                      <td className="py-2 px-4">{new Date(worker.dob).toLocaleDateString()}</td>
-                      <td className="py-2 px-4">{worker.address}</td>
-                      <td className="py-2 px-4">
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const filteredWorkers = workers.filter((worker) =>
+    worker.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  return (
+    <SupervisorLayout>
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <Typography
+              variant="h4"
+              align="left"
+              gutterBottom
+              className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-bold"
+            >
+              Anganwadi Workers
+            </Typography>
+            <p className="mt-1 text-gray-500 text-sm">
+              These are the registered Anganwadi workers.
+            </p>
+          </div>
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+
+        <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
+                  <TableCell className="text-white font-semibold w-10">
+                    #
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <User size={16} className="inline mr-2" />
+                    Name
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <Mail size={16} className="inline mr-2" />
+                    Email
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-30">
+                    <Phone size={16} className="inline mr-2" />
+                    Phone
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-42">
+                    <MapPin size={16} className="inline mr-2" />
+                    Anganwadi No
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <User size={16} className="inline mr-2" />
+                    Gender
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <CalendarDays size={16} className="inline mr-2" />
+                    DOB
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <Home size={16} className="inline mr-2" />
+                    Address
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-20">
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {filteredWorkers
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((worker, index) => (
+                    <TableRow key={worker._id} hover>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{worker.name}</TableCell>
+                      <TableCell>{worker.email}</TableCell>
+                      <TableCell>{worker.phone}</TableCell>
+                      <TableCell>{worker.anganwadiNo}</TableCell>
+                      <TableCell>{worker.gender}</TableCell>
+                      <TableCell>
+                        {new Date(worker.dob).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>{worker.address}</TableCell>
+                      <TableCell>
                         <button
                           onClick={() => handleDelete(worker._id)}
                           className="text-red-600 hover:text-red-800 transition"
@@ -85,17 +173,24 @@ export default function ViewWorkerList() {
                         >
                           <Trash2 size={18} />
                         </button>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="text-center text-gray-600 mt-4">No workers found.</p>
-          )}
-        </div>
-        </SupervisorLayout>
-    
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredWorkers.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </div>
+    </SupervisorLayout>
   );
 }

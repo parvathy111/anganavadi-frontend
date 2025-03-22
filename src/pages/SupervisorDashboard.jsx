@@ -12,7 +12,6 @@ import {
   Calendar,
   MessageSquare,
 } from "lucide-react";
-import dashboardIcon from "../assets/admin1.png";
 import SupervisorLayout from "../layouts/SupervisorLayout";
 
 export default function SupervisorDashboard() {

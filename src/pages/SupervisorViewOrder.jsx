@@ -1,106 +1,273 @@
-import { useState, useEffect } from "react";
-import { CheckCircle, XCircle } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import SupervisorLayout from "../layouts/SupervisorLayout";
+import {
+  CheckCircle,
+  XCircle,
+  ShoppingBag,
+  Calendar,
+  Warehouse,
+} from "lucide-react";
+import {
+  Button,
+  Typography,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Snackbar,
+  Alert,
+  TextField,
+  TablePagination,
+  CircularProgress,
+  InputAdornment,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 const SupervisorViewOrder = () => {
   const [orders, setOrders] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/orders/all")
-      .then((res) => res.json())
-      .then((data) => setOrders(data))
-      .catch((err) => console.error("Error fetching orders:", err));
+    fetchOrders();
   }, []);
 
-  const handleApprove = (orderId) => {
-    fetch(`http://localhost:5000/orders/approve/${orderId}`, {
-      method: "PUT",
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setOrders((prevOrders) =>
-          prevOrders.map((order) =>
-            order._id === orderId ? { ...order, orderStatus: "Approved" } : order
-          )
-        );
-      });
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/orders/all");
+      const data = await res.json();
+      const sortedData = data.sort(
+        (a, b) => new Date(b.orderDate) - new Date(a.orderDate)
+      );
+      setOrders(sortedData);
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReject = (orderId) => {
-    fetch(`http://localhost:5000/orders/cancel/${orderId}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
+  const handleApprove = async (orderId) => {
+    try {
+      await fetch(`http://localhost:5000/orders/approve/${orderId}`, {
+        method: "PUT",
       });
+      setOrders((prev) =>
+        prev.map((o) =>
+          o._id === orderId ? { ...o, orderStatus: "Approved" } : o
+        )
+      );
+      setOpenSnackbar({
+        open: true,
+        message: "Order approved successfully!",
+        severity: "success",
+      });
+    } catch (err) {
+      console.error("Error approving order:", err);
+    }
   };
+
+  const handleReject = async (orderId) => {
+    try {
+      await fetch(`http://localhost:5000/orders/cancel/${orderId}`, {
+        method: "DELETE",
+      });
+      setOrders((prev) => prev.filter((o) => o._id !== orderId));
+      setOpenSnackbar({
+        open: true,
+        message: "Order rejected successfully!",
+        severity: "error",
+      });
+    } catch (err) {
+      console.error("Error rejecting order:", err);
+    }
+  };
+
+  const filteredOrders = orders.filter((order) =>
+    (order.productname || "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <SupervisorLayout>
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Orders</h2>
-        <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden">
-          <thead className="bg-[#ff9800] text-white">
-            <tr>
-              <th className="p-3 text-left">Item ID</th>
-              <th className="p-3 text-left">Item Name</th>
-              <th className="p-3 text-left">Quantity</th>
-              <th className="p-3 text-left">Anganwadi No</th>
-              <th className="p-3 text-left">Order Date</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr
-                key={order._id}
-                className="border-b hover:bg-orange-50 transition duration-150"
-              >
-                <td className="p-3">{order.itemid}</td>
-                <td className="p-3">{order.productname}</td>
-                <td className="p-3">{order.quantity}</td>
-                <td className="p-3">{order.anganwadiNo}</td>
-                <td className="p-3">
-                  {new Date(order.orderDate).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })}
-                </td>
-                <td className="p-3 font-semibold">{order.orderStatus}</td>
-                <td className="p-3 flex justify-center gap-3">
-                  {order.orderStatus === "Pending" && (
-                    <>
-                      <button
-                        onClick={() => handleApprove(order._id)}
-                        className="bg-green-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:opacity-90"
-                      >
-                        <CheckCircle size={16} /> Approve
-                      </button>
-                      <button
-                        onClick={() => handleReject(order._id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:opacity-90"
-                      >
-                        <XCircle size={16} /> Reject
-                      </button>
-                    </>
-                  )}
-                  {order.orderStatus === "Approved" && (
-                    <button
-                      onClick={() => handleReject(order._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:opacity-90"
-                    >
-                      <XCircle size={16} /> Reject
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Container maxWidth="xl" className="mt-3">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <Typography
+              variant="h4"
+              gutterBottom
+              className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-bold"
+            >
+              View Orders
+            </Typography>
+            <p className="text-gray-600 mb-2">
+              Here you can review, approve, or reject stock orders from various Anganwadi centers.
+            </p>
+          </div>
+
+          {/* Search bar */}
+          <TextField
+            label="Search by Product Name"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+
+        <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
+                  <TableCell className="text-white font-semibold">
+                    <ShoppingBag size={16} className="inline mr-2" />
+                    Product
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    Quantity
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <Warehouse size={16} className="inline mr-2" />
+                    Anganwadi No
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <Calendar size={16} className="inline mr-2" />
+                    Order Date
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    Status
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredOrders
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((order) => (
+                    <TableRow key={order._id} hover>
+                      <TableCell>{order.productname}</TableCell>
+                      <TableCell>{order.quantity}</TableCell>
+                      <TableCell>{order.anganwadiNo}</TableCell>
+                      <TableCell>
+                        {new Date(order.orderDate).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={`px-2 py-1 text-xs font-bold rounded-md ${
+                            order.orderStatus === "Approved"
+                              ? "bg-green-200 text-green-700"
+                              : "bg-yellow-200 text-yellow-700"
+                          }`}
+                        >
+                          {order.orderStatus}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        {order.orderStatus === "Pending" && (
+                          <div className="flex gap-2">
+                            <Button
+                              variant="contained"
+                              color="success"
+                              size="small"
+                              onClick={() => handleApprove(order._id)}
+                              startIcon={<CheckCircle size={16} />}
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              size="small"
+                              onClick={() => handleReject(order._id)}
+                              startIcon={<XCircle size={16} />}
+                            >
+                              Reject
+                            </Button>
+                          </div>
+                        )}
+                        {order.orderStatus === "Approved" && (
+                          <Button
+                            variant="contained"
+                            color="error"
+                            size="small"
+                            onClick={() => handleReject(order._id)}
+                            startIcon={<XCircle size={16} />}
+                          >
+                            Reject
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredOrders.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+
+        <Snackbar
+          open={openSnackbar.open}
+          autoHideDuration={3000}
+          onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}
+        >
+          <Alert
+            severity={openSnackbar.severity}
+            onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}
+          >
+            {openSnackbar.message}
+          </Alert>
+        </Snackbar>
+      </Container>
     </SupervisorLayout>
   );
 };

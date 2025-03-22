@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 import {
   TextField,
-  InputAdornment,
   Button,
   Typography,
   Container,
   Snackbar,
   Alert,
   Box,
+  InputAdornment,
+  Paper,
 } from "@mui/material";
+import {
+  Inventory2 as InventoryIcon,
+  AddBox as AddIcon,
+  Image as ImageIcon,
+  Numbers as NumbersIcon,
+  ViewList as ViewIcon,
+} from "@mui/icons-material";
 import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
-import { Inventory2, AddBox, Visibility } from "@mui/icons-material";
-
-// import api from "../config/axiosinstance";
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -31,134 +36,112 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    console.log("Sending data:", product); // Debugging step
-
     try {
-      const response = await axios.post(
-        "http://localhost:5000/products/add",
-        product,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("Response:", response.data);
+      await axios.post("http://localhost:5000/products/add", product, {
+        headers: { "Content-Type": "application/json" },
+      });
       setOpen(true);
       setProduct({ itemid: "", productname: "", image: "" });
     } catch (err) {
-      console.error("Error:", err.response?.data);
       setError(err.response?.data?.message || "Server error");
     }
   };
 
   return (
     <SupervisorLayout>
-      <Container
-        maxWidth="sm"
-        className="mt-12 p-8 shadow-xl rounded-3xl bg-gradient-to-br from-white to-gray-50"
-      >
-        <Typography
-          variant="h5"
-          gutterBottom
-          className="text-center font-semibold text-orange-500 mb-6 flex items-center justify-center gap-2"
-        >
-          <Inventory2 fontSize="medium" /> Add New Product
-        </Typography>
+      {/* Header Section */}
+      <Box sx={{ mb: 4, display: "flex", alignItems: "center", gap: 2 }}>
+        <InventoryIcon sx={{ fontSize: 40, color: "#ff7043" }} />
+        <div>
+          <Typography variant="h4" sx={{ fontWeight: "bold", color: "#ff7043" }}>
+            Add New Product
+          </Typography>
+          <Typography variant="body1" sx={{ color: "gray" }}>
+            Add new products to the inventory for your Anganwadi center.
+          </Typography>
+        </div>
+      </Box>
 
-        {error && (
-          <Alert severity="error" className="mb-4">
-            {error}
-          </Alert>
-        )}
+      {/* Form Section */}
+      <Container maxWidth="sm">
+        <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
+          {error && <Alert severity="error">{error}</Alert>}
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-5"
-        >
-          <TextField
-            label="Item ID"
-            name="itemid"
-            value={product.itemid}
-            onChange={handleChange}
-            required
-            fullWidth
-            variant="outlined"
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Inventory2 />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            label="Product Name"
-            name="productname"
-            value={product.productname}
-            onChange={handleChange}
-            required
-            fullWidth
-            variant="outlined"
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Inventory2 />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            label="Image URL"
-            name="image"
-            value={product.image}
-            onChange={handleChange}
-            required
-            fullWidth
-            variant="outlined"
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Inventory2 />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <div className="flex gap-5">
-         <Button
-  variant="contained"
-  type="submit"
-  fullWidth
-  className="rounded-xl py-3 font-semibold transition-all hover:scale-[1.03] flex items-center justify-center gap-2 shadow-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
->
-  <AddBox /> Add Product
-</Button>
+          <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={3}>
+            <TextField
+              label="Item ID"
+              name="itemid"
+              value={product.itemid}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <NumbersIcon sx={{ color: "#ff7043" }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-<Button
-  variant="contained"
-  fullWidth
-  className="mt-5 rounded-xl py-3 font-semibold transition-all hover:scale-[1.03] flex items-center justify-center gap-2 shadow-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
->
+            <TextField
+              label="Product Name"
+              name="productname"
+              value={product.productname}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <InventoryIcon sx={{ color: "#ff7043" }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-  <Visibility /> View Stock
-</Button>
-</div>
-</Box>
+            <TextField
+              label="Image URL"
+              name="image"
+              value={product.image}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <ImageIcon sx={{ color: "#ff7043" }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-        <Snackbar
-          open={open}
-          autoHideDuration={3000}
-          onClose={() => setOpen(false)}
-        >
-          <Alert severity="success" onClose={() => setOpen(false)}>
-            Product added successfully!
-          </Alert>
-        </Snackbar>
+            <Button
+              variant="contained"
+              type="submit"
+              size="large"
+              startIcon={<AddIcon />}
+              sx={{
+                background: "linear-gradient(45deg, #ff7043, #ff7043)",
+                color: "#fff",
+                fontWeight: "bold",
+                "&:hover": {
+                  background: "linear-gradient(45deg, #fb8c00, #ff7043)",
+                },
+              }}
+            >
+              Add Product
+            </Button>
+          </Box>
+
+          <Snackbar
+            open={open}
+            autoHideDuration={3000}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert severity="success" onClose={() => setOpen(false)}>
+              Product added successfully!
+            </Alert>
+          </Snackbar>
+        </Paper>
       </Container>
     </SupervisorLayout>
   );
