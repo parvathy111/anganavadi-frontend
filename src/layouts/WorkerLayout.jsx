@@ -20,6 +20,7 @@ function WorkerLayout({ children }) {
   const [beneficiariesDropdown, setBeneficiariesDropdown] = useState(false);
   const [eventsDropdown, setEventsDropdown] = useState(false);
   const [vaccinesDropdown, setVaccinesDropdown] = useState(false);
+  const [foodDropdown, setFoodDropdown] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -46,7 +47,7 @@ function WorkerLayout({ children }) {
 
           {/* Nav Links */}
           <nav className="flex flex-col space-y-4 mt-8 px-2">
-            {/* Back to Dashboard */}
+            {/* Dashboard */}
             <a
               href="/worker-dashboard"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
@@ -69,9 +70,7 @@ function WorkerLayout({ children }) {
             {/* Beneficiaries Dropdown */}
             <div>
               <button
-                onClick={() =>
-                  setBeneficiariesDropdown(!beneficiariesDropdown)
-                }
+                onClick={() => setBeneficiariesDropdown(!beneficiariesDropdown)}
                 className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
               >
                 <Users />
@@ -111,14 +110,48 @@ function WorkerLayout({ children }) {
               )}
             </div>
 
-            {/* Food Distribution Link */}
-            <a
-              href="#"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
-            >
-              <Package />
-              {sidebarOpen && <span>Food Distribution</span>}
-            </a>
+            {/* Food Distribution Dropdown */}
+            <div>
+              <button
+                onClick={() => setFoodDropdown(!foodDropdown)}
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
+              >
+                <Package />
+                {sidebarOpen && (
+                  <>
+                    <span>Food Distribution</span>
+                    <ChevronDown
+                      className={`ml-auto transition-transform duration-300 ${
+                        foodDropdown ? "rotate-180" : ""
+                      }`}
+                      size={16}
+                    />
+                  </>
+                )}
+              </button>
+              {foodDropdown && sidebarOpen && (
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
+                  <a
+                    href="/order-product"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    Order Stock
+                  </a>
+                  <a
+                    href="/view-order"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    My Order
+                  </a>
+                  <a
+                    href="/view-stock"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    View Stock
+                  </a>
+                </div>
+              )}
+            </div>
 
             {/* Events Dropdown */}
             <div>

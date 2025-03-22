@@ -29,6 +29,7 @@ import ApproveEvents from "./pages/ApproveEvents";
 import OrderStack from "./pages/OrderStock";
 import PregLactWomenList from "./pages/ViewPregLactWomen";
 import ParentList from "./pages/ViewChildList";
+import ViewOrder from "./pages/ViewOrder";
 
 
 
@@ -61,7 +62,7 @@ function App() {
       <Route path="/approve-events" element={<ApproveEvents />} />
 
       <Route path="/order-product" element={<OrderStack />} />
-
+      <Route path="/view-order" element={<ViewOrder />} />
       <Route path="/view-preg-lact-women" element={<PregLactWomenList />} />
       <Route path="/view-child-parents" element={<ParentList />} />
       </Routes>
