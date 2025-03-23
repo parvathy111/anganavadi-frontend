@@ -78,13 +78,13 @@ const SupervisorLayout = ({ children }) => {
               {anganwadiDropdown && sidebarOpen && (
                 <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
                   <a
-                    href="/add-anganwadi"
+                    href="/addanganawadi"
                     className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
                   >
                     Add Anganwadi
                   </a>
                   <a
-                    href="/view-anganwadi"
+                    href="/view-anganawadis"
                     className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
                   >
                     View Anganwadi

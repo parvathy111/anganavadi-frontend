@@ -53,7 +53,7 @@ export default function SupervisorDashboard() {
       title: "Anganwadi List",
       description: "View and Manage Anganawadi List.",
       icon: <Home size={32} />,
-      link: "#",
+      link: "/view-anganawadis",
     },
     {
       id: 6,

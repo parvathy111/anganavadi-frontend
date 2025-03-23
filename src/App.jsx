@@ -31,6 +31,8 @@ import PregLactWomenList from "./pages/ViewPregLactWomen";
 import ParentList from "./pages/ViewChildList";
 import ViewOrder from "./pages/ViewOrder";
 import SupervisorViewOrder from "./pages/SupervisorViewOrder";
+import AddAnganawadi from "./pages/AddAnganawadi";
+import ViewSupervisorAnganawadi from "./pages/viewsupervisoranganawadi";
 
 
 
@@ -68,6 +70,9 @@ function App() {
 
       <Route path="/view-preg-lact-women" element={<PregLactWomenList />} />
       <Route path="/view-child-parents" element={<ParentList />} />
+
+      <Route path="/addanganawadi" element={<AddAnganawadi />} />
+      <Route path="/view-anganawadis" element={<ViewSupervisorAnganawadi />} />
       </Routes>
    
 
