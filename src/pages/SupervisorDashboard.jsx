@@ -11,6 +11,7 @@ import {
   Package,
   Calendar,
   MessageSquare,
+  Home,
 } from "lucide-react";
 import SupervisorLayout from "../layouts/SupervisorLayout";
 
@@ -49,6 +50,13 @@ export default function SupervisorDashboard() {
     },
     {
       id: 5,
+      title: "Anganwadi List",
+      description: "View and Manage Anganawadi List.",
+      icon: <Home size={32} />,
+      link: "#",
+    },
+    {
+      id: 6,
       title: "Messages",
       description: "Send and view messages.",
       icon: <MessageSquare size={32} />,

@@ -1,10 +1,31 @@
-import { useState } from "react";
-import { Menu, LogOut, UserPlus, Eye, ArrowLeft, Home, MapPin, Phone, Mail, Users } from "lucide-react";
-import dashboardIcon from "../assets/admin1.png";
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Snackbar,
+  Alert,
+  Box,
+  MenuItem,
+  InputAdornment,
+  Paper,
+  Grid,
+} from "@mui/material";
+import {
+  Person as PersonIcon,
+  Home as HomeIcon,
+  Phone as PhoneIcon,
+  Mail as MailIcon,
+  LocationOn as LocationIcon,
+  Wc as WcIcon,
+  SupervisorAccount as SupervisorIcon,
+  AddCircleOutline as AddIcon,
+} from "@mui/icons-material";
 import axios from "axios";
+import AdminLayout from "../layouts/AdminLayout";
 
-export default function AddSupervisor() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+const AddSupervisor = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     localBody: "",
@@ -14,7 +35,8 @@ export default function AddSupervisor() {
     email: "",
   });
 
-  const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,19 +44,19 @@ export default function AddSupervisor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
+    setError("");
     try {
-    //   const response = await axios.post("http://localhost:5000/supervisor/createsupervisor", formData);
-    const response = await axios.post(
+      await axios.post(
         "http://localhost:5000/supervisor/createsupervisor",
         formData,
         {
           headers: {
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2RhOTViNjNmNDZjNmIwOGU1MWFmYiIsImlhdCI6MTc0MjM3MTU5NH0.9qnp4PfQcjGEmh5CTAn8Jrm5p3ZKfUbQUIH3Sf-7YHU", // dummy token
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2RhOTViNjNmNDZjNmIwOGU1MWFmYiIsImlhdCI6MTc0MjM3MTU5NH0.9qnp4PfQcjGEmh5CTAn8Jrm5p3ZKfUbQUIH3Sf-7YHU", // dummy token
           },
         }
       );
-      setMessage(response.data.message);
+      setOpen(true);
       setFormData({
         fullname: "",
         localBody: "",
@@ -44,184 +66,177 @@ export default function AddSupervisor() {
         email: "",
       });
     } catch (err) {
-      setMessage(err.response?.data?.message || "Something went wrong");
+      setError(err.response?.data?.message || "Server error");
     }
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div
-        className={`text-white flex flex-col justify-between transition-all duration-300 ${
-          sidebarOpen ? "w-64" : "w-16"
-        }`}
-        style={{
-          background: "linear-gradient(135deg, #ff9800 0%, #f48fb1 100%)",
-        }}
-      >
+    <AdminLayout>
+      {/* Heading section */}
+      <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1.5 }}>
+        <SupervisorIcon sx={{ fontSize: 36, color: "#ff7043" }} />
         <div>
-          {/* Sidebar Toggle */}
-          <div className="flex items-center justify-between p-4">
-            {sidebarOpen && <h1 className="text-xl font-bold">Dashboard</h1>}
-            <button onClick={() => setSidebarOpen(!sidebarOpen)}>
-              <Menu />
-            </button>
-          </div>
-          {/* Nav Links */}
-          <nav className="flex flex-col space-y-4 mt-8 px-4">
-            <a
-              href="/admin-dashboard"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
-            >
-              <ArrowLeft />
-              {sidebarOpen && <span>Back to Dashboard</span>}
-            </a>
-            <a
-              href="#"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
-            >
-              <UserPlus />
-              {sidebarOpen && <span>Add Supervisor</span>}
-            </a>
-            <a
-              href="#"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
-            >
-              <Eye />
-              {sidebarOpen && <span>View Supervisor</span>}
-            </a>
-          </nav>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", color: "#ff7043" }}
+          >
+            Add New Supervisor
+          </Typography>
+          <Typography variant="body2" sx={{ color: "gray" }}>
+            Register a new supervisor and assign them to a local body.
+          </Typography>
         </div>
+      </Box>
 
-        {/* Bottom Image */}
-        <div className="p-4">
-          {sidebarOpen && (
-            <img
-              src={dashboardIcon}
-              alt="Bottom Image"
-              className="rounded-xl"
+      {/* Form container */}
+      <Container maxWidth="sm" sx={{ mt: 1 }}>
+        <Paper elevation={6} sx={{ p: 3, borderRadius: 3 }}>
+          {error && <Alert severity="error">{error}</Alert>}
+
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            display="flex"
+            flexDirection="column"
+            gap={2}
+          >
+            <TextField
+              fullWidth
+              label="Full Name"
+              name="fullname"
+              value={formData.fullname}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
             />
-          )}
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-y-auto">
-        {/* Top Navbar */}
-        <div className="bg-white shadow-lg p-4 flex justify-between items-center">
-          <h2 className="text-2xl font-semibold">Add Supervisor</h2>
-          <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
-            <LogOut className="mr-2" /> Logout
-          </button>
-        </div>
+            <TextField
+              fullWidth
+              label="Local Body"
+              name="localBody"
+              value={formData.localBody}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <HomeIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-        {/* Form Section */}
-        <div className="p-6 flex justify-center">
-          <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-lg">
-            {message && (
-              <div className="mb-4 text-center text-sm text-red-600">
-                {message}
-              </div>
-            )}
+            <TextField
+              fullWidth
+              label="Phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PhoneIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Full Name */}
-              <div className="relative">
-                <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  name="fullname"
-                  placeholder="Full Name"
-                  value={formData.fullname}
-                  onChange={handleChange}
-                  required
-                  className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
-              </div>
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MailIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-              {/* Local Body */}
-              <div className="relative">
-                <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  name="localBody"
-                  placeholder="Local Body"
-                  value={formData.localBody}
-                  onChange={handleChange}
-                  required
-                  className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
-              </div>
+            <TextField
+              fullWidth
+              label="Address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              multiline
+              rows={2}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LocationIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-              {/* Gender */}
-              <div className="relative">
-                <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  required
-                  className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
+            <TextField
+              fullWidth
+              select
+              label="Gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <WcIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            >
+              <MenuItem value="Female">Female</MenuItem>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </TextField>
 
-              {/* Address */}
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 text-gray-400" />
-                <textarea
-                  name="address"
-                  placeholder="Address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
-                  className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                ></textarea>
-              </div>
+            <Button
+              variant="contained"
+              type="submit"
+              size="medium"
+              startIcon={<AddIcon />}
+              sx={{
+                background: "linear-gradient(45deg, #ff7043, #ff7043)",
+                color: "#fff",
+                fontWeight: "bold",
+                mt: 0.5,
+                "&:hover": {
+                  background: "linear-gradient(45deg, #fb8c00, #ff7043)",
+                },
+              }}
+            >
+              Create Supervisor
+            </Button>
+          </Box>
 
-              {/* Phone */}
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                  className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
-              </div>
-
-              {/* Email */}
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
-              </div>
-
-              {/* Submit */}
-              <button
-                type="submit"
-                className="w-full bg-[#ff7043] text-white py-3 rounded-lg font-semibold hover:opacity-90"
-              >
-                Create Supervisor
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+          <Snackbar
+            open={open}
+            autoHideDuration={3000}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert severity="success" onClose={() => setOpen(false)}>
+              Supervisor created successfully!
+            </Alert>
+          </Snackbar>
+        </Paper>
+      </Container>
+    </AdminLayout>
   );
-}
+};
+
+export default AddSupervisor;

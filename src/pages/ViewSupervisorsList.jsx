@@ -1,15 +1,36 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import AdminLayout from "../layouts/AdminLayout";
 import {
-  Menu, ArrowLeft, Users, Eye, Phone, Mail, Home, MapPin, User, Trash2,
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  Home,
+  Trash2,
 } from "lucide-react";
-import dashboardIcon from "../assets/admin1.png";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CircularProgress,
+  Typography,
+  TablePagination,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 export default function ViewSupervisorsList() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [supervisors, setSupervisors] = useState([]);
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     fetchSupervisors();
@@ -17,17 +38,20 @@ export default function ViewSupervisorsList() {
 
   const fetchSupervisors = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/supervisor/viewsupervisors");
+      const response = await axios.get(
+        "http://localhost:5000/supervisor/viewsupervisors"
+      );
       setSupervisors(response.data.supervisors || []);
     } catch (err) {
-      setMessage(err.response?.data?.message || "Failed to load supervisors");
+      console.error("Failed to load supervisors:", err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this supervisor?")) return;
+    if (!window.confirm("Are you sure you want to delete this supervisor?"))
+      return;
 
     try {
       await axios.delete(`http://localhost:5000/supervisor/delete/${id}`);
@@ -37,90 +61,106 @@ export default function ViewSupervisorsList() {
     }
   };
 
-  return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div
-        className={`text-white flex flex-col justify-between transition-all duration-300 ${
-          sidebarOpen ? "w-64" : "w-16"
-        }`}
-        style={{
-          background: "linear-gradient(135deg, #ff9800 0%, #f48fb1 100%)",
-        }}
-      >
-        <div>
-          <div className="flex items-center justify-between p-4">
-            {sidebarOpen && <h1 className="text-xl font-bold">Dashboard</h1>}
-            <button onClick={() => setSidebarOpen(!sidebarOpen)}>
-              <Menu />
-            </button>
-          </div>
-          <nav className="flex flex-col space-y-4 mt-8 px-4">
-            <a
-              href="/admin-dashboard"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
-            >
-              <ArrowLeft />
-              {sidebarOpen && <span>Back to Dashboard</span>}
-            </a>
-            <a
-              href="/add-supervisor"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
-            >
-              <Users />
-              {sidebarOpen && <span>Add Supervisor</span>}
-            </a>
-            <a
-              href="/view-supervisors"
-              className="flex items-center space-x-2 bg-[#ff6f00cc] bg-opacity-30 rounded p-2 transition-colors duration-300"
-            >
-              <Eye />
-              {sidebarOpen && <span>View Supervisors</span>}
-            </a>
-          </nav>
-        </div>
-        <div className="p-4">
-          {sidebarOpen && (
-            <img src={dashboardIcon} alt="Bottom Image" className="rounded-xl" />
-          )}
-        </div>
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const filteredSupervisors = supervisors.filter((sup) =>
+    sup.fullname.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <CircularProgress />
       </div>
+    );
+  }
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-y-auto bg-gray-50">
-        <div className="bg-white shadow-lg p-4 flex justify-between items-center">
-          <h2 className="text-2xl font-semibold">Supervisors List</h2>
+  return (
+    <AdminLayout>
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <Typography
+              variant="h4"
+              align="left"
+              gutterBottom
+              className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-bold"
+            >
+              Supervisors List
+            </Typography>
+            <p className="mt-1 text-gray-500 text-sm">
+              These are the registered supervisors under your system.
+            </p>
+          </div>
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
         </div>
 
-        <div className="p-6">
-          {loading ? (
-            <p className="text-center text-gray-600">Loading supervisors...</p>
-          ) : message ? (
-            <div className="mb-4 text-center text-red-600">{message}</div>
-          ) : supervisors.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white rounded-xl shadow-md">
-                <thead>
-                  <tr className="bg-gradient-to-r from-orange-400 bg-orange-500 text-white">
-                    <th className="py-3 px-4 text-left">#</th>
-                    <th className="py-3 px-4 text-left"><User className="inline-block mr-1" size={16} /> Name</th>
-                    <th className="py-3 px-4 text-left"><MapPin className="inline-block mr-1" size={16} /> Local Body</th>
-                    <th className="py-3 px-4 text-left"><Home className="inline-block mr-1" size={16} /> Address</th>
-                    <th className="py-3 px-4 text-left"><Phone className="inline-block mr-1" size={16} /> Phone</th>
-                    <th className="py-3 px-4 text-left"><Mail className="inline-block mr-1" size={16} /> Email</th>
-                    <th className="py-3 px-4 text-left">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {supervisors.map((sup, index) => (
-                    <tr key={sup._id} className="hover:bg-orange-50">
-                      <td className="py-2 px-4 font-semibold">{index + 1}</td>
-                      <td className="py-2 px-4">{sup.fullname}</td>
-                      <td className="py-2 px-4">{sup.localBody}</td>
-                      <td className="py-2 px-4">{sup.address}</td>
-                      <td className="py-2 px-4">{sup.phone}</td>
-                      <td className="py-2 px-4">{sup.email}</td>
-                      <td className="py-2 px-4">
+        <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
+                  <TableCell className="text-white font-semibold w-10">
+                    #
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <User size={16} className="inline mr-2" />
+                    Name
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <MapPin size={16} className="inline mr-2" />
+                    Local Body
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-42">
+                    <Home size={16} className="inline mr-2" />
+                    Address
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-30">
+                    <Phone size={16} className="inline mr-2" />
+                    Phone
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <Mail size={16} className="inline mr-2" />
+                    Email
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-20">
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {filteredSupervisors
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((sup, index) => (
+                    <TableRow key={sup._id} hover>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{sup.fullname}</TableCell>
+                      <TableCell>{sup.localBody}</TableCell>
+                      <TableCell>{sup.address}</TableCell>
+                      <TableCell>{sup.phone}</TableCell>
+                      <TableCell>{sup.email}</TableCell>
+                      <TableCell>
                         <button
                           onClick={() => handleDelete(sup._id)}
                           className="text-red-600 hover:text-red-800 transition"
@@ -128,17 +168,24 @@ export default function ViewSupervisorsList() {
                         >
                           <Trash2 size={18} />
                         </button>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="text-center text-gray-600">No supervisors found.</p>
-          )}
-        </div>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredSupervisors.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

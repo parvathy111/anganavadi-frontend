@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Menu,
   UserPlus,
@@ -11,15 +11,17 @@ import {
   User,
   LayoutDashboard,
   ChevronDown,
+  Home,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 
 const SupervisorLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [foodDropdown, setFoodDropdown] = useState(false);
+  const [anganwadiDropdown, setAnganwadiDropdown] = useState(false);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <div
         className={`text-white flex flex-col justify-between transition-all duration-300 ${
@@ -53,6 +55,43 @@ const SupervisorLayout = ({ children }) => {
             </a>
 
             <div className="border-b border-white border-opacity-30 my-2"></div>
+
+            {/* Manage Anganwadi Dropdown */}
+            <div>
+              <button
+                onClick={() => setAnganwadiDropdown(!anganwadiDropdown)}
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2 transition-all duration-200"
+              >
+                <Home />
+                {sidebarOpen && (
+                  <>
+                    <span>Manage Anganwadi</span>
+                    <ChevronDown
+                      className={`ml-auto transition-transform duration-300 ${
+                        anganwadiDropdown ? "rotate-180" : ""
+                      }`}
+                      size={16}
+                    />
+                  </>
+                )}
+              </button>
+              {anganwadiDropdown && sidebarOpen && (
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
+                  <a
+                    href="/add-anganwadi"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    Add Anganwadi
+                  </a>
+                  <a
+                    href="/view-anganwadi"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    View Anganwadi
+                  </a>
+                </div>
+              )}
+            </div>
 
             {/* Add Worker */}
             <a
@@ -142,7 +181,7 @@ const SupervisorLayout = ({ children }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-y-auto">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navbar */}
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-2xl font-semibold">Welcome, Supervisor</h2>
