@@ -15,6 +15,8 @@ import {
   Home as HomeIcon,
   LocationOn as LocationIcon,
   AddCircleOutline as AddIcon,
+  AccountBalance as BodyNameIcon,
+  FormatListNumbered as WardIcon,
 } from "@mui/icons-material";
 import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
@@ -23,6 +25,8 @@ const AddAnganawadi = () => {
   const [formData, setFormData] = useState({
     anganwadiNo: "",
     localBody: "",
+    localBodyName: "",
+    wardNumber: "",
   });
 
   const [open, setOpen] = useState(false);
@@ -37,7 +41,7 @@ const AddAnganawadi = () => {
     setError("");
     try {
       await axios.post(
-        "http://localhost:5000/anganavadi/createanganawadi",
+        "http://localhost:5000/anganavadi/createanganwadi",
         formData,
         {
           headers: {
@@ -49,6 +53,8 @@ const AddAnganawadi = () => {
       setFormData({
         anganwadiNo: "",
         localBody: "",
+        localBodyName: "",
+        wardNumber: "",
       });
     } catch (err) {
       setError(err.response?.data?.message || "Server error");
@@ -104,7 +110,7 @@ const AddAnganawadi = () => {
             <TextField
               select
               fullWidth
-              label="Local Body"
+              label="Local Body Type"
               name="localBody"
               value={formData.localBody}
               onChange={handleChange}
@@ -121,6 +127,38 @@ const AddAnganawadi = () => {
               <MenuItem value="Panchayath">Panchayath</MenuItem>
               <MenuItem value="Corporation">Corporation</MenuItem>
             </TextField>
+
+            <TextField
+              fullWidth
+              label="Local Body Name"
+              name="localBodyName"
+              value={formData.localBodyName}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <BodyNameIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <TextField
+              fullWidth
+              label="Ward Number"
+              name="wardNumber"
+              value={formData.wardNumber}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <WardIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
             <Button
               variant="contained"

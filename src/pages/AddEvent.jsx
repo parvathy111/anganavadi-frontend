@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -18,9 +18,11 @@ import {
   AccessTime as TimeIcon,
   Person as PersonIcon,
   AddCircleOutline as AddIcon,
+  Home as HomeIcon,
 } from "@mui/icons-material";
 import api from "../config/axiosinstance";
 import WorkerLayout from "../layouts/WorkerLayout";
+import axios from "axios";
 
 const AddEvent = () => {
   const [event, setEvent] = useState({
@@ -29,9 +31,29 @@ const AddEvent = () => {
     date: "",
     time: "",
     conductedBy: "",
+    anganwadiNo: "",
   });
+  const [anganwadis, setAnganwadis] = useState([]);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
+
+  // Fetch Anganwadi numbers
+  useEffect(() => {
+    const fetchAnganwadis = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/anganavadi/getallanganwadi", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setAnganwadis(res.data.data);
+      } catch (err) {
+        console.error("Error fetching anganwadis:", err);
+        setError("Failed to load Anganwadi list");
+      }
+    };
+    fetchAnganwadis();
+  }, []);
 
   const handleChange = (e) => {
     setEvent({ ...event, [e.target.name]: e.target.value });
@@ -41,15 +63,23 @@ const AddEvent = () => {
     e.preventDefault();
     setError("");
     try {
-      const response = await api.post("events/add", {
+      await api.post("/events/add", {
         eventName: event.eventName,
         participants: event.participants ? [event.participants] : [],
         date: event.date,
         time: event.time,
         conductedBy: event.conductedBy,
+        anganwadiNo: event.anganwadiNo,
       });
       setOpen(true);
-      setEvent({ eventName: "", participants: "", date: "", time: "", conductedBy: "" });
+      setEvent({
+        eventName: "",
+        participants: "",
+        date: "",
+        time: "",
+        conductedBy: "",
+        anganwadiNo: "",
+      });
     } catch (err) {
       setError(err.response?.data?.message || "Server error");
     }
@@ -57,7 +87,6 @@ const AddEvent = () => {
 
   return (
     <WorkerLayout>
-      {/* Heading with Icon and Description */}
       <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
         <EventIcon sx={{ fontSize: 40, color: "#ff7043" }} />
         <div>
@@ -71,7 +100,6 @@ const AddEvent = () => {
       </Box>
 
       <Container maxWidth="sm" sx={{ mt: 5 }}>
-        {/* Event Form */}
         <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
           {error && <Alert severity="error">{error}</Alert>}
 
@@ -111,39 +139,44 @@ const AddEvent = () => {
               <MenuItem value="Others">Others</MenuItem>
             </TextField>
 
-            <TextField
-              type="date"
-              name="date"
-              value={event.date}
-              onChange={handleChange}
-              required
-              InputLabelProps={{ shrink: true }}
-              label="Date"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <CalendarIcon sx={{ color: "#ff7043" }} />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            {/* Grouping Date and Time side by side */}
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <TextField
+                type="date"
+                name="date"
+                value={event.date}
+                onChange={handleChange}
+                required
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                label="Date"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <CalendarIcon sx={{ color: "#ff7043" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-            <TextField
-              type="time"
-              name="time"
-              value={event.time}
-              onChange={handleChange}
-              required
-              InputLabelProps={{ shrink: true }}
-              label="Time"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <TimeIcon sx={{ color: "#ff7043" }} />
-                  </InputAdornment>
-                ),
-              }}
-            />
+              <TextField
+                type="time"
+                name="time"
+                value={event.time}
+                onChange={handleChange}
+                required
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                label="Time"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <TimeIcon sx={{ color: "#ff7043" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
 
             <TextField
               label="Conducted By"
@@ -159,6 +192,33 @@ const AddEvent = () => {
                 ),
               }}
             />
+
+            <TextField
+              fullWidth
+              select
+              label="Select Anganwadi No"
+              name="anganwadiNo"
+              value={event.anganwadiNo}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <HomeIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            >
+              {anganwadis && anganwadis.length > 0 ? (
+                anganwadis.map((aw) => (
+                  <MenuItem key={aw._id} value={aw.anganwadiNo}>
+                    {aw.anganwadiNo.toUpperCase()}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>Loading Anganwadis...</MenuItem>
+              )}
+            </TextField>
 
             <Button
               variant="contained"
@@ -178,7 +238,12 @@ const AddEvent = () => {
             </Button>
           </Box>
 
-          <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+          <Snackbar
+            open={open}
+            autoHideDuration={3000}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
             <Alert severity="success" onClose={() => setOpen(false)}>
               Event added successfully, pending supervisor approval!
             </Alert>

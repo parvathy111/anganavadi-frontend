@@ -7,6 +7,7 @@ import {
   User,
   CheckCircle,
   XCircle,
+  Building2,
 } from "lucide-react";
 import {
   Button,
@@ -93,7 +94,8 @@ const ApproveEvents = () => {
   };
 
   const filteredEvents = events.filter((event) =>
-    (event.eventName || "").toLowerCase().includes(searchQuery.toLowerCase())
+    (event.eventName || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (event.anganwadiNo || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleChangePage = (event, newPage) => {
@@ -132,7 +134,7 @@ const ApproveEvents = () => {
 
           {/* Search bar */}
           <TextField
-            label="Search by Event Name"
+            label="Search by Event Name / Anganwadi No"
             variant="outlined"
             size="small"
             value={searchQuery}
@@ -152,29 +154,33 @@ const ApproveEvents = () => {
             <Table>
               <TableHead>
                 <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
-                  <TableCell className="text-white font-semibold">
+                  <TableCell align="center" className="text-white font-semibold">
                     Event Name
                   </TableCell>
-                  <TableCell className="text-white font-semibold">
+                  <TableCell align="center" className="text-white font-semibold">
                     <CalendarDays size={16} className="inline mr-2" />
                     Date
                   </TableCell>
-                  <TableCell className="text-white font-semibold">
+                  <TableCell align="center" className="text-white font-semibold">
                     <Clock size={16} className="inline mr-2" />
                     Time
                   </TableCell>
-                  <TableCell className="text-white font-semibold">
+                  <TableCell align="center" className="text-white font-semibold">
                     Status
                   </TableCell>
-                  <TableCell className="text-white font-semibold">
+                  <TableCell align="center" className="text-white font-semibold">
                     <Users size={16} className="inline mr-2" />
                     Participants
                   </TableCell>
-                  <TableCell className="text-white font-semibold">
+                  <TableCell align="center" className="text-white font-semibold">
                     <User size={16} className="inline mr-2" />
                     Conducted By
                   </TableCell>
-                  <TableCell className="text-white font-semibold">
+                  <TableCell align="center" className="text-white font-semibold">
+                    <Building2 size={16} className="inline mr-2" />
+                    Anganwadi No
+                  </TableCell>
+                  <TableCell align="center" className="text-white font-semibold">
                     Actions
                   </TableCell>
                 </TableRow>
@@ -184,12 +190,12 @@ const ApproveEvents = () => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((event) => (
                     <TableRow key={event._id} hover>
-                      <TableCell>{event.eventName}</TableCell>
-                      <TableCell>
+                      <TableCell align="center">{event.eventName}</TableCell>
+                      <TableCell align="center">
                         {new Date(event.date).toLocaleDateString()}
                       </TableCell>
-                      <TableCell>{event.time}</TableCell>
-                      <TableCell>
+                      <TableCell align="center">{event.time}</TableCell>
+                      <TableCell align="center">
                         <span
                           className={`px-2 py-1 text-xs font-bold rounded-md ${
                             event.status === "Approved"
@@ -202,11 +208,12 @@ const ApproveEvents = () => {
                           {event.status}
                         </span>
                       </TableCell>
-                      <TableCell>{event.participantCount}</TableCell>
-                      <TableCell>{event.conductedBy}</TableCell>
-                      <TableCell>
+                      <TableCell align="center">{event.participantCount}</TableCell>
+                      <TableCell align="center">{event.conductedBy}</TableCell>
+                      <TableCell align="center">{event.anganwadiNo || "-"}</TableCell>
+                      <TableCell align="center">
                         {event.status === "Pending Approval" && (
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 justify-center">
                             <Button
                               variant="contained"
                               color="success"

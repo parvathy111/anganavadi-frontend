@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -36,8 +36,27 @@ const AddWorker = () => {
     dob: "",
   });
 
+  const [anganwadis, setAnganwadis] = useState([]);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
+
+  // Fetch Anganwadi numbers
+  useEffect(() => {
+    const fetchAnganwadis = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/anganavadi/getallanganwadi", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setAnganwadis(res.data.data);
+      } catch (err) {
+        console.error("Error fetching anganwadis:", err);
+        setError("Failed to load Anganwadi list");
+      }
+    };
+    fetchAnganwadis();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -73,7 +92,6 @@ const AddWorker = () => {
 
   return (
     <SupervisorLayout>
-      {/* Heading section */}
       <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1.5 }}>
         <PersonIcon sx={{ fontSize: 36, color: "#ff7043" }} />
         <div>
@@ -89,7 +107,6 @@ const AddWorker = () => {
         </div>
       </Box>
 
-      {/* Form container */}
       <Container maxWidth="sm" sx={{ mt: 1 }}>
         <Paper elevation={6} sx={{ p: 3, borderRadius: 3 }}>
           {error && <Alert severity="error">{error}</Alert>}
@@ -117,9 +134,11 @@ const AddWorker = () => {
               }}
             />
 
+            {/* ✅ Only showing anganwadiNo */}
             <TextField
               fullWidth
-              label="Anganwadi No"
+              select
+              label="Select Anganwadi No"
               name="anganwadiNo"
               value={formData.anganwadiNo}
               onChange={handleChange}
@@ -131,7 +150,13 @@ const AddWorker = () => {
                   </InputAdornment>
                 ),
               }}
-            />
+            >
+              {anganwadis.map((aw) => (
+                <MenuItem key={aw._id} value={aw.anganwadiNo}>
+                  {aw.anganwadiNo.toUpperCase()}
+                </MenuItem>
+              ))}
+            </TextField>
 
             <TextField
               fullWidth
@@ -184,7 +209,6 @@ const AddWorker = () => {
               }}
             />
 
-            {/* Gender and DOB in one row */}
             <Grid container spacing={1.5}>
               <Grid item xs={12} sm={6}>
                 <TextField
