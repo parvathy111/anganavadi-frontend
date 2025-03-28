@@ -10,7 +10,6 @@ import {
   MenuItem,
   InputAdornment,
   Paper,
-  Grid,
 } from "@mui/material";
 import {
   Person as PersonIcon,
@@ -38,24 +37,35 @@ const AddSupervisor = () => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 
+  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+  
+    const token = localStorage.getItem("token");
+    console.log("Token being sent:", token); // Debugging step
+  
+    if (!token) {
+      setError("No authentication token found. Please log in again.");
+      return;
+    }
+  
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:5000/supervisor/createsupervisor",
         formData,
         {
           headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2RhOTViNjNmNDZjNmIwOGU1MWFmYiIsImlhdCI6MTc0MjM3MTU5NH0.9qnp4PfQcjGEmh5CTAn8Jrm5p3ZKfUbQUIH3Sf-7YHU", // dummy token
+            Authorization: `Bearer ${token}`,
           },
         }
       );
+      console.log("Response:", response.data); // Debugging step
       setOpen(true);
       setFormData({
         fullname: "",
@@ -66,20 +76,19 @@ const AddSupervisor = () => {
         email: "",
       });
     } catch (err) {
-      setError(err.response?.data?.message || "Server error");
+      console.error("Request failed:", err.response?.data); // Log error details
+      setError(err.response?.data?.message || "Server error. Please try again.");
     }
   };
+  
 
   return (
     <AdminLayout>
-      {/* Heading section */}
+      {/* Header Section */}
       <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1.5 }}>
         <SupervisorIcon sx={{ fontSize: 36, color: "#ff7043" }} />
         <div>
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: "bold", color: "#ff7043" }}
-          >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "#ff7043" }}>
             Add New Supervisor
           </Typography>
           <Typography variant="body2" sx={{ color: "gray" }}>
@@ -88,18 +97,12 @@ const AddSupervisor = () => {
         </div>
       </Box>
 
-      {/* Form container */}
+      {/* Form Container */}
       <Container maxWidth="sm" sx={{ mt: 1 }}>
         <Paper elevation={6} sx={{ p: 3, borderRadius: 3 }}>
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            display="flex"
-            flexDirection="column"
-            gap={2}
-          >
+          <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
             <TextField
               fullWidth
               label="Full Name"
@@ -118,6 +121,7 @@ const AddSupervisor = () => {
 
             <TextField
               fullWidth
+              select
               label="Local Body"
               name="localBody"
               value={formData.localBody}
@@ -130,7 +134,11 @@ const AddSupervisor = () => {
                   </InputAdornment>
                 ),
               }}
-            />
+            >
+              <MenuItem value="Municipality">Municipality</MenuItem>
+              <MenuItem value="Panchayath">Panchayath</MenuItem>
+              <MenuItem value="Corporation">Corporation</MenuItem>
+            </TextField>
 
             <TextField
               fullWidth

@@ -21,7 +21,7 @@ import ViewVaccine from "./pages/ViewVaccine";
 // import VaccineDetails from "./pages/VaccineDetails";
 
 import { useState } from "react";
-import AddSupervisor from "./pages/Addsupervisor";
+import AddSupervisor from "./pages/AddSupervisor";
 import ViewSupervisorsList from "./pages/ViewSupervisorsList";
 import ViewWorkerList from "./pages/ViewWorkerList";
 import AddWorker from "./pages/AddWorker";
@@ -36,8 +36,10 @@ import ViewSupervisorAnganawadi from "./pages/viewsupervisoranganawadi";
 
 
 
+
 function App() {
   const [userRole, setUserRole] = useState("Worker");
+  
   return (
     <>
       <Routes>
@@ -73,6 +75,8 @@ function App() {
 
       <Route path="/addanganawadi" element={<AddAnganawadi />} />
       <Route path="/view-anganawadis" element={<ViewSupervisorAnganawadi />} />
+
+      
       </Routes>
    
 

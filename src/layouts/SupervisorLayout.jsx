@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   ChevronDown,
   Home,
+  KeyRound,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 
@@ -19,6 +20,7 @@ const SupervisorLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [foodDropdown, setFoodDropdown] = useState(false);
   const [anganwadiDropdown, setAnganwadiDropdown] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -171,11 +173,7 @@ const SupervisorLayout = ({ children }) => {
         {/* Bottom Image */}
         <div className="p-4">
           {sidebarOpen && (
-            <img
-              src={dashboardIcon}
-              alt="Bottom Image"
-              className="rounded-xl"
-            />
+            <img src={dashboardIcon} alt="Bottom Image" className="rounded-xl" />
           )}
         </div>
       </div>
@@ -188,6 +186,12 @@ const SupervisorLayout = ({ children }) => {
           <div className="flex items-center space-x-4">
             <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
               <User className="mr-2" /> Edit Profile
+            </button>
+            <button
+              onClick={() => navigate("/change-password")}
+              className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]"
+            >
+              <KeyRound className="mr-2" /> Change Password
             </button>
             <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
               <LogOut className="mr-2" /> Logout

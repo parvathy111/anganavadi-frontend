@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
-import { MapPin } from "lucide-react";
+import { MapPin, Trash2 } from "lucide-react";
 import {
   Paper,
   Table,
@@ -15,6 +15,7 @@ import {
   TablePagination,
   TextField,
   InputAdornment,
+  IconButton,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Note } from "@mui/icons-material";
@@ -45,6 +46,20 @@ export default function ViewSupervisorAnganawadi() {
       console.error("Failed to load anganwadis:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this Anganwadi?")) return;
+  
+    try {
+      await axios.delete(`http://localhost:5000/anganavadi/deleteanganwadi/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+  
+      setAnganwadis((prev) => prev.filter((center) => center._id !== id));
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete Anganwadi");
     }
   };
 
@@ -87,7 +102,7 @@ export default function ViewSupervisorAnganawadi() {
             </p>
           </div>
           <TextField
-            label="Search by Number"
+            label="Search by Anganwadi No"
             variant="outlined"
             size="small"
             value={searchQuery}
@@ -106,18 +121,19 @@ export default function ViewSupervisorAnganawadi() {
           <TableContainer>
             <Table>
               <TableHead>
-                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
-                  <TableCell className="text-white font-semibold w-10">
-                    #
-                  </TableCell>
-                  <TableCell className="text-white font-semibold w-32">
+                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500 text-white">
+                  <TableCell className="font-semibold w-10">Sl. No</TableCell>
+                  <TableCell className="font-semibold w-32">
                     <Note size={16} className="inline mr-2" />
                     Anganwadi No
                   </TableCell>
-                  <TableCell className="text-white font-semibold w-32">
+                  <TableCell className="font-semibold w-32">
                     <MapPin size={16} className="inline mr-2" />
                     Local Body
                   </TableCell>
+                  <TableCell className="font-semibold w-32">Local Body Name</TableCell>
+                  <TableCell className="font-semibold w-32">Ward No</TableCell>
+                  <TableCell className="font-semibold w-20">Action</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -129,6 +145,17 @@ export default function ViewSupervisorAnganawadi() {
                       <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
                       <TableCell>{center.anganwadiNo}</TableCell>
                       <TableCell>{center.localBody}</TableCell>
+                      <TableCell>{center.localBodyName}</TableCell>
+                      <TableCell>{center.wardNumber}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => handleDelete(center._id)}
+                          className="text-red-600 hover:text-red-800 transition"
+                          title="Delete Anganwadi"
+                        >
+                          <Trash2 size={18} color="red" />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
