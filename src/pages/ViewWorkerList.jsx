@@ -32,16 +32,21 @@ export default function ViewWorkerList() {
 
   const fetchWorkers = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/worker/allworkers"
-      );
-      setWorkers(response.data || []);
+        const response = await axios.get(
+            "http://localhost:5000/worker/allworkers",
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            }
+        );
+        setWorkers(response.data.data || []);
     } catch (err) {
-      console.error("Failed to load workers:", err);
+        console.error("Failed to load workers:", err);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this worker?")) return;
@@ -194,3 +199,4 @@ export default function ViewWorkerList() {
     </SupervisorLayout>
   );
 }
+
