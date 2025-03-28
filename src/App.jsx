@@ -33,6 +33,7 @@ import ViewOrder from "./pages/ViewOrder";
 import SupervisorViewOrder from "./pages/SupervisorViewOrder";
 import AddAnganawadi from "./pages/AddAnganawadi";
 import ViewSupervisorAnganawadi from "./pages/viewsupervisoranganawadi";
+import ViewSupervisorProducts from "./pages/ViewSupervisorProducts";
 
 
 
@@ -76,6 +77,7 @@ function App() {
       <Route path="/addanganawadi" element={<AddAnganawadi />} />
       <Route path="/view-anganawadis" element={<ViewSupervisorAnganawadi />} />
 
+      <Route path="/supervisor-products" element={<ViewSupervisorProducts />} />
       
       </Routes>
    

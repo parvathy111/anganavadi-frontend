@@ -15,7 +15,6 @@ import {
   AddBox as AddIcon,
   Image as ImageIcon,
   Numbers as NumbersIcon,
-  ViewList as ViewIcon,
 } from "@mui/icons-material";
 import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
@@ -36,24 +35,48 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const token = localStorage.getItem("token");
+    console.log("Token being sent:", token); // Debugging step
+
+    if (!token) {
+      setError("No authentication token found. Please log in again.");
+      return;
+    }
+
     try {
-      await axios.post("http://localhost:5000/products/add", product, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        "http://localhost:5000/products/add",
+        product,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Response:", response.data); // Debugging step
+
       setOpen(true);
       setProduct({ itemid: "", productname: "", image: "" });
     } catch (err) {
-      setError(err.response?.data?.message || "Server error");
+      console.error("Request failed:", err.response?.data); // Log error details
+      setError(
+        err.response?.data?.message || "Server error. Please try again."
+      );
     }
   };
 
   return (
     <SupervisorLayout>
-      {/* Header Section */}
       <Box sx={{ mb: 4, display: "flex", alignItems: "center", gap: 2 }}>
         <InventoryIcon sx={{ fontSize: 40, color: "#ff7043" }} />
         <div>
-          <Typography variant="h4" sx={{ fontWeight: "bold", color: "#ff7043" }}>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: "bold", color: "#ff7043" }}
+          >
             Add New Product
           </Typography>
           <Typography variant="body1" sx={{ color: "gray" }}>
@@ -62,12 +85,17 @@ const AddProduct = () => {
         </div>
       </Box>
 
-      {/* Form Section */}
       <Container maxWidth="sm">
         <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={3}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            display="flex"
+            flexDirection="column"
+            gap={3}
+          >
             <TextField
               label="Item ID"
               name="itemid"

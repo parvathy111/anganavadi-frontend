@@ -146,6 +146,12 @@ const SupervisorLayout = ({ children }) => {
                   >
                     New Orders
                   </a>
+                  <a
+                    href="/supervisor-products"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    View Stock
+                  </a>
                 </div>
               )}
             </div>
@@ -173,7 +179,11 @@ const SupervisorLayout = ({ children }) => {
         {/* Bottom Image */}
         <div className="p-4">
           {sidebarOpen && (
-            <img src={dashboardIcon} alt="Bottom Image" className="rounded-xl" />
+            <img
+              src={dashboardIcon}
+              alt="Bottom Image"
+              className="rounded-xl"
+            />
           )}
         </div>
       </div>
