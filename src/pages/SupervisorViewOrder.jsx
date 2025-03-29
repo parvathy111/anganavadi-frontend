@@ -45,14 +45,30 @@ const SupervisorViewOrder = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:5000/orders/all");
+      const res = await fetch("http://localhost:5000/orders/all", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is stored in localStorage
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      }
+
       const data = await res.json();
+
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid data format: Expected an array");
+      }
+
       const sortedData = data.sort(
         (a, b) => new Date(b.orderDate) - new Date(a.orderDate)
       );
       setOrders(sortedData);
     } catch (err) {
-      console.error("Error fetching orders:", err);
+      console.error("Error fetching orders:", err.message);
     } finally {
       setLoading(false);
     }
@@ -60,14 +76,27 @@ const SupervisorViewOrder = () => {
 
   const handleApprove = async (orderId) => {
     try {
-      await fetch(`http://localhost:5000/orders/approve/${orderId}`, {
-        method: "PUT",
-      });
+      const res = await fetch(
+        `http://localhost:5000/orders/approve/${orderId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      }
+
       setOrders((prev) =>
         prev.map((o) =>
           o._id === orderId ? { ...o, orderStatus: "Approved" } : o
         )
       );
+
       setOpenSnackbar({
         open: true,
         message: "Order approved successfully!",
@@ -80,10 +109,27 @@ const SupervisorViewOrder = () => {
 
   const handleReject = async (orderId) => {
     try {
-      await fetch(`http://localhost:5000/orders/cancel/${orderId}`, {
-        method: "DELETE",
-      });
-      setOrders((prev) => prev.filter((o) => o._id !== orderId));
+      const res = await fetch(
+        `http://localhost:5000/orders/reject/${orderId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      }
+
+      setOrders((prev) =>
+        prev.map((o) =>
+          o._id === orderId ? { ...o, orderStatus: "Rejected" } : o
+        )
+      );
+
       setOpenSnackbar({
         open: true,
         message: "Order rejected successfully!",
@@ -128,7 +174,8 @@ const SupervisorViewOrder = () => {
               View Orders
             </Typography>
             <p className="text-gray-600 mb-2">
-              Here you can review, approve, or reject stock orders from various Anganwadi centers.
+              Here you can review, approve, or reject stock orders from various
+              Anganwadi centers.
             </p>
           </div>
 
@@ -197,6 +244,8 @@ const SupervisorViewOrder = () => {
                           className={`px-2 py-1 text-xs font-bold rounded-md ${
                             order.orderStatus === "Approved"
                               ? "bg-green-200 text-green-700"
+                              : order.orderStatus === "Rejected"
+                              ? "bg-red-200 text-red-700"
                               : "bg-yellow-200 text-yellow-700"
                           }`}
                         >
@@ -259,6 +308,7 @@ const SupervisorViewOrder = () => {
           open={openSnackbar.open}
           autoHideDuration={3000}
           onClose={() => setOpenSnackbar({ ...openSnackbar, open: false })}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
             severity={openSnackbar.severity}
