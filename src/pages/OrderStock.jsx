@@ -10,6 +10,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from "lucide-react"; // Added ArrowLeft and ArrowRight imports
+import api from "../config/axiosinstance";
 
 const OrderStock = () => {
   const [products, setProducts] = useState([]);
@@ -29,8 +30,11 @@ const OrderStock = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/products/all");
-        console.log("Fetched Products:", res.data);
+      
+  
+        const res = await api.get('products/all')
+  
+        console.log("Fetched Products:", res);
         setProducts(res.data);
         setFilteredProducts(res.data);
         setLoading(false);
@@ -39,8 +43,10 @@ const OrderStock = () => {
         setLoading(false);
       }
     };
+  
     fetchProducts();
   }, []);
+  
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
