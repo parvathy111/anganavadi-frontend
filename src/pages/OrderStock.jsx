@@ -87,8 +87,18 @@ const OrderStock = () => {
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-
+  
     try {
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      if (!token) {
+        setNotification({
+          type: "error",
+          message: "Unauthorized: Please log in again.",
+        });
+        setSubmitting(false);
+        return;
+      }
+  
       const payload = {
         productname: selectedProduct.productname,
         itemid: selectedProduct.itemid,
@@ -96,12 +106,14 @@ const OrderStock = () => {
         anganwadiNo: anganwadiNo,
         image: selectedProduct.image,
       };
-
-      const res = await axios.post(
-        "http://localhost:5000/orders/create",
-        payload
-      );
-
+  
+      const res = await axios.post("http://localhost:5000/orders/create", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to headers
+          "Content-Type": "application/json",
+        },
+      });
+  
       if (res.status === 201) {
         setNotification({
           type: "success",
@@ -242,7 +254,7 @@ const OrderStock = () => {
             >
               <X size={20} />
             </button>
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+            <h2 className="border-b px-6 py-4 text-xl font-bold mb-4 text-gray-800">
               Order Details
             </h2>
             <form onSubmit={handleSubmitOrder} className="space-y-4">
