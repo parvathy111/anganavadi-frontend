@@ -22,8 +22,9 @@ import {
   CalendarToday as CalendarIcon,
   AddCircleOutline as AddIcon,
 } from "@mui/icons-material";
-import axios from "axios";
+
 import SupervisorLayout from "../layouts/SupervisorLayout";
+import api from "../config/axiosinstance";
 
 const AddWorker = () => {
   const [formData, setFormData] = useState({
@@ -44,11 +45,7 @@ const AddWorker = () => {
   useEffect(() => {
     const fetchAnganwadis = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/anganavadi/getallanganwadi", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const res = await api.get("/anganavadi/getallanganwadi");
         setAnganwadis(res.data.data);
       } catch (err) {
         console.error("Error fetching anganwadis:", err);
@@ -66,15 +63,7 @@ const AddWorker = () => {
     e.preventDefault();
     setError("");
     try {
-      await axios.post(
-        "http://localhost:5000/worker/createworker",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      await api.post("/worker/createworker", formData);
       setOpen(true);
       setFormData({
         name: "",

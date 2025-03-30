@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import axios from "axios";
+
 import {
   TextField,
   Button,
@@ -9,6 +9,7 @@ import {
   Paper,
   Box,
 } from "@mui/material";
+import api from "../config/axiosinstance";
 
 const Adminlogin = () => {
   const [username, setUsername] = useState("");
@@ -20,7 +21,7 @@ const Adminlogin = () => {
     console.log("Password:", password);
 
     try {
-      const res = await axios.post("http://localhost:5000/admin/login", {
+      const res = await api.post("/admin/login", {
         username,
         password,
       });

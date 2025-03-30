@@ -16,8 +16,9 @@ import {
   Image as ImageIcon,
   Numbers as NumbersIcon,
 } from "@mui/icons-material";
-import axios from "axios";
+
 import SupervisorLayout from "../layouts/SupervisorLayout";
+import api from "../config/axiosinstance";
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -36,27 +37,8 @@ const AddProduct = () => {
     e.preventDefault();
     setError("");
 
-    const token = localStorage.getItem("token");
-    console.log("Token being sent:", token); // Debugging step
-
-    if (!token) {
-      setError("No authentication token found. Please log in again.");
-      return;
-    }
-
     try {
-      const response = await axios.post(
-        "http://localhost:5000/products/add",
-        product,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log("Response:", response.data); // Debugging step
+      const response = await api.post("/products/add", product);
 
       setOpen(true);
       setProduct({ itemid: "", productname: "", image: "" });

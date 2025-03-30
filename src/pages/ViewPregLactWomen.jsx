@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import WorkerLayout from '../layouts/WorkerLayout';
 import { User, CalendarDays, Hash, MapPin, Phone, Mail, ShieldCheck, Users } from 'lucide-react';
 import {
@@ -17,6 +16,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import api from '../config/axiosinstance';
 
 const PregLactWomenList = () => {
   const [women, setWomen] = useState([]);
@@ -28,7 +28,7 @@ const PregLactWomenList = () => {
   useEffect(() => {
     const fetchWomen = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/beneficiaries/preglactwomen');
+        const response = await api.get('/beneficiaries/preglactwomen');
         setWomen(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);

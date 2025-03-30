@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import WorkerLayout from "../layouts/WorkerLayout";
 import {
   Search,
@@ -10,6 +9,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";
+import api from "../config/axiosinstance";
 
 const ViewOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -32,11 +32,7 @@ const ViewOrder = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/orders/my-orders", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await api.get("/orders/my-orders")
         setOrders(response.data);
         setFilteredOrders(response.data);
         setLoading(false);
@@ -92,8 +88,8 @@ const ViewOrder = () => {
     setMessage(null);
 
     try {
-      await axios.put(
-        `http://localhost:5000/orders/update/${selectedOrder._id}`,
+      await api.put(
+        `/orders/update/${selectedOrder._id}`,
         {
           quantity: newQuantity,
           anganwadiNo: newAnganwadiNo,
@@ -136,7 +132,7 @@ const ViewOrder = () => {
     if (!confirmCancel) return;
 
     try {
-      await axios.delete(`http://localhost:5000/orders/cancel/${orderId}`);
+      await api.delete(`/orders/cancel/${orderId}`);
       const updatedOrders = orders.filter((o) => o._id !== orderId);
       setOrders(updatedOrders);
       setFilteredOrders(updatedOrders);

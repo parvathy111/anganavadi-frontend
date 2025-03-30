@@ -22,7 +22,7 @@ import {
 } from "@mui/icons-material";
 import api from "../config/axiosinstance";
 import WorkerLayout from "../layouts/WorkerLayout";
-import axios from "axios";
+
 
 const AddEvent = () => {
   const [event, setEvent] = useState({
@@ -40,11 +40,7 @@ const AddEvent = () => {
   useEffect(() => {
     const fetchWorkerDetails = async () => {
       try {
-        const res = await api.get("/worker/me", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const res = await api.get("/worker/me")
         setEvent((prevEvent) => ({
           ...prevEvent,
           anganwadiNo: res.data.anganwadiNo, // Auto-fill anganwadi number

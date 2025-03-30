@@ -28,7 +28,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import axios from "axios";
+import api from "../config/axiosinstance";
 
 const ApproveEvents = () => {
   const [events, setEvents] = useState([]);
@@ -55,9 +55,7 @@ const ApproveEvents = () => {
             return;
         }
 
-        const res = await axios.get("http://localhost:5000/events/view-events", {
-            headers: { Authorization: `Bearer ${token}` }, // Include token in request
-        });
+        const res = await api.get("/events/view-events")
 
         if (res.status === 200) {
             setEvents(Array.isArray(res.data) ? res.data : []);
@@ -74,7 +72,7 @@ const ApproveEvents = () => {
 
   const handleApprove = async (eventId) => {
     try {
-      await axios.put(`/api/events/approve/${eventId}`);
+      await api.put(`/events/approve/${eventId}`)
       setEvents((prev) =>
         prev.map((e) =>
           e._id === eventId ? { ...e, status: "Approved" } : e
@@ -92,7 +90,7 @@ const ApproveEvents = () => {
 
   const handleReject = async (eventId) => {
     try {
-      await axios.put(`/api/events/reject/${eventId}`);
+      await api.put(`/events/reject/${eventId}`);
       setEvents((prev) =>
         prev.map((e) =>
           e._id === eventId ? { ...e, status: "Rejected" } : e

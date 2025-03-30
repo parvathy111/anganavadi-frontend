@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import WorkerLayout from "../layouts/WorkerLayout";
 import {
   Search,
@@ -89,15 +88,7 @@ const OrderStock = () => {
     setSubmitting(true);
   
     try {
-      const token = localStorage.getItem("token"); // Retrieve token from localStorage
-      if (!token) {
-        setNotification({
-          type: "error",
-          message: "Unauthorized: Please log in again.",
-        });
-        setSubmitting(false);
-        return;
-      }
+      
   
       const payload = {
         productname: selectedProduct.productname,
@@ -107,12 +98,7 @@ const OrderStock = () => {
         image: selectedProduct.image,
       };
   
-      const res = await axios.post("http://localhost:5000/orders/create", payload, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to headers
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await api.post("/orders/create", payload)
   
       if (res.status === 201) {
         setNotification({

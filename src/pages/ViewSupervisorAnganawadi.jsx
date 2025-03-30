@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
 import { MapPin, Trash2 } from "lucide-react";
 import {
@@ -19,6 +18,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Note } from "@mui/icons-material";
+import api from "../config/axiosinstance";
 
 export default function ViewSupervisorAnganawadi() {
   const [anganwadis, setAnganwadis] = useState([]);
@@ -33,14 +33,8 @@ export default function ViewSupervisorAnganawadi() {
 
   const fetchAnganwadis = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/anganavadi/getallanganwadi",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await api.get(
+        "/anganavadi/getallanganwadi")
       setAnganwadis(response.data.data || []);
     } catch (err) {
       console.error("Failed to load anganwadis:", err);
@@ -53,9 +47,7 @@ export default function ViewSupervisorAnganawadi() {
     if (!window.confirm("Are you sure you want to delete this Anganwadi?")) return;
   
     try {
-      await axios.delete(`http://localhost:5000/anganavadi/deleteanganwadi/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      await api.delete(`/anganavadi/deleteanganwadi/${id}`)
   
       setAnganwadis((prev) => prev.filter((center) => center._id !== id));
     } catch (err) {

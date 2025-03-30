@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import WorkerLayout from '../layouts/WorkerLayout';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, CircularProgress, Typography, TextField, InputAdornment
 } from '@mui/material';
 import { User, CalendarDays, MapPin, Phone, Mail, ShieldCheck, Users } from 'lucide-react';
 import SearchIcon from '@mui/icons-material/Search';
+import api from '../config/axiosinstance';
 
 const ParentList = () => {
   const [parents, setParents] = useState([]);
@@ -17,7 +17,7 @@ const ParentList = () => {
   useEffect(() => {
     const fetchParents = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/beneficiaries/parents'); 
+        const response = await api.get('/beneficiaries/parents'); 
         setParents(response.data);
       } catch (error) {
         console.error('Error fetching parents:', error);

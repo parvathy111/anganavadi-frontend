@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import WorkerLayout from "../layouts/WorkerLayout";
 import {
   CircularProgress,
@@ -17,6 +16,7 @@ import {
 } from "@mui/material";
 import { Syringe, Hash, ShieldPlus, Layers, Droplet, UserCheck, Users, CalendarDays } from "lucide-react";
 import SearchIcon from "@mui/icons-material/Search";
+import api from "../config/axiosinstance";
 
 const ViewVaccine = ({ userRole }) => {
   const [vaccines, setVaccines] = useState([]);
@@ -28,7 +28,7 @@ const ViewVaccine = ({ userRole }) => {
   useEffect(() => {
     const fetchVaccines = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/vaccines");
+        const response = await api.get("/vaccines");
         let filteredVaccines = response.data;
 
         if (userRole !== "Worker") {

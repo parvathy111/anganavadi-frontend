@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 // import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Button, CircularProgress, Typography, Card, CardContent } from "@mui/material";
+import api from "../config/axiosinstance";
 
 const VaccineDetails = () => {
   const { id } = useParams(); // Get vaccine ID from URL
@@ -12,7 +12,7 @@ const VaccineDetails = () => {
   useEffect(() => {
     const fetchVaccineDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/vaccines/${id}`);
+        const response = await api.get(`/vaccines/${id}`);
         setVaccine(response.data);
       } catch (error) {
         console.error("Error fetching vaccine details:", error);
@@ -26,7 +26,7 @@ const VaccineDetails = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/vaccines/${id}`);
+      await api.delete(`/vaccines/${id}`);
       navigate("/vaccines"); // Redirect back to vaccine list after deletion
     } catch (error) {
       console.error("Error deleting vaccine:", error);

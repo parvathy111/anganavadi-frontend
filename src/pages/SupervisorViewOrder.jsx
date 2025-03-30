@@ -26,6 +26,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import api from "../config/axiosinstance";
 
 const SupervisorViewOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -45,19 +46,9 @@ const SupervisorViewOrder = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:5000/orders/all", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is stored in localStorage
-        },
-      });
+      const res = await api.get("/orders/all");
 
-      if (!res.ok) {
-        throw new Error(`Error ${res.status}: ${res.statusText}`);
-      }
-
-      const data = await res.json();
+      const data = res.data;
 
       if (!Array.isArray(data)) {
         throw new Error("Invalid data format: Expected an array");
@@ -76,20 +67,7 @@ const SupervisorViewOrder = () => {
 
   const handleApprove = async (orderId) => {
     try {
-      const res = await fetch(
-        `http://localhost:5000/orders/approve/${orderId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error(`Error ${res.status}: ${res.statusText}`);
-      }
+      const res = await api.put(`/orders/approve/${orderId}`);
 
       setOrders((prev) =>
         prev.map((o) =>
@@ -109,20 +87,8 @@ const SupervisorViewOrder = () => {
 
   const handleReject = async (orderId) => {
     try {
-      const res = await fetch(
-        `http://localhost:5000/orders/reject/${orderId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await api.put(`/orders/reject/${orderId}`);
 
-      if (!res.ok) {
-        throw new Error(`Error ${res.status}: ${res.statusText}`);
-      }
 
       setOrders((prev) =>
         prev.map((o) =>

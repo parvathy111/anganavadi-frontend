@@ -19,8 +19,9 @@ import {
   CircularProgress,
   InputAdornment
 } from "@mui/material";
-import axios from "axios";
+
 import SearchIcon from '@mui/icons-material/Search';
+import api from "../config/axiosinstance";
 
 const ApproveBeneficiaries = () => {
   const [beneficiaries, setBeneficiaries] = useState([]);
@@ -36,7 +37,7 @@ const ApproveBeneficiaries = () => {
 
   const fetchBeneficiaries = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/beneficiaries/all");
+      const response = await api.get("/beneficiaries/all");
       const sortedData = response.data.beneficiaries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setBeneficiaries(sortedData);
     } catch (error) {
@@ -48,7 +49,7 @@ const ApproveBeneficiaries = () => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/beneficiaries/approve/${id}`);
+      await api.put(`/beneficiaries/approve/${id}`);
       setBeneficiaries((prev) => prev.map((b) => (b._id === id ? { ...b, status: "Active" } : b)));
       setOpenSnackbar({ open: true, message: "Beneficiary approved successfully!", severity: "success" });
     } catch (error) {
@@ -58,7 +59,7 @@ const ApproveBeneficiaries = () => {
 
   const handleRemove = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/beneficiaries/remove/${id}`);
+      await api.delete(`/beneficiaries/remove/${id}`);
       setBeneficiaries((prev) => prev.filter((b) => b._id !== id));
       setOpenSnackbar({ open: true, message: "Beneficiary removed successfully!", severity: "error" });
     } catch (error) {

@@ -18,8 +18,8 @@ import {
   AccountBalance as BodyNameIcon,
   FormatListNumbered as WardIcon,
 } from "@mui/icons-material";
-import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
+import api from "../config/axiosinstance";
 
 const AddAnganawadi = () => {
   const [formData, setFormData] = useState({
@@ -40,15 +40,7 @@ const AddAnganawadi = () => {
     e.preventDefault();
     setError("");
     try {
-      await axios.post(
-        "http://localhost:5000/anganavadi/createanganwadi",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      await api.post("/anganavadi/createanganwadi")
       setOpen(true);
       setFormData({
         anganwadiNo: "",

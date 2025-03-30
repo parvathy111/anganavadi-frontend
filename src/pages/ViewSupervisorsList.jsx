@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import AdminLayout from "../layouts/AdminLayout";
-import {
-  User,
-  Phone,
-  Mail,
-  MapPin,
-  Home,
-  Trash2,
-} from "lucide-react";
+import { User, Phone, Mail, MapPin, Home, Trash2 } from "lucide-react";
 import {
   Paper,
   Table,
@@ -24,6 +16,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import api from "../config/axiosinstance";
 
 export default function ViewSupervisorsList() {
   const [supervisors, setSupervisors] = useState([]);
@@ -38,9 +31,7 @@ export default function ViewSupervisorsList() {
 
   const fetchSupervisors = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/supervisor/viewsupervisors"
-      );
+      const response = await api.get("/supervisor/viewsupervisors");
       setSupervisors(response.data.supervisors || []);
     } catch (err) {
       console.error("Failed to load supervisors:", err);
@@ -54,7 +45,7 @@ export default function ViewSupervisorsList() {
       return;
 
     try {
-      await axios.delete(`http://localhost:5000/supervisor/delete/${id}`);
+      await api.delete(`/supervisor/delete/${id}`);
       setSupervisors((prev) => prev.filter((sup) => sup._id !== id));
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete supervisor");

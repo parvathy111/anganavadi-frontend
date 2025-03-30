@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import WorkerLayout from "../layouts/WorkerLayout";
 import {
   Table,
@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { CalendarDays, Users, User, Clock, BadgeCheck } from "lucide-react";
+import api from "../config/axiosinstance";
 
 const ViewEvents = () => {
   const [events, setEvents] = useState([]);
@@ -28,27 +29,19 @@ const ViewEvents = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const token = localStorage.getItem("token"); // Get token from localStorage
-        console.log(token);
-        if (!token) {
-          console.error("No token found, please login");
-          return;
-        }
-  
-        const response = await axios.get("http://localhost:5000/events/all", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Fix: Ensure token format is "Bearer <token>"
-          },
-        });
-  
+        const response = await api.get("/events/all");
+
         setEvents(response.data);
       } catch (error) {
-        console.error("Error fetching events:", error.response?.data || error.message);
+        console.error(
+          "Error fetching events:",
+          error.response?.data || error.message
+        );
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchEvents();
   }, []);
 
@@ -122,12 +115,30 @@ const ViewEvents = () => {
               <TableHead>
                 <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
                   <TableCell className="text-white font-semibold">#</TableCell>
-                  <TableCell className="text-white font-semibold"><CalendarDays size={16} className="inline mr-2" />Event Name</TableCell>
-                  <TableCell className="text-white font-semibold"><Users size={16} className="inline mr-2" />Participants</TableCell>
-                  <TableCell className="text-white font-semibold"><User size={16} className="inline mr-2" />Organisers</TableCell>
-                  <TableCell className="text-white font-semibold"><CalendarDays size={16} className="inline mr-2" />Date</TableCell>
-                  <TableCell className="text-white font-semibold"><Clock size={16} className="inline mr-2" />Time</TableCell>
-                  <TableCell className="text-white font-semibold"><BadgeCheck size={16} className="inline mr-2" />Status</TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <CalendarDays size={16} className="inline mr-2" />
+                    Event Name
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <Users size={16} className="inline mr-2" />
+                    Participants
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <User size={16} className="inline mr-2" />
+                    Organisers
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <CalendarDays size={16} className="inline mr-2" />
+                    Date
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <Clock size={16} className="inline mr-2" />
+                    Time
+                  </TableCell>
+                  <TableCell className="text-white font-semibold">
+                    <BadgeCheck size={16} className="inline mr-2" />
+                    Status
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

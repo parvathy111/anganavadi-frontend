@@ -1,9 +1,22 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
-import { Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, TablePagination, TextField, InputAdornment } from "@mui/material";
+import {
+  Typography,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CircularProgress,
+  TablePagination,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Trash2 } from "lucide-react";
+import api from "../config/axiosinstance";
 
 export default function ViewSupervisorProducts() {
   const [products, setProducts] = useState([]);
@@ -18,11 +31,7 @@ export default function ViewSupervisorProducts() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/products/my-products", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await api.get("/products/my-products");
       setProducts(response.data || []);
     } catch (err) {
       console.error("Failed to load products:", err);
@@ -32,14 +41,11 @@ export default function ViewSupervisorProducts() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
 
     try {
-      await axios.delete(`http://localhost:5000/products/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      await api.delete(`/products/delete/${id}`);
       setProducts((prev) => prev.filter((product) => product._id !== id));
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete product");
@@ -105,11 +111,21 @@ export default function ViewSupervisorProducts() {
             <Table>
               <TableHead>
                 <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
-                  <TableCell className="text-white font-semibold w-10">#</TableCell>
-                  <TableCell className="text-white font-semibold w-32">Item ID</TableCell>
-                  <TableCell className="text-white font-semibold w-40">Product Name</TableCell>
-                  <TableCell className="text-white font-semibold w-40">Image</TableCell>
-                  <TableCell className="text-white font-semibold w-20">Action</TableCell>
+                  <TableCell className="text-white font-semibold w-10">
+                    #
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    Item ID
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-40">
+                    Product Name
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-40">
+                    Image
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-20">
+                    Action
+                  </TableCell>
                 </TableRow>
               </TableHead>
 
@@ -122,7 +138,11 @@ export default function ViewSupervisorProducts() {
                       <TableCell>{product.itemid}</TableCell>
                       <TableCell>{product.productname}</TableCell>
                       <TableCell>
-                        <img src={product.image} alt={product.productname} className="w-20 h-20 object-cover rounded-lg shadow-md" />
+                        <img
+                          src={product.image}
+                          alt={product.productname}
+                          className="w-20 h-20 object-cover rounded-lg shadow-md"
+                        />
                       </TableCell>
                       <TableCell>
                         <button

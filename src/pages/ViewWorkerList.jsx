@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import SupervisorLayout from "../layouts/SupervisorLayout";
 import { User, Phone, Mail, MapPin, CalendarDays, Home } from "lucide-react";
 import {
@@ -18,6 +17,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Trash2 } from "lucide-react";
+import api from "../config/axiosinstance";
 
 export default function ViewWorkerList() {
   const [workers, setWorkers] = useState([]);
@@ -32,27 +32,20 @@ export default function ViewWorkerList() {
 
   const fetchWorkers = async () => {
     try {
-        const response = await axios.get(
-            "http://localhost:5000/worker/allworkers",
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            }
-        );
-        setWorkers(response.data.data || []);
+      const response = await api.get("/worker/allworkers");
+      setWorkers(response.data.data || []);
     } catch (err) {
-        console.error("Failed to load workers:", err);
+      console.error("Failed to load workers:", err);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this worker?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/worker/delete/${id}`);
+      await api.delete(`/worker/delete/${id}`);
       setWorkers((prev) => prev.filter((worker) => worker._id !== id));
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete worker");
@@ -199,4 +192,3 @@ export default function ViewWorkerList() {
     </SupervisorLayout>
   );
 }
-

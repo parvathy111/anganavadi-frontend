@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
     Card,
     CardContent,
@@ -15,6 +14,7 @@ import {
     InputAdornment
 } from "@mui/material";
 import { PersonOutline, Home, MailOutline, LockOutlined, Phone, ChildCare } from "@mui/icons-material";
+import api from "../config/axiosinstance";
 
 const RegistrationForm = () => {
     const navigate = useNavigate();
@@ -66,7 +66,7 @@ const RegistrationForm = () => {
                     password: formData.password,
                 };
 
-            const response = await axios.post(endpoint, payload);
+            const response = await api.post(endpoint, payload);
             setMessage(response.data.message);
             setFormData({});
 

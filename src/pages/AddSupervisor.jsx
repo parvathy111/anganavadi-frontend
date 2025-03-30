@@ -21,8 +21,8 @@ import {
   SupervisorAccount as SupervisorIcon,
   AddCircleOutline as AddIcon,
 } from "@mui/icons-material";
-import axios from "axios";
 import AdminLayout from "../layouts/AdminLayout";
+import api from "../config/axiosinstance";
 
 const AddSupervisor = () => {
   const [formData, setFormData] = useState({
@@ -46,25 +46,9 @@ const AddSupervisor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-  
-    const token = localStorage.getItem("token");
-    console.log("Token being sent:", token); // Debugging step
-  
-    if (!token) {
-      setError("No authentication token found. Please log in again.");
-      return;
-    }
-  
+
     try {
-      const response = await axios.post(
-        "http://localhost:5000/supervisor/createsupervisor",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await api.post("/supervisor/createsupervisor", formData);
       console.log("Response:", response.data); // Debugging step
       setOpen(true);
       setFormData({
@@ -77,10 +61,11 @@ const AddSupervisor = () => {
       });
     } catch (err) {
       console.error("Request failed:", err.response?.data); // Log error details
-      setError(err.response?.data?.message || "Server error. Please try again.");
+      setError(
+        err.response?.data?.message || "Server error. Please try again."
+      );
     }
   };
-  
 
   return (
     <AdminLayout>
@@ -88,7 +73,10 @@ const AddSupervisor = () => {
       <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1.5 }}>
         <SupervisorIcon sx={{ fontSize: 36, color: "#ff7043" }} />
         <div>
-          <Typography variant="h5" sx={{ fontWeight: "bold", color: "#ff7043" }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", color: "#ff7043" }}
+          >
             Add New Supervisor
           </Typography>
           <Typography variant="body2" sx={{ color: "gray" }}>
@@ -102,7 +90,13 @@ const AddSupervisor = () => {
         <Paper elevation={6} sx={{ p: 3, borderRadius: 3 }}>
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            display="flex"
+            flexDirection="column"
+            gap={2}
+          >
             <TextField
               fullWidth
               label="Full Name"
