@@ -35,6 +35,7 @@ import AddAnganawadi from "./pages/AddAnganawadi";
 import ViewSupervisorAnganawadi from "./pages/viewsupervisoranganawadi";
 import ViewSupervisorProducts from "./pages/ViewSupervisorProducts";
 import AddDailyTrack from "./pages/AddDailyTrack";
+import WorkerViewDailyTrack from "./pages/WorkerViewDailyTrack";
 
 
 
@@ -81,6 +82,7 @@ function App() {
       <Route path="/supervisor-products" element={<ViewSupervisorProducts />} />
 
       <Route path="/upload-daily-track" element={<AddDailyTrack />} />
+      <Route path="/worker-view-dailytracks" element={<WorkerViewDailyTrack />} />
       
       </Routes>
    

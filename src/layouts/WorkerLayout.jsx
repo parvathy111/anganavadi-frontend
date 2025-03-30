@@ -87,7 +87,7 @@ function WorkerLayout({ children }) {
                     Upload Daily Activities
                   </a>
                   <a
-                    href="/view-daily-activities"
+                    href="/worker-view-dailytracks"
                     className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
                   >
                     View Activities
