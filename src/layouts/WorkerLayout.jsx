@@ -21,6 +21,7 @@ function WorkerLayout({ children }) {
   const [eventsDropdown, setEventsDropdown] = useState(false);
   const [vaccinesDropdown, setVaccinesDropdown] = useState(false);
   const [foodDropdown, setFoodDropdown] = useState(false);
+  const [dailyTrackDropdown, setDailyTrackDropdown] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -58,14 +59,42 @@ function WorkerLayout({ children }) {
 
             <div className="border-b border-white border-opacity-30 my-2"></div>
 
-            {/* Daily Track */}
-            <a
-              href="#"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
-            >
-              <CalendarCheck />
-              {sidebarOpen && <span>Daily Track</span>}
-            </a>
+            {/* Daily Track Dropdown */}
+            <div>
+              <button
+                onClick={() => setDailyTrackDropdown(!dailyTrackDropdown)}
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
+              >
+                <CalendarCheck />
+                {sidebarOpen && (
+                  <>
+                    <span>Daily Track</span>
+                    <ChevronDown
+                      className={`ml-auto transition-transform duration-300 ${
+                        dailyTrackDropdown ? "rotate-180" : ""
+                      }`}
+                      size={16}
+                    />
+                  </>
+                )}
+              </button>
+              {dailyTrackDropdown && sidebarOpen && (
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
+                  <a
+                    href="/upload-daily-track"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    Upload Daily Activities
+                  </a>
+                  <a
+                    href="/view-daily-activities"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  >
+                    View Activities
+                  </a>
+                </div>
+              )}
+            </div>
 
             {/* Beneficiaries Dropdown */}
             <div>
