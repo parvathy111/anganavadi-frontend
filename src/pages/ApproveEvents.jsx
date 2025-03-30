@@ -48,14 +48,29 @@ const ApproveEvents = () => {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/events/all");
-      setEvents(Array.isArray(res.data) ? res.data : []);
+        const token = localStorage.getItem("token"); // Retrieve token from localStorage
+
+        if (!token) {
+            console.error("No token found, please login");
+            return;
+        }
+
+        const res = await axios.get("http://localhost:5000/events/view-events", {
+            headers: { Authorization: `Bearer ${token}` }, // Include token in request
+        });
+
+        if (res.status === 200) {
+            setEvents(Array.isArray(res.data) ? res.data : []);
+        } else {
+            console.error("Failed to fetch events. Status:", res.status);
+        }
     } catch (err) {
-      console.error("Error fetching events:", err);
+        console.error("Error fetching events:", err.response ? err.response.data : err.message);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   const handleApprove = async (eventId) => {
     try {

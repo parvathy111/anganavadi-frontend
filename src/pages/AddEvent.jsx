@@ -37,22 +37,25 @@ const AddEvent = () => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch Anganwadi numbers
   useEffect(() => {
-    const fetchAnganwadis = async () => {
+    const fetchWorkerDetails = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/anganavadi/getallanganwadi", {
+        const res = await api.get("/worker/me", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setAnganwadis(res.data.data);
+        setEvent((prevEvent) => ({
+          ...prevEvent,
+          anganwadiNo: res.data.anganwadiNo, // Auto-fill anganwadi number
+        }));
       } catch (err) {
-        console.error("Error fetching anganwadis:", err);
-        setError("Failed to load Anganwadi list");
+        console.error("Error fetching worker details:", err);
+        setError("Failed to fetch worker details");
       }
     };
-    fetchAnganwadis();
+
+    fetchWorkerDetails();
   }, []);
 
   const handleChange = (e) => {
@@ -87,14 +90,18 @@ const AddEvent = () => {
 
   return (
     <WorkerLayout>
-      <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box sx={{ mb: 4, display: "flex", alignItems: "center", gap: 2 }}>
         <EventIcon sx={{ fontSize: 40, color: "#ff7043" }} />
         <div>
-          <Typography variant="h4" sx={{ fontWeight: "bold", color: "#ff7043" }}>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: "bold", color: "#ff7043" }}
+          >
             Add New Event
           </Typography>
           <Typography variant="body1" sx={{ color: "gray" }}>
-            Create and manage events for the Anganwadi, including participant details and schedule.
+            Create and manage events for the Anganwadi, including participant
+            details and schedule.
           </Typography>
         </div>
       </Box>
@@ -103,7 +110,13 @@ const AddEvent = () => {
         <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={3}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            display="flex"
+            flexDirection="column"
+            gap={3}
+          >
             <TextField
               label="Event Name"
               name="eventName"
@@ -135,7 +148,9 @@ const AddEvent = () => {
               }}
             >
               <MenuItem value="Parent">Parent</MenuItem>
-              <MenuItem value="Pregnant/Lactating women">Pregnant/Lactating women</MenuItem>
+              <MenuItem value="Pregnant/Lactating women">
+                Pregnant/Lactating women
+              </MenuItem>
               <MenuItem value="Others">Others</MenuItem>
             </TextField>
 
@@ -194,13 +209,10 @@ const AddEvent = () => {
             />
 
             <TextField
-              fullWidth
-              select
-              label="Select Anganwadi No"
+              label="Anganwadi No"
               name="anganwadiNo"
               value={event.anganwadiNo}
-              onChange={handleChange}
-              required
+              disabled // Prevent manual changes
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -208,17 +220,7 @@ const AddEvent = () => {
                   </InputAdornment>
                 ),
               }}
-            >
-              {anganwadis && anganwadis.length > 0 ? (
-                anganwadis.map((aw) => (
-                  <MenuItem key={aw._id} value={aw.anganwadiNo}>
-                    {aw.anganwadiNo.toUpperCase()}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem disabled>Loading Anganwadis...</MenuItem>
-              )}
-            </TextField>
+            />
 
             <Button
               variant="contained"
@@ -229,9 +231,9 @@ const AddEvent = () => {
                 background: "linear-gradient(45deg, #ff7043, #ff7043)",
                 color: "#fff",
                 fontWeight: "bold",
-                '&:hover': {
+                "&:hover": {
                   background: "linear-gradient(45deg, #fb8c00, #ff7043)",
-                }
+                },
               }}
             >
               Add Event
@@ -242,7 +244,7 @@ const AddEvent = () => {
             open={open}
             autoHideDuration={3000}
             onClose={() => setOpen(false)}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <Alert severity="success" onClose={() => setOpen(false)}>
               Event added successfully, pending supervisor approval!

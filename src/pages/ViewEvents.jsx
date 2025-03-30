@@ -28,14 +28,27 @@ const ViewEvents = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/events/all");
+        const token = localStorage.getItem("token"); // Get token from localStorage
+        console.log(token);
+        if (!token) {
+          console.error("No token found, please login");
+          return;
+        }
+  
+        const response = await axios.get("http://localhost:5000/events/all", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Fix: Ensure token format is "Bearer <token>"
+          },
+        });
+  
         setEvents(response.data);
       } catch (error) {
-        console.error("Error fetching events:", error);
+        console.error("Error fetching events:", error.response?.data || error.message);
       } finally {
         setLoading(false);
       }
     };
+  
     fetchEvents();
   }, []);
 
