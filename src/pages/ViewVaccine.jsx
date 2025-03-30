@@ -107,7 +107,7 @@ const ViewVaccine = ({ userRole }) => {
               <TableHead>
                 <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
                   <TableCell className="text-white font-semibold">
-                    <Hash size={16} className="inline mr-2" /> #
+                    <Hash size={16} className="inline mr-2" /> 
                   </TableCell>
                   <TableCell className="text-white font-semibold">
                     <ShieldPlus size={16} className="inline mr-2" /> Vaccine
