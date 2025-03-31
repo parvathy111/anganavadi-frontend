@@ -223,7 +223,7 @@ const ViewOrder = () => {
                     {order.productname}
                   </h2>
                   <p className="text-sm text-gray-600 mt-1">
-                    Quantity: {order.quantity}
+                    Quantity (Kg): {order.quantity}
                   </p>
                   <p className="text-sm text-gray-600">
                     Anganwadi No: {order.anganwadiNo}
