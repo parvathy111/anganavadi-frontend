@@ -2,8 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./App.css";
 
-// import { Routes, Route } from "react-router";
-
 import IndexPage from "./pages/IndexPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import SupervisorDashboard from "./pages/SupervisorDashboard";
@@ -36,6 +34,7 @@ import ViewSupervisorAnganawadi from "./pages/viewsupervisoranganawadi";
 import ViewSupervisorProducts from "./pages/ViewSupervisorProducts";
 import AddDailyTrack from "./pages/AddDailyTrack";
 import WorkerViewDailyTrack from "./pages/WorkerViewDailyTrack";
+import WorkerAvailableStock from "./pages/WorkerAvailableStock";
 
 
 
@@ -83,6 +82,8 @@ function App() {
 
       <Route path="/upload-daily-track" element={<AddDailyTrack />} />
       <Route path="/worker-view-dailytracks" element={<WorkerViewDailyTrack />} />
+
+      <Route path="/worker-available-stock" element={<WorkerAvailableStock />} />
       
       </Routes>
    

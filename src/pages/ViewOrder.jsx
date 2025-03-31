@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import WorkerLayout from "../layouts/WorkerLayout";
 import {
@@ -8,6 +9,7 @@ import {
   Trash2,
   ArrowLeft,
   ArrowRight,
+  CheckCircle,
 } from "lucide-react";
 import api from "../config/axiosinstance";
 
@@ -24,15 +26,15 @@ const ViewOrder = () => {
   const [updating, setUpdating] = useState(false);
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(""); // success / error
-  
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 4;  // Number of orders per page
+  const ordersPerPage = 4; // Number of orders per page
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await api.get("/orders/my-orders")
+        const response = await api.get("/orders/my-orders");
         setOrders(response.data);
         setFilteredOrders(response.data);
         setLoading(false);
@@ -43,7 +45,7 @@ const ViewOrder = () => {
     };
     fetchOrders();
   }, []);
-  
+
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
@@ -61,7 +63,10 @@ const ViewOrder = () => {
   // Get orders for the current page
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = filteredOrders.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
+  );
 
   // Total pages
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
@@ -88,14 +93,11 @@ const ViewOrder = () => {
     setMessage(null);
 
     try {
-      await api.put(
-        `/orders/update/${selectedOrder._id}`,
-        {
-          quantity: newQuantity,
-          anganwadiNo: newAnganwadiNo,
-          productname: newProductName,
-        }
-      );
+      await api.put(`/orders/update/${selectedOrder._id}`, {
+        quantity: newQuantity,
+        anganwadiNo: newAnganwadiNo,
+        productname: newProductName,
+      });
 
       const updatedOrders = orders.map((o) =>
         o._id === selectedOrder._id
@@ -143,6 +145,26 @@ const ViewOrder = () => {
     }
   };
 
+
+  const markOrderCompleted = async (orderId) => {
+    const confirmComplete = window.confirm("Are you sure you want to mark this order as completed?");
+    if (!confirmComplete) return;
+  
+    try {
+      await api.put(`/orders/complete/${orderId}`);
+  
+      // Remove the completed order from the UI
+      const updatedOrders = orders.filter((o) => o._id !== orderId);
+      setOrders(updatedOrders);
+      setFilteredOrders(updatedOrders);
+  
+      alert("Order marked as completed and moved to Available Stock!");
+    } catch (error) {
+      console.error("Error marking order as completed:", error);
+      alert("Failed to mark order as completed. Please try again.");
+    }
+  };
+  
   if (loading)
     return <div className="text-center mt-10 text-lg">Loading Orders...</div>;
 
@@ -157,12 +179,17 @@ const ViewOrder = () => {
               <PackageCheck size={28} className="text-[#ff6f00]" />
               All Stock Orders
             </h1>
-            <p className="text-gray-500 mb-4">Manage and update your placed orders</p>
+            <p className="text-gray-500 mb-4">
+              Manage and update your placed orders
+            </p>
           </div>
 
           {/* Search bar aligned to the right */}
           <div className="relative w-full max-w-md">
-            <Search className="absolute top-2.5 left-3 text-gray-400" size={20} />
+            <Search
+              className="absolute top-2.5 left-3 text-gray-400"
+              size={20}
+            />
             <input
               type="text"
               value={searchQuery}
@@ -172,7 +199,7 @@ const ViewOrder = () => {
             />
           </div>
         </div>
-        
+
         {/* Order cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 px-2">
           {currentOrders.length > 0 ? (
@@ -207,19 +234,37 @@ const ViewOrder = () => {
                 </div>
 
                 <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={() => openUpdateModal(order)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-[#ff6f00] text-white text-sm py-2 rounded-lg hover:bg-[#e65100] transition-colors duration-200"
-                  >
-                    <Pencil size={16} /> Update
-                  </button>
-                  <button
-                    onClick={() => handleCancelOrder(order._id)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white text-sm py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
-                  >
-                    <Trash2 size={16} /> Cancel
-                  </button>
-                </div>
+  {/* Update Button - Hide if status is Approved or Rejected */}
+  {order.orderStatus !== "Approved" && order.orderStatus !== "Rejected" && (
+    <button
+      onClick={() => openUpdateModal(order)}
+      className="flex-1 flex items-center justify-center gap-2 bg-[#ff6f00] text-white text-sm py-2 rounded-lg hover:bg-[#e65100] transition-colors duration-200"
+    >
+      <Pencil size={16} /> Update
+    </button>
+  )}
+
+  {/* Cancel Button - Hide if status is Approved */}
+  {order.orderStatus !== "Approved" && (
+    <button
+      onClick={() => handleCancelOrder(order._id)}
+      className="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white text-sm py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+    >
+      <Trash2 size={16} /> Cancel
+    </button>
+  )}
+
+  {/* Completed Button - Show only if status is Approved */}
+  {order.orderStatus === "Approved" && (
+    <button
+      onClick={() => markOrderCompleted(order._id)}
+      className="flex-1 flex items-center justify-center gap-2 bg-green-500 text-white text-sm py-2 rounded-lg hover:bg-green-700 transition-colors duration-200"
+    >
+      <CheckCircle size={16} /> Completed
+    </button>
+  )}
+</div>
+
               </div>
             ))
           ) : (
@@ -243,7 +288,9 @@ const ViewOrder = () => {
             <span className="text-lg text-gray-700">
               Page {currentPage} of {totalPages}
             </span>
-            <span className="text-xs text-gray-500">({filteredOrders.length} orders)</span>
+            <span className="text-xs text-gray-500">
+              ({filteredOrders.length} orders)
+            </span>
           </div>
 
           <button
@@ -278,99 +325,116 @@ const ViewOrder = () => {
           </div>
         </div>
 
-       
         {/* Update Order Modal */}
-{selectedOrder && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
-    <div className="bg-white rounded-lg shadow-xl w-full max-w-md border border-gray-200">
-      {/* Modal Header */}
-      <div className="border-b px-6 py-4">
-        <h3 className="text-xl font-semibold text-gray-800">Update Order Details</h3>
-      </div>
-      
-      {/* Modal Body */}
-      <div className="p-6">
-        {message && (
-          <div className={`mb-4 p-3 rounded-md ${messageType === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-            {message}
+        {selectedOrder && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md border border-gray-200">
+              {/* Modal Header */}
+              <div className="border-b px-6 py-4">
+                <h3 className="text-xl font-semibold text-gray-800">
+                  Update Order Details
+                </h3>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6">
+                {message && (
+                  <div
+                    className={`mb-4 p-3 rounded-md ${
+                      messageType === "success"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {message}
+                  </div>
+                )}
+
+                <form onSubmit={handleUpdateOrder}>
+                  <div className="space-y-4">
+                    {/* Product Name Field */}
+                    <div>
+                      <label
+                        htmlFor="productName"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Product Name
+                      </label>
+                      <input
+                        type="text"
+                        id="productName"
+                        value={newProductName}
+                        onChange={(e) => setNewProductName(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff6f00] focus:outline-none"
+                        required
+                      />
+                    </div>
+
+                    {/* Quantity Field */}
+                    <div>
+                      <label
+                        htmlFor="quantity"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Quantity
+                      </label>
+                      <input
+                        type="number"
+                        id="quantity"
+                        value={newQuantity}
+                        onChange={(e) => setNewQuantity(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff6f00] focus:outline-none"
+                        required
+                        min="1"
+                      />
+                    </div>
+
+                    {/* Anganwadi Number Field */}
+                    <div>
+                      <label
+                        htmlFor="anganwadiNo"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Anganwadi Number
+                      </label>
+                      <input
+                        type="text"
+                        id="anganwadiNo"
+                        value={newAnganwadiNo}
+                        onChange={(e) => setNewAnganwadiNo(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff6f00] focus:outline-none"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Modal Footer */}
+                  <div className="mt-6 flex justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={closeModal}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                      disabled={updating}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 text-sm font-medium text-white bg-[#ff6f00] rounded-lg hover:bg-[#e65100] focus:outline-none focus:ring-2 focus:ring-[#ff6f00] disabled:opacity-50"
+                      disabled={updating}
+                    >
+                      {updating ? "Updating..." : "Update Order"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         )}
-        
-        <form onSubmit={handleUpdateOrder}>
-          <div className="space-y-4">
-            {/* Product Name Field */}
-            <div>
-              <label htmlFor="productName" className="block text-sm font-medium text-gray-700 mb-1">
-                Product Name
-              </label>
-              <input
-                type="text"
-                id="productName"
-                value={newProductName}
-                onChange={(e) => setNewProductName(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff6f00] focus:outline-none"
-                required
-              />
-            </div>
-            
-            {/* Quantity Field */}
-            <div>
-              <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                Quantity
-              </label>
-              <input
-                type="number"
-                id="quantity"
-                value={newQuantity}
-                onChange={(e) => setNewQuantity(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff6f00] focus:outline-none"
-                required
-                min="1"
-              />
-            </div>
-            
-            {/* Anganwadi Number Field */}
-            <div>
-              <label htmlFor="anganwadiNo" className="block text-sm font-medium text-gray-700 mb-1">
-                Anganwadi Number
-              </label>
-              <input
-                type="text"
-                id="anganwadiNo"
-                value={newAnganwadiNo}
-                onChange={(e) => setNewAnganwadiNo(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff6f00] focus:outline-none"
-                required
-              />
-            </div>
-          </div>
-          
-          {/* Modal Footer */}
-          <div className="mt-6 flex justify-end gap-3">
-            <button
-              type="button"
-              onClick={closeModal}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
-              disabled={updating}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-[#ff6f00] rounded-lg hover:bg-[#e65100] focus:outline-none focus:ring-2 focus:ring-[#ff6f00] disabled:opacity-50"
-              disabled={updating}
-            >
-              {updating ? "Updating..." : "Update Order"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-)}
       </div>
     </WorkerLayout>
   );
 };
 
 export default ViewOrder;
+
