@@ -39,8 +39,15 @@ const AddAnganawadi = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+  
     try {
-      await api.post("/anganavadi/createanganwadi")
+      await api.post("/anganavadi/createanganwadi", {
+        anganwadiNo: formData.anganwadiNo,
+        localBody: formData.localBody,
+        localBodyName: formData.localBodyName,
+        wardNumber: formData.wardNumber
+      });
+  
       setOpen(true);
       setFormData({
         anganwadiNo: "",
@@ -48,10 +55,12 @@ const AddAnganawadi = () => {
         localBodyName: "",
         wardNumber: "",
       });
+  
     } catch (err) {
       setError(err.response?.data?.message || "Server error");
     }
   };
+  
 
   return (
     <SupervisorLayout>

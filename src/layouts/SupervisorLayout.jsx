@@ -95,23 +95,34 @@ const SupervisorLayout = ({ children }) => {
               )}
             </div>
 
-            {/* Add Worker */}
-            <a
-              href="/add-worker"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
-            >
-              <UserPlus />
-              {sidebarOpen && <span>Add Worker</span>}
-            </a>
-
-            {/* View Workers */}
-            <a
-              href="/view-workers"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
-            >
-              <Users />
-              {sidebarOpen && <span>View Workers</span>}
-            </a>
+            <div className="space-y-2">
+              {/* Manage Worker Dropdown */}
+              <details className="group">
+                <summary className="flex items-center justify-between p-2 cursor-pointer hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded">
+                  <span className="flex items-center space-x-2">
+                    <Users />
+                    {sidebarOpen && <span>Manage Worker</span>}
+                  </span>
+                  <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="pl-6 space-y-1">
+                  <a
+                    href="/add-worker"
+                    className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                  >
+                    <UserPlus />
+                    {sidebarOpen && <span>Add Worker</span>}
+                  </a>
+                  <a
+                    href="/view-workers"
+                    className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                  >
+                    <Users />
+                    {sidebarOpen && <span>View Workers</span>}
+                  </a>
+                </div>
+              </details>
+            </div>
 
             {/* Food Stock Dropdown */}
             <div>
@@ -193,17 +204,18 @@ const SupervisorLayout = ({ children }) => {
         {/* Top Navbar */}
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-2xl font-semibold">Welcome, Supervisor</h2>
-          <div className="flex items-center space-x-4">
-            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
+          <div className="flex items-center space-x-1">
+            <button onClick={() => navigate("/edit-profile/supervisor")}
+            className="flex items-center  text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition ">
               <User className="mr-2" /> Edit Profile
             </button>
             <button
               onClick={() => navigate("/change-password")}
-              className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]"
+              className="flex items-center  text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition "
             >
               <KeyRound className="mr-2" /> Change Password
             </button>
-            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
+            <button className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition">
               <LogOut className="mr-2" /> Logout
             </button>
           </div>

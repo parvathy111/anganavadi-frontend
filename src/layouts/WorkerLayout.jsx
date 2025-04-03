@@ -12,6 +12,7 @@ import {
   LogOut,
   User,
   ChevronDown,
+  KeyRound,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 
@@ -22,6 +23,7 @@ function WorkerLayout({ children }) {
   const [vaccinesDropdown, setVaccinesDropdown] = useState(false);
   const [foodDropdown, setFoodDropdown] = useState(false);
   const [dailyTrackDropdown, setDailyTrackDropdown] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -285,10 +287,17 @@ function WorkerLayout({ children }) {
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold">Welcome, Worker</h2>
           <div className="flex items-center space-x-4">
-            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
+            <button onClick={() => navigate("/editprofile/worker")}
+            className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
               <User className="mr-2" /> Edit Profile
             </button>
-            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
+            <button
+              onClick={() => navigate("/changepassword")}
+              className="flex items-center  text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition "
+            >
+              <KeyRound className="mr-2" /> Change Password
+            </button>
+            <button className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
               <LogOut className="mr-2" /> Logout
             </button>
           </div>

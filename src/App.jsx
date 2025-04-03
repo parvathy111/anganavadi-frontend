@@ -35,6 +35,10 @@ import ViewSupervisorProducts from "./pages/ViewSupervisorProducts";
 import AddDailyTrack from "./pages/AddDailyTrack";
 import WorkerViewDailyTrack from "./pages/WorkerViewDailyTrack";
 import WorkerAvailableStock from "./pages/WorkerAvailableStock";
+import EditProfile from "./pages/EditProfile";
+import ChangePassword from "./pages/ChangePassword";
+import SupervisorLayout from "./layouts/SupervisorLayout";
+import WorkerLayout from "./layouts/WorkerLayout";
 
 
 
@@ -84,6 +88,12 @@ function App() {
       <Route path="/worker-view-dailytracks" element={<WorkerViewDailyTrack />} />
 
       <Route path="/worker-available-stock" element={<WorkerAvailableStock />} />
+
+      <Route path="/edit-profile/:userType" element={<SupervisorLayout> <EditProfile /> </SupervisorLayout>} />
+      <Route path="/editprofile/:userType" element={<WorkerLayout><EditProfile /></WorkerLayout>} />
+
+      <Route path="/change-password" element={<SupervisorLayout><ChangePassword /></SupervisorLayout>} />
+      <Route path="/changepassword" element={<WorkerLayout><ChangePassword /></WorkerLayout>} />
       
       </Routes>
    

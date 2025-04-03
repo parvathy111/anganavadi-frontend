@@ -33,6 +33,7 @@ export default function LoginPage() {
 
     try {
       const res = await api.post(endpoint, { email, password, role });
+      localStorage.setItem('userRole',role.toLowerCase())
       if (
         res.data.status === "inactive" &&
         (role.toLowerCase() === "parent" ||
