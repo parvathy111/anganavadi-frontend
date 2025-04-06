@@ -13,10 +13,13 @@ import {
   LayoutDashboard ,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
+import { useUser } from "../store/useUser";
 
 const BeneficiaryLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
+
+  const { logout } = useUser()
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -120,7 +123,8 @@ const BeneficiaryLayout = ({ children }) => {
             className="flex items-center  text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
               <Edit3 className="mr-2" /> Edit Profile
             </button>
-            <button className="flex items-center  text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
+            <button onClick={ logout }
+            className="flex items-center  text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
               <LogOut className="mr-2" /> Logout
             </button>
           </div>

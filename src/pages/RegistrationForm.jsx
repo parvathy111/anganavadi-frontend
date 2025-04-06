@@ -95,7 +95,7 @@ const RegistrationForm = () => {
       <Typography
         variant="h5"
         align="center"
-        className="text-pink-600 p-2 font-bold"
+        className="text-orange-600 p-2 font-bold"
       >
         Create a new account
       </Typography>
@@ -131,7 +131,7 @@ const RegistrationForm = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <ChildCare className="text-pink-500" />
+                        <ChildCare className="text-orange-500" />
                       </InputAdornment>
                     ),
                   }}
@@ -228,7 +228,7 @@ const RegistrationForm = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Business className="text-pink-500" />
+                    <Business className="text-orange-500" />
                   </InputAdornment>
                 ),
               }}
@@ -246,7 +246,7 @@ const RegistrationForm = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Phone className="text-pink-500" />
+                    <Phone className="text-orange-500" />
                   </InputAdornment>
                 ),
               }}
@@ -263,7 +263,7 @@ const RegistrationForm = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Home className="text-pink-500" />
+                    <Home className="text-orange-500" />
                   </InputAdornment>
                 ),
               }}
@@ -281,7 +281,7 @@ const RegistrationForm = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <MailOutline className="text-pink-500" />
+                    <MailOutline className="text-orange-500" />
                   </InputAdornment>
                 ),
               }}
@@ -298,7 +298,7 @@ const RegistrationForm = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <LockOutlined className="text-pink-500" />
+                    <LockOutlined className="text-orange-500" />
                   </InputAdornment>
                 ),
               }}
@@ -310,7 +310,7 @@ const RegistrationForm = () => {
               type="submit"
               variant="contained"
               fullWidth
-              className="bg-gradient-to-r from-orange-700 to-pink-700 hover:from-orange-500 hover:to-pink-600 text-white py-3 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all"
+              className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white py-3 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all"
             >
               Register
             </Button>

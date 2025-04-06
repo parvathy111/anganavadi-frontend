@@ -63,7 +63,7 @@ export default function LoginPage() {
     <CardContent>
       <Typography
         variant="h5"
-        className="text-center mb-6 font-bold text-pink-600 p-5"
+        className="text-center mb-6 font-bold text-orange-600 p-5"
       >
         Login to Your Account
       </Typography>
@@ -85,7 +85,7 @@ export default function LoginPage() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <MailOutline className="text-pink-500" />
+                  <MailOutline className="text-orange-500" />
                 </InputAdornment>
               ),
             }}
@@ -104,7 +104,7 @@ export default function LoginPage() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <LockOutlined className="text-pink-500" />
+                  <LockOutlined className="text-orange-500" />
                 </InputAdornment>
               ),
             }}
@@ -123,7 +123,7 @@ export default function LoginPage() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <PersonOutline className="text-pink-500" />
+                  <PersonOutline className="text-orange-500" />
                 </InputAdornment>
               ),
             }}
@@ -141,7 +141,7 @@ export default function LoginPage() {
           type="submit"
           variant="contained"
           fullWidth
-          className="bg-gradient-to-r from-orange-700 to-pink-700 hover:from-orange-500 hover:to-pink-600 text-white py-3 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all"
+          className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white py-3 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all"
         >
           Login
         </Button>

@@ -15,6 +15,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
+import { useUser } from "../store/useUser";
 
 const SupervisorLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -22,6 +23,8 @@ const SupervisorLayout = ({ children }) => {
   const [anganwadiDropdown, setAnganwadiDropdown] = useState(false);
   const [workerDropdown, setWorkerDropdown] = useState(false); // ✅ Added this line
   const navigate = useNavigate();
+
+  const { logout } = useUser()
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -188,7 +191,7 @@ const SupervisorLayout = ({ children }) => {
 
             {/* Messages */}
             <a
-              href="#"
+              href="/send-message"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
             >
               <MessageSquare />
@@ -227,7 +230,8 @@ const SupervisorLayout = ({ children }) => {
             >
               <KeyRound className="mr-2" /> Change Password
             </button>
-            <button className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition">
+            <button onClick={ logout }
+            className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition">
               <LogOut className="mr-2" /> Logout
             </button>
           </div>

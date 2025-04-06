@@ -1,66 +1,115 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Close, Info, Login, PersonAdd, VolunteerActivism } from "@mui/icons-material";
 import {
-  Button,
   AppBar,
-  Toolbar,
-  Typography,
-  Container,
   Box,
+  Button,
+  Container,
   Dialog,
   DialogContent,
   IconButton,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Info, Login, PersonAdd, Close } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import indeximage from "../assets/index.png";
 import aboutimage from "../assets/index1.png";
 import LoginComponent from "./Login";
-import RegistrationForm from "./RegistrationForm"; // Import Registration Form
+import RegistrationForm from "./RegistrationForm";
 
+// 🍊 Orange Color Theme
 const theme = createTheme({
   palette: {
     mode: "light",
-    primary: { main: "#ff9800" }, // Orange
-    secondary: { main: "#f48fb1" }, // Pink
-    background: { default: "#ffeb3b" }, // Yellow
+    primary: { main: "#f57c00" },      // Deep Orange
+    secondary: { main: "#ffcc80" },    // Light Orange
+    background: {
+      default: "#fff8e1",              // Soft Cream
+      paper: "#ffffff",
+    },
+    text: {
+      primary: "#333333",
+    },
   },
 });
 
 const IndexPage = () => {
   const [openLogin, setOpenLogin] = useState(false);
-  const [openRegister, setOpenRegister] = useState(false); // Register popup state
+  const [openRegister, setOpenRegister] = useState(false);
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" sx={{ background: "#ef9a9a" }}>
-        <Toolbar>
-          <Typography variant="h5" sx={{ flexGrow: 1, color: "white" }}>
-            CareNest
-          </Typography>
-          <Button color="inherit" sx={{ color: "white" }} startIcon={<Info />}>
-            About
-          </Button>
-          <Button
-            color="inherit"
-            startIcon={<Login />}
-            onClick={() => setOpenLogin(true)}
-            sx={{ color: "white" }}
-          >
-            Login
-          </Button>
-          <Button
-            color="inherit"
-            startIcon={<PersonAdd />}
-            onClick={() => setOpenRegister(true)} // Open Register Popup
-            sx={{ color: "white" }}
-          >
-            Register
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <AppBar
+  position="static"
+  elevation={3}
+  sx={{
+    backgroundColor: theme.palette.primary.main,
+    paddingY: 1,
+  }}
+>
+  <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+    {/* Left side: Icon + Title */}
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <VolunteerActivism sx={{ color: "white", fontSize: 36, marginRight: 1 }} />
+      <Typography
+        variant="h6"
+        sx={{
+          color: "white",
+          fontWeight: "bold",
+          fontSize: { xs: "1.2rem", sm: "1.5rem" },
+        }}
+      >
+        CareNest
+      </Typography>
+    </Box>
 
+    {/* Right side: Navigation buttons */}
+    <Box sx={{ display: "flex", gap: 2 }}>
+      <Button
+        color="inherit"
+        sx={{
+          color: "white",
+          "&:hover": {
+            backgroundColor: "#ef6c00",
+          },
+        }}
+        startIcon={<Info />}
+      >
+        About
+      </Button>
+      <Button
+        color="inherit"
+        onClick={() => setOpenLogin(true)}
+        sx={{
+          color: "white",
+          "&:hover": {
+            backgroundColor: "#ef6c00",
+          },
+        }}
+        startIcon={<Login />}
+      >
+        Login
+      </Button>
+      <Button
+        color="inherit"
+        onClick={() => setOpenRegister(true)}
+        sx={{
+          color: "white",
+          "&:hover": {
+            backgroundColor: "#ef6c00",
+          },
+        }}
+        startIcon={<PersonAdd />}
+      >
+        Register
+      </Button>
+    </Box>
+  </Toolbar>
+</AppBar>
+
+
+      {/* Welcome Section */}
       <Box
         sx={{
           height: "70vh",
@@ -70,7 +119,7 @@ const IndexPage = () => {
           justifyContent: "center",
           textAlign: "center",
           background:
-            "linear-gradient(135deg, #ff9800 0%, #f48fb1 50%, #ffeb3b 100%)",
+            "linear-gradient(135deg, #f57c00 0%, #ffb74d 50%, #ffb74d 100%)",
           color: "white",
           padding: 4,
         }}
@@ -84,7 +133,7 @@ const IndexPage = () => {
         >
           <img
             src={indeximage}
-            alt="Hero Image"
+            alt="Hero"
             style={{
               width: "100%",
               maxWidth: "400px",
@@ -100,7 +149,7 @@ const IndexPage = () => {
               transition={{ duration: 1 }}
             >
               <Typography variant="h3" fontWeight="bold" m="10px">
-                Welcome to My App
+                Empowering Communities with CareNest
               </Typography>
             </motion.div>
             <motion.div
@@ -109,22 +158,34 @@ const IndexPage = () => {
               transition={{ duration: 1, delay: 0.3 }}
             >
               <Typography variant="h6" mt={2}>
-                Experience a seamless and engaging platform.
+                A digital platform designed to support Anganwadi centers and the well-being of children and mothers. Seamless. Efficient. Impactful.
               </Typography>
             </motion.div>
           </Box>
         </Container>
       </Box>
 
-      <Container sx={{ paddingY: 4, textAlign: "left" }}>
-        <Typography variant="h3" fontWeight="bold" gutterBottom color="#ec407a">
-          About
+      {/* About Section */}
+      <Container sx={{ paddingY: 4 }}>
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ color: theme.palette.primary.main }}
+        >
+          About CareNest
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Typography variant="body1" color="black" paragraph>
-            This is a modern web application built with React, Vite, Material
-            UI, and Tailwind CSS. It provides a stylish and efficient user
-            interface for managing various tasks efficiently.
+          <Typography
+            variant="body1"
+            paragraph
+            sx={{ color: theme.palette.text.primary, textAlign: "justify" }}
+          >
+            <strong>CareNest</strong> is a modern web-based system built to enhance the operations of <strong>Anganwadi centers</strong>—an essential part of India’s Integrated Child Development Services (ICDS). These centers provide crucial support to <strong>children under six</strong>, <strong>pregnant women</strong>, and <strong>nursing mothers</strong>.
+            <br /><br />
+            Our platform helps streamline daily tasks like attendance tracking, nutrition monitoring, educational activities, health updates, and inventory management—creating a smarter, more connected ecosystem for grassroots childcare.
+            <br /><br />
+            With CareNest, we aim to bridge the gap between traditional practices and digital efficiency—empowering Anganwadi workers, supervisors, and administrators with the tools they need to create real change.
           </Typography>
           <img
             src={aboutimage}
@@ -132,6 +193,25 @@ const IndexPage = () => {
             style={{ width: "100%", maxWidth: "400px", borderRadius: "12px" }}
           />
         </Box>
+      </Container>
+
+      {/* Mission Section */}
+      <Container sx={{ paddingY: 4 }}>
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ color: theme.palette.primary.main }}
+        >
+          Our Mission
+        </Typography>
+        <Typography
+          variant="body1"
+          paragraph
+          sx={{ color: theme.palette.text.primary, textAlign: "justify" }}
+        >
+          At CareNest, our mission is to uplift rural communities by leveraging the power of digital transformation. We believe every child deserves a strong start, and every Anganwadi worker deserves strong support. Our system is built with care, compassion, and cutting-edge technology to make that vision a reality.
+        </Typography>
       </Container>
 
       {/* Login Popup */}

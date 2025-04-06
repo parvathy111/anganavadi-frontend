@@ -8,9 +8,12 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
+import { useUser } from "../store/useUser";
 
 const AdminLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const { logout } = useUser()
 
   return (
     <div className="flex h-screen">
@@ -82,7 +85,8 @@ const AdminLayout = ({ children }) => {
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-2xl font-semibold">Welcome, Admin</h2>
           <div className="flex items-center space-x-4">
-            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
+            <button onClick={ logout }
+            className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
               <LogOut className="mr-2" /> Logout
             </button>
           </div>
