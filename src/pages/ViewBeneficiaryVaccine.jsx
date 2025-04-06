@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import SupervisorLayout from "../layouts/SupervisorLayout";
 import {
-  Typography,
   Paper,
   Table,
   TableBody,
@@ -10,47 +8,45 @@ import {
   TableHead,
   TableRow,
   CircularProgress,
+  Typography,
   TablePagination,
   TextField,
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { Trash2 } from "lucide-react";
+import VaccinesIcon from "@mui/icons-material/Vaccines";
+import PersonIcon from "@mui/icons-material/Person";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import DateRangeIcon from "@mui/icons-material/DateRange";
 import api from "../config/axiosinstance";
+import BeneficiaryLayout from "../layouts/BeneficiaryLayout";
 
-export default function ViewSupervisorProducts() {
-  const [products, setProducts] = useState([]);
+const ViewBeneficiaryVaccine = () => {
+  const [vaccines, setVaccines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    fetchProducts();
+    const fetchVaccines = async () => {
+      try {
+        const response = await api.get("/vaccines/getvaccine");
+        setVaccines(response.data || []);
+      } catch (error) {
+        console.error("Error fetching vaccines:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVaccines();
   }, []);
 
-  const fetchProducts = async () => {
-    try {
-      const response = await api.get("/products/my-products");
-      setProducts(response.data || []);
-    } catch (err) {
-      console.error("Failed to load products:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?"))
-      return;
-
-    try {
-      await api.delete(`/products/delete/${id}`);
-      setProducts((prev) => prev.filter((product) => product._id !== id));
-    } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete product");
-    }
-  };
+  const filteredVaccines = vaccines.filter((vaccine) =>
+    vaccine.vaccine.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -61,10 +57,6 @@ export default function ViewSupervisorProducts() {
     setPage(0);
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.productname.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -74,7 +66,7 @@ export default function ViewSupervisorProducts() {
   }
 
   return (
-    <SupervisorLayout>
+    <BeneficiaryLayout>
       <div className="p-6">
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -84,14 +76,14 @@ export default function ViewSupervisorProducts() {
               gutterBottom
               className="bg-gradient-to-r from-orange-500 to-orange-600 text-transparent bg-clip-text font-bold"
             >
-              My Products
+              Vaccine Details
             </Typography>
             <p className="mt-1 text-gray-500 text-sm">
-              These are the products you have added.
+              These are the vaccines available for you.
             </p>
           </div>
           <TextField
-            label="Search by Product Name"
+            label="Search by Vaccine"
             variant="outlined"
             size="small"
             value={searchQuery}
@@ -111,47 +103,39 @@ export default function ViewSupervisorProducts() {
             <Table>
               <TableHead>
                 <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
-                  <TableCell className="text-white font-semibold w-10">
-                    #
+                  <TableCell className="text-white font-semibold w-40">
+                    <VaccinesIcon fontSize="small" className="mr-1" />
+                    Vaccine
                   </TableCell>
                   <TableCell className="text-white font-semibold w-32">
-                    Item ID
+                    <AccessTimeIcon fontSize="small" className="mr-1" />
+                    Stage
+                  </TableCell>
+                  <TableCell className="text-white font-semibold w-32">
+                    <PersonIcon fontSize="small" className="mr-1" />
+                    Dose
                   </TableCell>
                   <TableCell className="text-white font-semibold w-40">
-                    Product Name
+                    <LocalHospitalIcon fontSize="small" className="mr-1" />
+                    Vaccinator
                   </TableCell>
                   <TableCell className="text-white font-semibold w-40">
-                    Image
-                  </TableCell>
-                  <TableCell className="text-white font-semibold w-20">
-                    Action
+                    <DateRangeIcon fontSize="small" className="mr-1" />
+                    Last Date
                   </TableCell>
                 </TableRow>
               </TableHead>
-
               <TableBody>
-                {filteredProducts
+                {filteredVaccines
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((product, index) => (
-                    <TableRow key={product._id} hover>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{product.itemid}</TableCell>
-                      <TableCell>{product.productname}</TableCell>
+                  .map((vaccine) => (
+                    <TableRow key={vaccine._id} hover>
+                      <TableCell>{vaccine.vaccine}</TableCell>
+                      <TableCell>{vaccine.stage}</TableCell>
+                      <TableCell>{vaccine.dose}</TableCell>
+                      <TableCell>{vaccine.vaccinator}</TableCell>
                       <TableCell>
-                        <img
-                          src={product.image}
-                          alt={product.productname}
-                          className="w-20 h-20 object-cover rounded-lg shadow-md"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <button
-                          onClick={() => handleDelete(product._id)}
-                          className="text-red-600 hover:text-red-800 transition"
-                          title="Delete Product"
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                        {new Date(vaccine.lastDate).toLocaleDateString()}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -160,9 +144,9 @@ export default function ViewSupervisorProducts() {
           </TableContainer>
 
           <TablePagination
-            rowsPerPageOptions={[3, 10, 25]}
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={filteredProducts.length}
+            count={filteredVaccines.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -170,6 +154,8 @@ export default function ViewSupervisorProducts() {
           />
         </Paper>
       </div>
-    </SupervisorLayout>
+    </BeneficiaryLayout>
   );
-}
+};
+
+export default ViewBeneficiaryVaccine;

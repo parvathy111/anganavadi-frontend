@@ -23,7 +23,6 @@ import {
 import api from "../config/axiosinstance";
 import WorkerLayout from "../layouts/WorkerLayout";
 
-
 const AddEvent = () => {
   const [event, setEvent] = useState({
     eventName: "",
@@ -33,17 +32,16 @@ const AddEvent = () => {
     conductedBy: "",
     anganwadiNo: "",
   });
-  const [anganwadis, setAnganwadis] = useState([]);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchWorkerDetails = async () => {
       try {
-        const res = await api.get("/worker/me")
+        const res = await api.get("/worker/me");
         setEvent((prevEvent) => ({
           ...prevEvent,
-          anganwadiNo: res.data.anganwadiNo, // Auto-fill anganwadi number
+          anganwadiNo: res.data.anganwadiNo,
         }));
       } catch (err) {
         console.error("Error fetching worker details:", err);
@@ -77,7 +75,7 @@ const AddEvent = () => {
         date: "",
         time: "",
         conductedBy: "",
-        anganwadiNo: "",
+        anganwadiNo: event.anganwadiNo, // Keep anganwadiNo after success
       });
     } catch (err) {
       setError(err.response?.data?.message || "Server error");
@@ -150,7 +148,6 @@ const AddEvent = () => {
               <MenuItem value="Others">Others</MenuItem>
             </TextField>
 
-            {/* Grouping Date and Time side by side */}
             <Box sx={{ display: "flex", gap: 2 }}>
               <TextField
                 type="date"
@@ -171,14 +168,16 @@ const AddEvent = () => {
               />
 
               <TextField
-                type="time"
                 name="time"
+                label="Time (e.g., 10:30 AM)"
+                placeholder="HH:MM AM/PM"
                 value={event.time}
                 onChange={handleChange}
                 required
                 fullWidth
-                InputLabelProps={{ shrink: true }}
-                label="Time"
+                inputProps={{
+                  pattern: "^(0?[1-9]|1[0-2]):[0-5][0-9]\\s?(AM|PM|am|pm)$",
+                }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -208,7 +207,7 @@ const AddEvent = () => {
               label="Anganwadi No"
               name="anganwadiNo"
               value={event.anganwadiNo}
-              disabled // Prevent manual changes
+              disabled
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

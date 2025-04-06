@@ -83,9 +83,6 @@ const AdminLayout = ({ children }) => {
           <h2 className="text-2xl font-semibold">Welcome, Admin</h2>
           <div className="flex items-center space-x-4">
             <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
-              <User className="mr-2" /> Edit Profile
-            </button>
-            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
               <LogOut className="mr-2" /> Logout
             </button>
           </div>

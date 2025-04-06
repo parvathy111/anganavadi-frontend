@@ -46,7 +46,7 @@ const ViewVaccine = ({ userRole }) => {
   useEffect(() => {
     const fetchVaccines = async () => {
       try {
-        const response = await api.get("/vaccines");
+        const response = await api.get("/vaccines/");
         let filteredVaccines = response.data;
 
         if (userRole !== "Worker") {
@@ -278,7 +278,7 @@ const ViewVaccine = ({ userRole }) => {
           fullWidth
           maxWidth="sm"
         >
-          <DialogTitle className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+          <DialogTitle className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
             Edit Vaccine Record
           </DialogTitle>
           <DialogContent>
@@ -358,8 +358,8 @@ const ViewVaccine = ({ userRole }) => {
           <DialogActions>
             <Button 
               onClick={() => setOpenEditModal(false)}
-              variant="outlined"
-              color="secondary"
+              
+              color="primary"
             >
               Cancel
             </Button>
@@ -367,7 +367,7 @@ const ViewVaccine = ({ userRole }) => {
               onClick={handleUpdateVaccine} 
               color="primary"
               variant="contained"
-              className="bg-gradient-to-r from-blue-500 to-blue-600"
+              className="bg-gradient-to-r from-orange-500 to-orange-600"
             >
               Save Changes
             </Button>

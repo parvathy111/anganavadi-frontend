@@ -20,6 +20,7 @@ import {
   Wc as WcIcon,
   SupervisorAccount as SupervisorIcon,
   AddCircleOutline as AddIcon,
+  Apartment as ApartmentIcon,
 } from "@mui/icons-material";
 import AdminLayout from "../layouts/AdminLayout";
 import api from "../config/axiosinstance";
@@ -28,6 +29,7 @@ const AddSupervisor = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     localBody: "",
+    localbodyName: "", // ➕ new field
     gender: "",
     address: "",
     phone: "",
@@ -37,30 +39,29 @@ const AddSupervisor = () => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
       const response = await api.post("/supervisor/createsupervisor", formData);
-      console.log("Response:", response.data); // Debugging step
+      console.log("Response:", response.data);
       setOpen(true);
       setFormData({
         fullname: "",
         localBody: "",
+        localbodyName: "",
         gender: "",
         address: "",
         phone: "",
         email: "",
       });
     } catch (err) {
-      console.error("Request failed:", err.response?.data); // Log error details
+      console.error("Request failed:", err.response?.data);
       setError(
         err.response?.data?.message || "Server error. Please try again."
       );
@@ -69,14 +70,10 @@ const AddSupervisor = () => {
 
   return (
     <AdminLayout>
-      {/* Header Section */}
       <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1.5 }}>
         <SupervisorIcon sx={{ fontSize: 36, color: "#ff7043" }} />
         <div>
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: "bold", color: "#ff7043" }}
-          >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "#ff7043" }}>
             Add New Supervisor
           </Typography>
           <Typography variant="body2" sx={{ color: "gray" }}>
@@ -85,7 +82,6 @@ const AddSupervisor = () => {
         </div>
       </Box>
 
-      {/* Form Container */}
       <Container maxWidth="sm" sx={{ mt: 1 }}>
         <Paper elevation={6} sx={{ p: 3, borderRadius: 3 }}>
           {error && <Alert severity="error">{error}</Alert>}
@@ -113,10 +109,11 @@ const AddSupervisor = () => {
               }}
             />
 
+<div className="flex gap-5">
             <TextField
               fullWidth
               select
-              label="Local Body"
+              label="Local Body Type"
               name="localBody"
               value={formData.localBody}
               onChange={handleChange}
@@ -133,6 +130,23 @@ const AddSupervisor = () => {
               <MenuItem value="Panchayath">Panchayath</MenuItem>
               <MenuItem value="Corporation">Corporation</MenuItem>
             </TextField>
+
+            <TextField
+              fullWidth
+              label="Local Body Name"
+              name="localbodyName"
+              value={formData.localbodyName}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <ApartmentIcon sx={{ color: "#ff7043", fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+</div>
 
             <TextField
               fullWidth

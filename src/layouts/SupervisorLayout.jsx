@@ -20,7 +20,8 @@ const SupervisorLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [foodDropdown, setFoodDropdown] = useState(false);
   const [anganwadiDropdown, setAnganwadiDropdown] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [workerDropdown, setWorkerDropdown] = useState(false); // ✅ Added this line
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -95,33 +96,42 @@ const SupervisorLayout = ({ children }) => {
               )}
             </div>
 
-            <div className="space-y-2">
-              {/* Manage Worker Dropdown */}
-              <details className="group">
-                <summary className="flex items-center justify-between p-2 cursor-pointer hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded">
-                  <span className="flex items-center space-x-2">
-                    <Users />
-                    {sidebarOpen && <span>Manage Worker</span>}
-                  </span>
-                  <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
-                </summary>
-                <div className="pl-6 space-y-1">
+            {/* Manage Worker Dropdown */}
+            <div>
+              <button
+                onClick={() => setWorkerDropdown(!workerDropdown)}
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2 transition-all duration-200"
+              >
+                <Users />
+                {sidebarOpen && (
+                  <>
+                    <span>Manage Worker</span>
+                    <ChevronDown
+                      className={`ml-auto transition-transform duration-300 ${
+                        workerDropdown ? "rotate-180" : ""
+                      }`}
+                      size={16}
+                    />
+                  </>
+                )}
+              </button>
+
+              {workerDropdown && sidebarOpen && (
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
                   <a
                     href="/add-worker"
-                    className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
                   >
-                    <UserPlus />
-                    {sidebarOpen && <span>Add Worker</span>}
+                    Add Worker
                   </a>
                   <a
                     href="/view-workers"
-                    className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
                   >
-                    <Users />
-                    {sidebarOpen && <span>View Workers</span>}
+                    View Workers
                   </a>
                 </div>
-              </details>
+              )}
             </div>
 
             {/* Food Stock Dropdown */}
@@ -205,13 +215,15 @@ const SupervisorLayout = ({ children }) => {
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-2xl font-semibold">Welcome, Supervisor</h2>
           <div className="flex items-center space-x-1">
-            <button onClick={() => navigate("/edit-profile/supervisor")}
-            className="flex items-center  text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition ">
+            <button
+              onClick={() => navigate("/edit-profile/supervisor")}
+              className="flex items-center text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition"
+            >
               <User className="mr-2" /> Edit Profile
             </button>
             <button
               onClick={() => navigate("/change-password")}
-              className="flex items-center  text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition "
+              className="flex items-center text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition"
             >
               <KeyRound className="mr-2" /> Change Password
             </button>

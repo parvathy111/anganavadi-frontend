@@ -39,6 +39,9 @@ import EditProfile from "./pages/EditProfile";
 import ChangePassword from "./pages/ChangePassword";
 import SupervisorLayout from "./layouts/SupervisorLayout";
 import WorkerLayout from "./layouts/WorkerLayout";
+import BeneficiaryLayout from "./layouts/BeneficiaryLayout";
+import ViewBeneficiaryVaccine from "./pages/ViewBeneficiaryVaccine";
+import ViewBeneficiaryEvents from "./pages/ViewBeneficiaryEvents";
 
 
 
@@ -91,9 +94,13 @@ function App() {
 
       <Route path="/edit-profile/:userType" element={<SupervisorLayout> <EditProfile /> </SupervisorLayout>} />
       <Route path="/editprofile/:userType" element={<WorkerLayout><EditProfile /></WorkerLayout>} />
+      <Route path="/edit-beneficiary-Profile/:userType" element={<BeneficiaryLayout> <EditProfile /> </BeneficiaryLayout>} />
 
       <Route path="/change-password" element={<SupervisorLayout><ChangePassword /></SupervisorLayout>} />
       <Route path="/changepassword" element={<WorkerLayout><ChangePassword /></WorkerLayout>} />
+
+      <Route path="/beneficiary-view-vaccines" element={<ViewBeneficiaryVaccine />} />
+      <Route path="/beneficiary-view-events" element={<ViewBeneficiaryEvents />} />
       
       </Routes>
    

@@ -1,4 +1,5 @@
 import React, { useState } from "react"; // Import useState
+import { useNavigate } from "react-router-dom"; 
 import {
   Menu,
   User,
@@ -9,11 +10,13 @@ import {
   Baby,
   LogOut,
   Edit3,
+  LayoutDashboard ,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 
 const BeneficiaryLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -40,6 +43,16 @@ const BeneficiaryLayout = ({ children }) => {
 
           {/* Nav Links */}
           <nav className="flex flex-col space-y-4 mt-8 px-2">
+             {/* Dashboard */}
+             <a
+              href="/beneficiary-dashboard"
+              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
+            >
+              <LayoutDashboard />
+              {sidebarOpen && <span>Dashboard</span>}
+            </a>
+
+            <div className="border-b border-white border-opacity-30 my-2"></div>
             <a
               href="#"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
@@ -55,14 +68,14 @@ const BeneficiaryLayout = ({ children }) => {
               {sidebarOpen && <span>Food Distribution</span>}
             </a>
             <a
-              href="#"
+              href="/beneficiary-view-vaccines"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
             >
               <Syringe />
               {sidebarOpen && <span>Vaccination Records</span>}
             </a>
             <a
-              href="#"
+              href="/beneficiary-view-events"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
             >
               <Calendar />
@@ -102,11 +115,12 @@ const BeneficiaryLayout = ({ children }) => {
         {/* Top Navbar */}
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold">Welcome, Beneficiary</h2>
-          <div className="flex items-center space-x-4">
-            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
+          <div className="flex items-center space-x-1">
+            <button  onClick={() => navigate("/edit-beneficiary-Profile/parent")}
+            className="flex items-center  text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
               <Edit3 className="mr-2" /> Edit Profile
             </button>
-            <button className="flex items-center bg-[#ff7043] text-[#fafafa] px-4 py-2 rounded-lg hover:opacity-90 transition border border-[#ff7043]">
+            <button className="flex items-center  text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
               <LogOut className="mr-2" /> Logout
             </button>
           </div>
