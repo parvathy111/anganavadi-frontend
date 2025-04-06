@@ -254,7 +254,7 @@ function WorkerLayout({ children }) {
               </button>
               {messageDropdown && sidebarOpen && (
                 <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
-                  <Link to="/send-message-supervisor" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link to="/worker-send-supervisor" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     To Supervisor
                   </Link>
                   <Link to="/send-message-beneficiary" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">

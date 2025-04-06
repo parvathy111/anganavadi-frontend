@@ -41,16 +41,19 @@ export default function SendMessageSupervisor() {
     }
   };
 
-  const filteredWorkers = workers.filter((worker) =>
-    worker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    worker.anganwadiNo.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredWorkers = workers.filter(
+    (worker) =>
+      worker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      worker.anganwadiNo.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleOpenChat = async (worker) => {
     setSelectedWorker(worker);
     setMessageInput("");
     try {
-      const res = await api.get(`/messages/conversation/${user.id}/${worker._id}`);
+      const res = await api.get(
+        `/messages/conversation/${user.id}/${worker._id}`
+      );
       setMessages(res.data.data || []);
     } catch (err) {
       console.error("Error loading chat history:", err);
@@ -186,21 +189,28 @@ export default function SendMessageSupervisor() {
                     No messages yet.
                   </Typography>
                 ) : (
-                  messages.map((msg, index) => (
-                    <div
-                      key={index}
-                      className={`max-w-[40%] p-2 rounded-md text-sm ${
-                        msg.sender === user.id
-                          ? "bg-blue-100 text-right self-end ml-auto"
-                          : "bg-gray-200 text-left self-start"
-                      }`}
-                    >
-                      <p>{msg.text}</p>
-                      <p className="text-[10px] text-gray-500 mt-1 text-right">
-                        {new Date(msg.timestamp).toLocaleTimeString()}
-                      </p>
-                    </div>
-                  ))
+                  messages.map((msg, index) => {
+                    const isSentByCurrentUser = msg.sender === user.id;
+                    return (
+                      <div
+                        key={index}
+                        className={`max-w-[60%] p-2 rounded-lg text-sm ${
+                          isSentByCurrentUser
+                            ? "bg-blue-100 text-right self-end ml-auto"
+                            : "bg-green-100 text-left self-start"
+                        }`}
+                      >
+                        <p>{msg.text}</p>
+                        <p className="text-[10px] text-gray-500 mt-1 text-right">
+                          {new Date(msg.timestamp).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </p>
+                      </div>
+                    );
+                  })
                 )}
               </div>
 

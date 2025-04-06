@@ -43,6 +43,7 @@ import BeneficiaryLayout from "./layouts/BeneficiaryLayout";
 import ViewBeneficiaryVaccine from "./pages/ViewBeneficiaryVaccine";
 import ViewBeneficiaryEvents from "./pages/ViewBeneficiaryEvents";
 import SendMessageSupervisor from "./pages/SendMessageSupervisor";
+import WorkerSendSupervisor from "./pages/WorkerSendSupervisor";
 
 
 
@@ -105,6 +106,7 @@ function App() {
 
 
       <Route path="/send-message" element={<SendMessageSupervisor />} />
+      <Route path="/worker-send-supervisor" element={<WorkerSendSupervisor />} />
       
       </Routes>
    
