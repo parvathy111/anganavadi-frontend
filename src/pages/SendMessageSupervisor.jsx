@@ -17,7 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import api from "../config/axiosinstance";
 import { useUser } from "../store/useUser";
 
-export default function SendMessage() {
+export default function SendMessageSupervisor() {
   const [workers, setWorkers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);

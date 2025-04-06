@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Menu,
   LayoutDashboard,
@@ -24,9 +24,9 @@ function WorkerLayout({ children }) {
   const [vaccinesDropdown, setVaccinesDropdown] = useState(false);
   const [foodDropdown, setFoodDropdown] = useState(false);
   const [dailyTrackDropdown, setDailyTrackDropdown] = useState(false);
+  const [messageDropdown, setMessageDropdown] = useState(false);
   const navigate = useNavigate();
-
-  const {logout} = useUser()
+  const { logout } = useUser();
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -54,13 +54,13 @@ function WorkerLayout({ children }) {
           {/* Nav Links */}
           <nav className="flex flex-col space-y-4 mt-8 px-2">
             {/* Dashboard */}
-            <a
-              href="/worker-dashboard"
+            <Link
+              to="/worker-dashboard"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
             >
               <LayoutDashboard />
               {sidebarOpen && <span>Dashboard</span>}
-            </a>
+            </Link>
 
             <div className="border-b border-white border-opacity-30 my-2"></div>
 
@@ -84,19 +84,19 @@ function WorkerLayout({ children }) {
                 )}
               </button>
               {dailyTrackDropdown && sidebarOpen && (
-                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
-                  <a
-                    href="/upload-daily-track"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
+                  <Link
+                    to="/upload-daily-track"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
                   >
                     Upload Daily Activities
-                  </a>
-                  <a
-                    href="/worker-view-dailytracks"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
+                  </Link>
+                  <Link
+                    to="/worker-view-dailytracks"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
                   >
                     View Activities
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -104,8 +104,10 @@ function WorkerLayout({ children }) {
             {/* Beneficiaries Dropdown */}
             <div>
               <button
-                onClick={() => setBeneficiariesDropdown(!beneficiariesDropdown)}
-                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
+                onClick={() =>
+                  setBeneficiariesDropdown(!beneficiariesDropdown)
+                }
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2"
               >
                 <Users />
                 {sidebarOpen && (
@@ -121,25 +123,16 @@ function WorkerLayout({ children }) {
                 )}
               </button>
               {beneficiariesDropdown && sidebarOpen && (
-                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
-                  <a
-                    href="/approve-beneficiaries"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
+                  <Link to="/approve-beneficiaries" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     New Registrations
-                  </a>
-                  <a
-                    href="view-child-parents"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                  </Link>
+                  <Link to="/view-child-parents" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     Children List
-                  </a>
-                  <a
-                    href="/view-preg-lact-women"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                  </Link>
+                  <Link to="/view-preg-lact-women" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     Pregnant Women List
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -148,7 +141,7 @@ function WorkerLayout({ children }) {
             <div>
               <button
                 onClick={() => setFoodDropdown(!foodDropdown)}
-                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2"
               >
                 <Package />
                 {sidebarOpen && (
@@ -164,25 +157,16 @@ function WorkerLayout({ children }) {
                 )}
               </button>
               {foodDropdown && sidebarOpen && (
-                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
-                  <a
-                    href="/order-product"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
+                  <Link to="/order-product" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     Order Stock
-                  </a>
-                  <a
-                    href="/view-order"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                  </Link>
+                  <Link to="/view-order" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     My Order
-                  </a>
-                  <a
-                    href="/worker-available-stock"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                  </Link>
+                  <Link to="/worker-available-stock" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     View Stock
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -191,7 +175,7 @@ function WorkerLayout({ children }) {
             <div>
               <button
                 onClick={() => setEventsDropdown(!eventsDropdown)}
-                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2"
               >
                 <Calendar />
                 {sidebarOpen && (
@@ -207,19 +191,13 @@ function WorkerLayout({ children }) {
                 )}
               </button>
               {eventsDropdown && sidebarOpen && (
-                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
-                  <a
-                    href="/add-event"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
+                  <Link to="/add-event" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     New Event
-                  </a>
-                  <a
-                    href="/view-events"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                  </Link>
+                  <Link to="/view-events" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     View Event Details
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -228,7 +206,7 @@ function WorkerLayout({ children }) {
             <div>
               <button
                 onClick={() => setVaccinesDropdown(!vaccinesDropdown)}
-                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2"
               >
                 <Syringe />
                 {sidebarOpen && (
@@ -244,31 +222,47 @@ function WorkerLayout({ children }) {
                 )}
               </button>
               {vaccinesDropdown && sidebarOpen && (
-                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2 transition-all duration-300">
-                  <a
-                    href="/add-vaccine"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
+                  <Link to="/add-vaccine" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     New Vaccine
-                  </a>
-                  <a
-                    href="/view-vaccines"
-                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white transition-all duration-200"
-                  >
+                  </Link>
+                  <Link to="/view-vaccines" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
                     View Vaccine Details
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
 
-            {/* Messages Link */}
-            <a
-              href="/send-message"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
-            >
-              <MessageSquare />
-              {sidebarOpen && <span>Messages</span>}
-            </a>
+            {/* Messages Dropdown */}
+            <div>
+              <button
+                onClick={() => setMessageDropdown(!messageDropdown)}
+                className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2"
+              >
+                <MessageSquare />
+                {sidebarOpen && (
+                  <>
+                    <span>Messages</span>
+                    <ChevronDown
+                      className={`ml-auto transition-transform duration-300 ${
+                        messageDropdown ? "rotate-180" : ""
+                      }`}
+                      size={16}
+                    />
+                  </>
+                )}
+              </button>
+              {messageDropdown && sidebarOpen && (
+                <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
+                  <Link to="/send-message-supervisor" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                    To Supervisor
+                  </Link>
+                  <Link to="/send-message-beneficiary" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                    To Beneficiary
+                  </Link>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
 
@@ -290,18 +284,22 @@ function WorkerLayout({ children }) {
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold">Welcome, Worker</h2>
           <div className="flex items-center space-x-4">
-            <button onClick={() => navigate("/editprofile/worker")}
-            className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
+            <button
+              onClick={() => navigate("/editprofile/worker")}
+              className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition"
+            >
               <User className="mr-2" /> Edit Profile
             </button>
             <button
               onClick={() => navigate("/changepassword")}
-              className="flex items-center  text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition "
+              className="flex items-center text-[#ff7043] px-3 py-2 rounded-lg hover:opacity-90 transition"
             >
               <KeyRound className="mr-2" /> Change Password
             </button>
-            <button onClick={ logout }
-            className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
+            <button
+              onClick={logout}
+              className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition"
+            >
               <LogOut className="mr-2" /> Logout
             </button>
           </div>

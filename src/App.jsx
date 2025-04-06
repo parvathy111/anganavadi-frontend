@@ -42,7 +42,7 @@ import WorkerLayout from "./layouts/WorkerLayout";
 import BeneficiaryLayout from "./layouts/BeneficiaryLayout";
 import ViewBeneficiaryVaccine from "./pages/ViewBeneficiaryVaccine";
 import ViewBeneficiaryEvents from "./pages/ViewBeneficiaryEvents";
-import SendMessage from "./pages/SendMessage";
+import SendMessageSupervisor from "./pages/SendMessageSupervisor";
 
 
 
@@ -104,7 +104,7 @@ function App() {
       <Route path="/beneficiary-view-events" element={<ViewBeneficiaryEvents />} />
 
 
-      <Route path="/send-message" element={<SendMessage />} />
+      <Route path="/send-message" element={<SendMessageSupervisor />} />
       
       </Routes>
    
