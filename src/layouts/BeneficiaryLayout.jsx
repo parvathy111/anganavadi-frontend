@@ -64,7 +64,7 @@ const BeneficiaryLayout = ({ children }) => {
               {sidebarOpen && <span>My Profile</span>}
             </a>
             <a
-              href="#"
+              href="/beneficiary-stock"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
             >
               <Package />

@@ -12,6 +12,8 @@ import {
   TablePagination,
   TextField,
   InputAdornment,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import VaccinesIcon from "@mui/icons-material/Vaccines";
@@ -19,15 +21,20 @@ import PersonIcon from "@mui/icons-material/Person";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
 import api from "../config/axiosinstance";
 import BeneficiaryLayout from "../layouts/BeneficiaryLayout";
+import { useUser } from "../store/useUser"; // Adjust path if needed
 
 const ViewBeneficiaryVaccine = () => {
+  const { user } = useUser();
   const [vaccines, setVaccines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     const fetchVaccines = async () => {
@@ -55,6 +62,37 @@ const ViewBeneficiaryVaccine = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const markAsCompleted = async (vaccineId) => {
+    if (!user?._id) return;
+
+    setUpdating(true);
+    try {
+      await api.put(`/vaccines/complete/${vaccineId}`, { userId: user._id });
+
+      // update UI
+      setVaccines((prev) =>
+        prev.map((v) =>
+          v._id === vaccineId
+            ? {
+                ...v,
+                completedPersons: [...(v.completedPersons || []), user._id],
+              }
+            : v
+        )
+      );
+    } catch (error) {
+      if (error.response) {
+        console.error("Server responded with an error:", error.response.data);
+      } else if (error.request) {
+        console.error("Request was made but no response received:", error.request);
+      } else {
+        console.error("Something went wrong setting up the request:", error.message);
+      }
+    } finally {
+      setUpdating(false);
+    }
   };
 
   if (loading) {
@@ -123,22 +161,47 @@ const ViewBeneficiaryVaccine = () => {
                     <DateRangeIcon fontSize="small" className="mr-1" />
                     Last Date
                   </TableCell>
+                  <TableCell className="text-white font-semibold w-24 text-center">
+                    Completed
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {filteredVaccines
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((vaccine) => (
-                    <TableRow key={vaccine._id} hover>
-                      <TableCell>{vaccine.vaccine}</TableCell>
-                      <TableCell>{vaccine.stage}</TableCell>
-                      <TableCell>{vaccine.dose}</TableCell>
-                      <TableCell>{vaccine.vaccinator}</TableCell>
-                      <TableCell>
-                        {new Date(vaccine.lastDate).toLocaleDateString()}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  .map((vaccine) => {
+                    const isCompleted = vaccine.completedPersons?.includes(
+                      user._id
+                    );
+                    return (
+                      <TableRow key={vaccine._id} hover>
+                        <TableCell>{vaccine.vaccine}</TableCell>
+                        <TableCell>{vaccine.stage}</TableCell>
+                        <TableCell>{vaccine.dose}</TableCell>
+                        <TableCell>{vaccine.vaccinator}</TableCell>
+                        <TableCell>
+                          {new Date(vaccine.lastDate).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Tooltip
+                            title={
+                              isCompleted ? "Completed" : "Mark as Completed"
+                            }
+                          >
+                            <span>
+                              <IconButton
+                                disabled={updating || isCompleted}
+                                onClick={() => markAsCompleted(vaccine._id)}
+                                color={isCompleted ? "default" : "success"}
+                              >
+                                <CheckCircleIcon />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -159,3 +222,4 @@ const ViewBeneficiaryVaccine = () => {
 };
 
 export default ViewBeneficiaryVaccine;
+

@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../config/axiosinstance";
@@ -7,6 +6,7 @@ const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [anganwadiNo, setAnganwadiNo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -15,33 +15,32 @@ export const UserProvider = ({ children }) => {
       try {
         const res = await api.get("/auth/me");
         setUser(res.data);
+        setAnganwadiNo(res.data.anganwadiNo); // should now be available
       } catch (error) {
         console.error("Error fetching user:", error);
         setUser(null);
+        setAnganwadiNo(null);
       } finally {
         setIsLoading(false);
       }
     };
-
-
     fetchUser();
   }, []);
-
+    
   const logout = async () => {
     console.log("logout");
     localStorage.clear();
-    
+    setUser(null);
+    setAnganwadiNo(null);
     navigate("/");
   };
 
-  // Add changePassword function if needed later
   const changePassword = () => {
-    // Example stub
     console.log("Change password function called.");
   };
 
   return (
-    <UserContext.Provider value={{ user, logout, isLoading, changePassword }}>
+    <UserContext.Provider value={{ user, anganwadiNo, logout, isLoading, changePassword }}>
       {children}
     </UserContext.Provider>
   );

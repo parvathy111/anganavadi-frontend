@@ -44,6 +44,7 @@ import ViewBeneficiaryVaccine from "./pages/ViewBeneficiaryVaccine";
 import ViewBeneficiaryEvents from "./pages/ViewBeneficiaryEvents";
 import SendMessageSupervisor from "./pages/SendMessageSupervisor";
 import WorkerSendSupervisor from "./pages/WorkerSendSupervisor";
+import ViewBeneficiaryStock from "./pages/ViewBeneficiaryStock";
 
 
 
@@ -108,6 +109,7 @@ function App() {
       <Route path="/send-message" element={<SendMessageSupervisor />} />
       <Route path="/worker-send-supervisor" element={<WorkerSendSupervisor />} />
       
+      <Route path="/beneficiary-stock" element={<ViewBeneficiaryStock />} />
       </Routes>
    
 
