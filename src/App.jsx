@@ -16,7 +16,6 @@ import AddProduct from "./pages/AddProduct";
 import ApproveBeneficiaries from "./pages/ApproveBeneficiaries";
 import ViewEvents from "./pages/ViewEvents";
 import ViewVaccine from "./pages/ViewVaccine";
-// import VaccineDetails from "./pages/VaccineDetails";
 
 import { useState } from "react";
 import AddSupervisor from "./pages/AddSupervisor";
@@ -45,6 +44,7 @@ import ViewBeneficiaryEvents from "./pages/ViewBeneficiaryEvents";
 import SendMessageSupervisor from "./pages/SendMessageSupervisor";
 import WorkerSendSupervisor from "./pages/WorkerSendSupervisor";
 import ViewBeneficiaryStock from "./pages/ViewBeneficiaryStock";
+import VaccineDetail from "./pages/VaccineDetails";
 
 
 
@@ -69,7 +69,7 @@ function App() {
         <Route path="/approve-beneficiaries" element={<ApproveBeneficiaries />} />
         <Route path="/view-events" element={<ViewEvents />} />
         <Route path="/view-vaccines" element={<ViewVaccine userRole={userRole} />} />
-        {/* <Route path="/vaccine/:id" element={<VaccineDetails />} /> */}
+        <Route path="/vaccine-detail/:id" element={<VaccineDetail />} />
 
         
       <Route path="/add-supervisor" element={<AddSupervisor />} />

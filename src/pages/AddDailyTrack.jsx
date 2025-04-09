@@ -56,9 +56,7 @@ const AddDailyTrack = () => {
     });
 
     try {
-      await api.post("/dailytracks/add", formDataToSend, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await api.post("/dailytracks/add", formDataToSend);
 
       setOpen(true);
       setFormData({

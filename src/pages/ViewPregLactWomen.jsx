@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import WorkerLayout from '../layouts/WorkerLayout';
-import { User, CalendarDays, Hash, MapPin, Phone, Mail, ShieldCheck, Users } from 'lucide-react';
+import {
+  User,
+  CalendarDays,
+  Hash,
+  MapPin,
+  Phone,
+  Mail,
+  ShieldCheck,
+  Users,
+} from 'lucide-react';
 import {
   Paper,
   Table,
@@ -23,7 +32,7 @@ const PregLactWomenList = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchWomen = async () => {
@@ -74,9 +83,10 @@ const PregLactWomenList = () => {
             >
               Pregnant and Lactating Women :
             </Typography>
-            <p className="mt-1 text-gray-500 text-sm">These are the List of all Pregnant women and Lactating women.</p>
+            <p className="mt-1 text-gray-500 text-sm">
+              These are the List of all Pregnant women and Lactating women.
+            </p>
           </div>
-          {/* Search bar aligned right */}
           <TextField
             label="Search by Name"
             variant="outlined"
@@ -94,46 +104,89 @@ const PregLactWomenList = () => {
         </div>
 
         <Paper elevation={6} className="rounded-xl shadow-xl overflow-hidden">
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
-                  <TableCell className="text-white font-semibold"><User size={16} className="inline mr-2" />Full Name</TableCell>
-                  <TableCell className="text-white font-semibold"><CalendarDays size={16} className="inline mr-2" />Delivery Date</TableCell>
-                  <TableCell className="text-white font-semibold"><Hash size={16} className="inline mr-2" />Previous Pregnancies</TableCell>
-                  <TableCell className="text-white font-semibold"><MapPin size={16} className="inline mr-2" />Address</TableCell>
-                  <TableCell className="text-white font-semibold"><Phone size={16} className="inline mr-2" />Phone</TableCell>
-                  <TableCell className="text-white font-semibold"><Mail size={16} className="inline mr-2" />Email</TableCell>
-                  <TableCell className="text-white font-semibold"><ShieldCheck size={16} className="inline mr-2" />Status</TableCell>
-                  <TableCell className="text-white font-semibold"><Users size={16} className="inline mr-2" />Role</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredWomen.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((woman) => (
-                  <TableRow key={woman._id} hover>
-                    <TableCell>{woman.fullname}</TableCell>
-                    <TableCell>{new Date(woman.deliveryDate).toLocaleDateString()}</TableCell>
-                    <TableCell>{woman.prevNumPreg}</TableCell>
-                    <TableCell>{woman.address}</TableCell>
-                    <TableCell>{woman.phone}</TableCell>
-                    <TableCell>{woman.email}</TableCell>
-                    <TableCell>{woman.status}</TableCell>
-                    <TableCell>{woman.role}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {filteredWomen.length === 0 ? (
+            <Typography
+              variant="body1"
+              align="center"
+              className="text-gray-600 py-10"
+            >
+              No data available.
+            </Typography>
+          ) : (
+            <>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow className="bg-gradient-to-r from-orange-400 to-orange-500">
+                      <TableCell className="text-white font-semibold">
+                        <User size={16} className="inline mr-2" />
+                        Full Name
+                      </TableCell>
+                      <TableCell className="text-white font-semibold">
+                        <CalendarDays size={16} className="inline mr-2" />
+                        Delivery Date
+                      </TableCell>
+                      <TableCell className="text-white font-semibold">
+                        <Hash size={16} className="inline mr-2" />
+                        Previous Pregnancies
+                      </TableCell>
+                      <TableCell className="text-white font-semibold">
+                        <MapPin size={16} className="inline mr-2" />
+                        Address
+                      </TableCell>
+                      <TableCell className="text-white font-semibold">
+                        <Phone size={16} className="inline mr-2" />
+                        Phone
+                      </TableCell>
+                      <TableCell className="text-white font-semibold">
+                        <Mail size={16} className="inline mr-2" />
+                        Email
+                      </TableCell>
+                      <TableCell className="text-white font-semibold">
+                        <ShieldCheck size={16} className="inline mr-2" />
+                        Status
+                      </TableCell>
+                      <TableCell className="text-white font-semibold">
+                        <Users size={16} className="inline mr-2" />
+                        Role
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {filteredWomen
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((woman) => (
+                        <TableRow key={woman._id} hover>
+                          <TableCell>{woman.fullname}</TableCell>
+                          <TableCell>
+                            {new Date(woman.deliveryDate).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>{woman.prevNumPreg}</TableCell>
+                          <TableCell>{woman.address}</TableCell>
+                          <TableCell>{woman.phone}</TableCell>
+                          <TableCell>{woman.email}</TableCell>
+                          <TableCell>{woman.status}</TableCell>
+                          <TableCell>{woman.role}</TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
 
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={filteredWomen.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={filteredWomen.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </>
+          )}
         </Paper>
       </div>
     </WorkerLayout>

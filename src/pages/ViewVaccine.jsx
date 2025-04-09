@@ -21,15 +21,18 @@ import {
   Button,
   Grid,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Syringe, CalendarDays, User, Shield } from "lucide-react";
 import api from "../config/axiosinstance";
+import { useNavigate } from "react-router-dom";
 
 const ViewVaccine = ({ userRole }) => {
+  const navigate = useNavigate();
   const [vaccines, setVaccines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -114,7 +117,8 @@ const ViewVaccine = ({ userRole }) => {
     } catch (error) {
       console.error("Error updating vaccine:", error);
       showNotification(
-        error.response?.data?.message || "Failed to update vaccine. Please try again.",
+        error.response?.data?.message ||
+          "Failed to update vaccine. Please try again.",
         "error"
       );
     }
@@ -152,11 +156,11 @@ const ViewVaccine = ({ userRole }) => {
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert 
-            onClose={handleCloseSnackbar} 
-            severity={notification.severity} 
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity={notification.severity}
             variant="filled"
-            sx={{ width: '100%' }}
+            sx={{ width: "100%" }}
           >
             {notification.message}
           </Alert>
@@ -238,20 +242,30 @@ const ViewVaccine = ({ userRole }) => {
                         {new Date(vaccine.lastDate).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
-                        <IconButton 
-                          onClick={() => handleEdit(vaccine)} 
+                        <IconButton
+                          onClick={() => handleEdit(vaccine)}
                           color="primary"
                           size="small"
                           className="mr-1"
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>
-                        <IconButton 
-                          onClick={() => handleDelete(vaccine._id)} 
+                        <IconButton
+                          onClick={() => handleDelete(vaccine._id)}
                           color="error"
                           size="small"
                         >
                           <DeleteIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          onClick={() =>
+                            navigate(`/vaccine-detail/${vaccine._id}`)
+                          }
+                          color="info"
+                          size="small"
+                          className="mr-1"
+                        >
+                          <InfoOutlinedIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -344,7 +358,7 @@ const ViewVaccine = ({ userRole }) => {
                   label="Last Date"
                   type="date"
                   name="lastDate"
-                  value={editVaccineData?.lastDate?.split('T')[0] || ""}
+                  value={editVaccineData?.lastDate?.split("T")[0] || ""}
                   onChange={handleEditInputChange}
                   InputLabelProps={{
                     shrink: true,
@@ -356,15 +370,11 @@ const ViewVaccine = ({ userRole }) => {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button 
-              onClick={() => setOpenEditModal(false)}
-              
-              color="primary"
-            >
+            <Button onClick={() => setOpenEditModal(false)} color="primary">
               Cancel
             </Button>
-            <Button 
-              onClick={handleUpdateVaccine} 
+            <Button
+              onClick={handleUpdateVaccine}
               color="primary"
               variant="contained"
               className="bg-gradient-to-r from-orange-500 to-orange-600"
