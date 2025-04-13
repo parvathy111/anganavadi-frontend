@@ -26,7 +26,7 @@ import WorkerLayout from "../layouts/WorkerLayout";
 const AddEvent = () => {
   const [event, setEvent] = useState({
     eventName: "",
-    participants: "",
+    participantType: "",
     date: "",
     time: "",
     conductedBy: "",
@@ -62,7 +62,7 @@ const AddEvent = () => {
     try {
       await api.post("/events/add", {
         eventName: event.eventName,
-        participants: event.participants ? [event.participants] : [],
+        participantType: event.participantType,
         date: event.date,
         time: event.time,
         conductedBy: event.conductedBy,
@@ -71,7 +71,7 @@ const AddEvent = () => {
       setOpen(true);
       setEvent({
         eventName: "",
-        participants: "",
+        participantType: "",
         date: "",
         time: "",
         conductedBy: "",
@@ -128,9 +128,9 @@ const AddEvent = () => {
 
             <TextField
               select
-              label="Participants"
-              name="participants"
-              value={event.participants}
+              label="Participant Type"
+              name="participantType"
+              value={event.participantType}
               onChange={handleChange}
               required
               InputProps={{
@@ -142,7 +142,7 @@ const AddEvent = () => {
               }}
             >
               <MenuItem value="Parent">Parent</MenuItem>
-              <MenuItem value="Pregnant/Lactating women">
+              <MenuItem value="PregLactWomen">
                 Pregnant/Lactating women
               </MenuItem>
               <MenuItem value="Others">Others</MenuItem>

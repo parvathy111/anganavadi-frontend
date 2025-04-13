@@ -114,19 +114,28 @@ const EditProfile = () => {
             { name: "phone", type: "text", placeholder: "Phone" },
             { name: "anganwadiNo", type: "text", placeholder: "Anganwadi Number" },
             { name: "email", type: "email", placeholder: "Email" }
+        ],
+        preglac: [ 
+            { name: "fullname", type: "text", placeholder: "Full Name" },
+            { name: "deliveryDate", type: "date", placeholder: "Expected Delivery Date" },
+            { name: "prevNumPreg", type: "number", placeholder: "Number of Previous Pregnancies" },
+            { name: "address", type: "text", placeholder: "Address" },
+            { name: "phone", type: "text", placeholder: "Phone" },
+            { name: "anganwadiNo", type: "text", placeholder: "Anganwadi Number" },
+            { name: "email", type: "email", placeholder: "Email" }
         ]
     };
 
     return (
         <>
         <div>
-             <h2 className="text-2xl font-bold text-orange-500 mt-5 ml-5 mb-2 text-left flex items-center gap-2">
+             <h2 className="text-2xl font-bold text-orange-500 mt-2 ml-5 mb-2 text-left flex items-center gap-2">
                 <FaUser className="text-orange-500 text-3xl" /> Edit Profile
             </h2>
             <p className="ml-15 text-gray-400">You can edit your profile here.</p>
         </div>
         
-        <div className="max-w-2xl mt-12 mx-auto p-6 bg-white shadow-xl rounded-lg border border-gray-200">
+        <div className="max-w-2xl mt-4 mx-auto p-6 bg-white shadow-xl rounded-lg border border-gray-200">
            
             {loading ? (
                 <p className="text-center text-gray-600">Loading...</p>

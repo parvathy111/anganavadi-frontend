@@ -48,11 +48,12 @@ export default function SendMessageSupervisor() {
   );
 
   const handleOpenChat = async (worker) => {
+    console.log(user)
     setSelectedWorker(worker);
     setMessageInput("");
     try {
       const res = await api.get(
-        `/messages/conversation/${user.id}/${worker._id}`
+        `/messages/conversation/${user._id}/${worker._id}`
       );
       setMessages(res.data.data || []);
     } catch (err) {
@@ -65,7 +66,7 @@ export default function SendMessageSupervisor() {
     if (messageInput.trim() === "" || !user || !selectedWorker) return;
 
     const payload = {
-      sender: user.id,
+      sender: user._id,
       receiver: selectedWorker._id,
       text: messageInput,
     };

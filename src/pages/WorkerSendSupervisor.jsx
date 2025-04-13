@@ -27,8 +27,9 @@ export default function WorkerSendSupervisor() {
   }, [user]);
 
   const fetchSupervisorAndMessages = async () => {
+    console.log(user)
     try {
-      const res = await api.get(`/worker/${user.id}/supervisor`);
+      const res = await api.get(`/worker/${user._id}/supervisor`);
       const supervisorData = res.data?.data;
 
       if (!supervisorData) {
@@ -38,7 +39,7 @@ export default function WorkerSendSupervisor() {
       setSupervisor(supervisorData);
 
       const msgRes = await api.get(
-        `/messages/conversation/${user.id}/${supervisorData._id}`
+        `/messages/conversation/${user._id}/${supervisorData._id}`
       );
       setMessages(msgRes.data.data || []);
     } catch (err) {
@@ -54,7 +55,7 @@ export default function WorkerSendSupervisor() {
     if (messageInput.trim() === "" || !supervisor) return;
 
     const payload = {
-      sender: user.id,
+      sender: user._id,
       receiver: supervisor._id,
       text: messageInput,
     };

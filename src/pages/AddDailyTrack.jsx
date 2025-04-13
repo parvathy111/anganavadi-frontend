@@ -32,7 +32,6 @@ const AddDailyTrack = () => {
     todayMeal: "",
     topicLearned: "",
     otherActivities: "",
-    studentImage: null,
   });
 
   const [open, setOpen] = useState(false);
@@ -50,13 +49,10 @@ const AddDailyTrack = () => {
     e.preventDefault();
     setError("");
 
-    const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      formDataToSend.append(key, formData[key]);
-    });
+    
 
     try {
-      await api.post("/dailytracks/add", formDataToSend);
+      await api.post("/dailytracks/add", formData);
 
       setOpen(true);
       setFormData({
@@ -224,7 +220,7 @@ const AddDailyTrack = () => {
               }}
             />
 
-            <Button
+            {/* <Button
               variant="contained"
               component="label"
               startIcon={<CameraAltIcon />}
@@ -237,7 +233,7 @@ const AddDailyTrack = () => {
             >
               Upload Student Image
               <input type="file" hidden name="studentImage" onChange={handleFileChange} />
-            </Button>
+            </Button> */}
 
             <Button
               variant="contained"

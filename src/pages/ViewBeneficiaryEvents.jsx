@@ -127,7 +127,7 @@ const ViewBeneficiaryEvents = () => {
                     <TableRow key={event._id} hover>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{event.eventName}</TableCell>
-                      <TableCell>{event.participants.join(", ")}</TableCell>
+                      <TableCell>{event.participantType}</TableCell>
                       <TableCell>
                         {new Date(event.date).toLocaleDateString()} at {event.time}
                       </TableCell>

@@ -1,5 +1,5 @@
 import React, { useState } from "react"; // Import useState
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import {
   Menu,
   User,
@@ -10,7 +10,7 @@ import {
   Baby,
   LogOut,
   Edit3,
-  LayoutDashboard ,
+  LayoutDashboard,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 import { useUser } from "../store/useUser";
@@ -18,9 +18,17 @@ import { useUser } from "../store/useUser";
 const BeneficiaryLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
+  const { user } = useUser();
+  const { logout } = useUser();
 
-  const { logout } = useUser()
-
+  const handleEdit = () => {
+    if (user?.role === "parent") {
+      navigate("/edit-beneficiary-Profile/parent");
+    } else if (user?.role === "preglac") {
+      navigate("/edit-beneficiary-Profile/preglac");
+    }
+  };
+  /////////////////////////////////////////////////////////////
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -46,8 +54,8 @@ const BeneficiaryLayout = ({ children }) => {
 
           {/* Nav Links */}
           <nav className="flex flex-col space-y-4 mt-8 px-2">
-             {/* Dashboard */}
-             <a
+            {/* Dashboard */}
+            <a
               href="/beneficiary-dashboard"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded p-2"
             >
@@ -56,13 +64,14 @@ const BeneficiaryLayout = ({ children }) => {
             </a>
 
             <div className="border-b border-white border-opacity-30 my-2"></div>
-            <a
-              href="#"
-              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
+
+            <button
+              onClick={handleEdit}
+              className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200 w-full text-left"
             >
               <User />
               {sidebarOpen && <span>My Profile</span>}
-            </a>
+            </button>
             <a
               href="/beneficiary-stock"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
@@ -119,12 +128,18 @@ const BeneficiaryLayout = ({ children }) => {
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold">Welcome, Beneficiary</h2>
           <div className="flex items-center space-x-1">
-            <button  onClick={() => navigate("/edit-beneficiary-Profile/parent")}
-            className="flex items-center  text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
-              <Edit3 className="mr-2" /> Edit Profile
-            </button>
-            <button onClick={ logout }
-            className="flex items-center  text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition ">
+            {
+              <button
+                onClick={handleEdit}
+                className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition"
+              >
+                <Edit3 className="mr-2" /> Edit Profile
+              </button>
+            }
+            <button
+              onClick={logout}
+              className="flex items-center  text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition "
+            >
               <LogOut className="mr-2" /> Logout
             </button>
           </div>
