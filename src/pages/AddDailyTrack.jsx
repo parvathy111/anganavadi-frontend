@@ -235,6 +235,7 @@ const AddDailyTrack = () => {
               <input type="file" hidden name="studentImage" onChange={handleFileChange} />
             </Button> */}
 
+
             <Button
               variant="contained"
               type="submit"

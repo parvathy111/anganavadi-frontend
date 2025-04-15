@@ -45,6 +45,7 @@ import SendMessageSupervisor from "./pages/SendMessageSupervisor";
 import WorkerSendSupervisor from "./pages/WorkerSendSupervisor";
 import ViewBeneficiaryStock from "./pages/ViewBeneficiaryStock";
 import VaccineDetail from "./pages/VaccineDetails";
+import ChildDetails from "./pages/ChildDetails";
 
 
 
@@ -110,6 +111,9 @@ function App() {
       <Route path="/worker-send-supervisor" element={<WorkerSendSupervisor />} />
       
       <Route path="/beneficiary-stock" element={<ViewBeneficiaryStock />} />
+
+      <Route path="/child-details" element={<ChildDetails />} />
+
       </Routes>
    
 

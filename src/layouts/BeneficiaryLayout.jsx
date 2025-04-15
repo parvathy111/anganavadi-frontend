@@ -94,7 +94,7 @@ const BeneficiaryLayout = ({ children }) => {
               {sidebarOpen && <span>Event Calendar</span>}
             </a>
             <a
-              href="#"
+              href="/child-details"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
             >
               <Baby />
