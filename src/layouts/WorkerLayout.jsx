@@ -52,7 +52,7 @@ function WorkerLayout({ children }) {
           </div>
 
           {/* Nav Links */}
-          <nav className="flex flex-col space-y-4 mt-8 px-2">
+          <nav className="flex flex-col space-y-4 mt-4 px-2">
             {/* Dashboard */}
             <Link
               to="/worker-dashboard"
@@ -63,6 +63,14 @@ function WorkerLayout({ children }) {
             </Link>
 
             <div className="border-b border-white border-opacity-30 my-2"></div>
+
+            <Link
+              to="/view-anganawadi-details"
+              className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
+            >
+              <User />
+              {sidebarOpen && <span>Anganawadi Details</span>}
+            </Link>
 
             {/* Daily Track Dropdown */}
             <div>
@@ -104,9 +112,7 @@ function WorkerLayout({ children }) {
             {/* Beneficiaries Dropdown */}
             <div>
               <button
-                onClick={() =>
-                  setBeneficiariesDropdown(!beneficiariesDropdown)
-                }
+                onClick={() => setBeneficiariesDropdown(!beneficiariesDropdown)}
                 className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2"
               >
                 <Users />
@@ -124,13 +130,22 @@ function WorkerLayout({ children }) {
               </button>
               {beneficiariesDropdown && sidebarOpen && (
                 <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
-                  <Link to="/approve-beneficiaries" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/approve-beneficiaries"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     New Registrations
                   </Link>
-                  <Link to="/view-child-parents" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/view-child-parents"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     Children List
                   </Link>
-                  <Link to="/view-preg-lact-women" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/view-preg-lact-women"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     Pregnant Women List
                   </Link>
                 </div>
@@ -158,13 +173,22 @@ function WorkerLayout({ children }) {
               </button>
               {foodDropdown && sidebarOpen && (
                 <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
-                  <Link to="/order-product" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/order-product"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     Order Stock
                   </Link>
-                  <Link to="/view-order" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/view-order"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     My Order
                   </Link>
-                  <Link to="/worker-available-stock" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/worker-available-stock"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     View Stock
                   </Link>
                 </div>
@@ -192,10 +216,16 @@ function WorkerLayout({ children }) {
               </button>
               {eventsDropdown && sidebarOpen && (
                 <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
-                  <Link to="/add-event" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/add-event"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     New Event
                   </Link>
-                  <Link to="/view-events" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/view-events"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     View Event Details
                   </Link>
                 </div>
@@ -223,10 +253,16 @@ function WorkerLayout({ children }) {
               </button>
               {vaccinesDropdown && sidebarOpen && (
                 <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
-                  <Link to="/add-vaccine" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/add-vaccine"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     New Vaccine
                   </Link>
-                  <Link to="/view-vaccines" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/view-vaccines"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     View Vaccine Details
                   </Link>
                 </div>
@@ -254,10 +290,16 @@ function WorkerLayout({ children }) {
               </button>
               {messageDropdown && sidebarOpen && (
                 <div className="ml-6 mt-2 bg-[#ffffff22] rounded-xl shadow-md p-2 space-y-2">
-                  <Link to="/worker-send-supervisor" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/worker-send-supervisor"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     To Supervisor
                   </Link>
-                  <Link to="/send-message-beneficiary" className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white">
+                  <Link
+                    to="/send-message-beneficiary"
+                    className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
+                  >
                     To Beneficiary
                   </Link>
                 </div>

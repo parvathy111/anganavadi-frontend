@@ -7,6 +7,7 @@ import {
   Calendar,
   MessageSquare,
   Syringe,
+  Home,
 } from "lucide-react";
 
 import WorkerLayout from "../layouts/WorkerLayout";
@@ -62,6 +63,13 @@ export default function WorkerDashboard() {
       title: "Messages",
       description: "Communicate with other users.",
       icon: <MessageSquare size={32} />,
+      link: "/messages",
+    },
+    {
+      id: 8,
+      title: "Anganawadi Details",
+      description: "Your Anganawadi Center.",
+      icon: <Home size={32} />,
       link: "/messages",
     },
   ];
