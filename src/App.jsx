@@ -46,6 +46,7 @@ import WorkerSendSupervisor from "./pages/WorkerSendSupervisor";
 import ViewBeneficiaryStock from "./pages/ViewBeneficiaryStock";
 import VaccineDetail from "./pages/VaccineDetails";
 import ChildDetails from "./pages/ChildDetails";
+import WorkerViewAnganwadi from "./pages/WorkerViewAnganwadi";
 
 
 
@@ -113,6 +114,8 @@ function App() {
       <Route path="/beneficiary-stock" element={<ViewBeneficiaryStock />} />
 
       <Route path="/child-details" element={<ChildDetails />} />
+
+      <Route path="/worker-view-anganwadi" element={<WorkerViewAnganwadi />} />
 
       </Routes>
    

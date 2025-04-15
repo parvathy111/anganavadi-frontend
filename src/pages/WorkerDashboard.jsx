@@ -70,7 +70,7 @@ export default function WorkerDashboard() {
       title: "Anganawadi Details",
       description: "Your Anganawadi Center.",
       icon: <Home size={32} />,
-      link: "/messages",
+      link: "/worker-view-anganwadi",
     },
   ];
 

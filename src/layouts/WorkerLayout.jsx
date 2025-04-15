@@ -65,7 +65,7 @@ function WorkerLayout({ children }) {
             <div className="border-b border-white border-opacity-30 my-2"></div>
 
             <Link
-              to="/view-anganawadi-details"
+              to="/worker-view-anganwadi"
               className="flex items-center space-x-2 w-full hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
             >
               <User />
