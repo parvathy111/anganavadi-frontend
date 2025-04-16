@@ -169,7 +169,7 @@ const WorkerViewAnganwadi = () => {
                   <div className="space-y-2">
                     <p><span className="font-medium">Local Body:</span> {anganwadi.localBody}</p>
                     <p><span className="font-medium">Ward Number:</span> {anganwadi.wardNumber}</p>
-                    <p><span className="font-medium">Address:</span> {anganwadi.address || 'Not specified'}</p>
+                    <p><span className="font-medium">Place:</span> {anganwadi.localBodyName || 'Not specified'}</p>
                   </div>
                 </div>
 

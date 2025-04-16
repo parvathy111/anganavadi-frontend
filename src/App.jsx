@@ -72,51 +72,34 @@ function App() {
         <Route path="/view-events" element={<ViewEvents />} />
         <Route path="/view-vaccines" element={<ViewVaccine userRole={userRole} />} />
         <Route path="/vaccine-detail/:id" element={<VaccineDetail />} />
-
-        
       <Route path="/add-supervisor" element={<AddSupervisor />} />
       <Route path="/view-supervisors" element={<ViewSupervisorsList />} />
       <Route path="/view-workers" element={<ViewWorkerList />} />
       <Route path="/add-worker" element={<AddWorker />} />
       <Route path="/approve-events" element={<ApproveEvents />} />
-
       <Route path="/order-product" element={<OrderStack />} />
       <Route path="/view-order" element={<ViewOrder />} />
       <Route path="/supervisor-orders" element={<SupervisorViewOrder />} />
-
       <Route path="/view-preg-lact-women" element={<PregLactWomenList />} />
       <Route path="/view-child-parents" element={<ParentList />} />
-
       <Route path="/addanganawadi" element={<AddAnganawadi />} />
       <Route path="/view-anganawadis" element={<ViewSupervisorAnganawadi />} />
-
       <Route path="/supervisor-products" element={<ViewSupervisorProducts />} />
-
       <Route path="/upload-daily-track" element={<AddDailyTrack />} />
       <Route path="/worker-view-dailytracks" element={<WorkerViewDailyTrack />} />
-
       <Route path="/worker-available-stock" element={<WorkerAvailableStock />} />
-
       <Route path="/edit-profile/:userType" element={<SupervisorLayout> <EditProfile /> </SupervisorLayout>} />
       <Route path="/editprofile/:userType" element={<WorkerLayout><EditProfile /></WorkerLayout>} />
       <Route path="/edit-beneficiary-Profile/:userType" element={<BeneficiaryLayout> <EditProfile /> </BeneficiaryLayout>} />
-
       <Route path="/change-password" element={<SupervisorLayout><ChangePassword /></SupervisorLayout>} />
       <Route path="/changepassword" element={<WorkerLayout><ChangePassword /></WorkerLayout>} />
-
       <Route path="/beneficiary-view-vaccines" element={<ViewBeneficiaryVaccine />} />
       <Route path="/beneficiary-view-events" element={<ViewBeneficiaryEvents />} />
-
-
       <Route path="/send-message" element={<SendMessageSupervisor />} />
       <Route path="/worker-send-supervisor" element={<WorkerSendSupervisor />} />
-      
       <Route path="/beneficiary-stock" element={<ViewBeneficiaryStock />} />
-
       <Route path="/child-details" element={<ChildDetails />} />
-
       <Route path="/worker-view-anganwadi" element={<WorkerViewAnganwadi />} />
-
       </Routes>
    
 

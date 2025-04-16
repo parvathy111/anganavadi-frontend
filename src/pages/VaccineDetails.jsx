@@ -38,7 +38,7 @@ const VaccineDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 3;
 
   useEffect(() => {
     const fetchVaccine = async () => {
@@ -72,7 +72,7 @@ const VaccineDetail = () => {
 
   return (
     <WorkerLayout>
-      <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 4 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 1 } }}>
         {loading ? (
           <Box
             display="flex"
@@ -265,14 +265,14 @@ const VaccineDetail = () => {
                       <Box
                         display="flex"
                         justifyContent="center"
-                        mt={3}
+                        mt={1}
                         className="no-print"
                       >
                         <Pagination
                           count={totalPages}
                           page={currentPage}
                           onChange={handlePageChange}
-                          color="primary"
+                          color="#"
                           showFirstButton
                           showLastButton
                         />
