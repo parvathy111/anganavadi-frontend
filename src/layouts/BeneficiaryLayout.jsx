@@ -101,7 +101,7 @@ const BeneficiaryLayout = ({ children }) => {
               {sidebarOpen && <span>Child Details</span>}
             </a>
             <a
-              href="#"
+              href="/beneficiary-send-message"
               className="flex items-center space-x-2 hover:bg-[#ff6f00cc] hover:bg-opacity-20 rounded-lg p-2 transition-all duration-200"
             >
               <MessageSquare />

@@ -297,7 +297,7 @@ function WorkerLayout({ children }) {
                     To Supervisor
                   </Link>
                   <Link
-                    to="/send-message-beneficiary"
+                    to="/worker-send-beneficiary"
                     className="block px-3 py-2 text-sm rounded-lg hover:bg-[#ff6f00] hover:text-white"
                   >
                     To Beneficiary

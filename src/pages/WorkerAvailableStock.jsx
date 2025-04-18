@@ -49,11 +49,11 @@ export default function WorkerAvailableStock() {
 
   const fetchStock = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await api.get("/worker-available-stock/available-stock", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    
+      const response = await api.get("/worker-available-stock/available-stock");
+    
       setStock(response.data);
+    
     } catch (err) {
       console.error("Failed to fetch stock:", err);
     } finally {
@@ -88,11 +88,9 @@ export default function WorkerAvailableStock() {
     if (!editItem || newQuantity < 0) return;
 
     try {
-      const token = localStorage.getItem("token");
       await api.put(
         `/worker-available-stock/update-stock/${editItem._id}`,
-        { quantity: newQuantity },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { quantity: newQuantity }
       );
 
       setStock((prevStock) =>
@@ -117,7 +115,7 @@ export default function WorkerAvailableStock() {
 
   return (
     <WorkerLayout>
-      <div className="p-6">
+      <div className="p-2">
         {lowStockWarning && (
           <Typography variant="body1" className="text-red-600 font-semibold mb-4">
             {lowStockWarning}

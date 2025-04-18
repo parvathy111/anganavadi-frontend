@@ -47,6 +47,8 @@ import ViewBeneficiaryStock from "./pages/ViewBeneficiaryStock";
 import VaccineDetail from "./pages/VaccineDetails";
 import ChildDetails from "./pages/ChildDetails";
 import WorkerViewAnganwadi from "./pages/WorkerViewAnganwadi";
+import WorkerSendBeneficiary from "./pages/WorkerSendBeneficiary";
+import BeneficiarySendWorker from "./pages/BeneficiarySendWorker";
 
 
 
@@ -100,6 +102,9 @@ function App() {
       <Route path="/beneficiary-stock" element={<ViewBeneficiaryStock />} />
       <Route path="/child-details" element={<ChildDetails />} />
       <Route path="/worker-view-anganwadi" element={<WorkerViewAnganwadi />} />
+
+      <Route path="/worker-send-beneficiary" element={<WorkerSendBeneficiary />} />
+      <Route path="/beneficiary-send-message" element={<BeneficiarySendWorker />} />
       </Routes>
    
 
