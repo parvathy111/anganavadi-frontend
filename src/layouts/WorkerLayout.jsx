@@ -13,6 +13,7 @@ import {
   User,
   ChevronDown,
   KeyRound,
+  Bell,
 } from "lucide-react";
 import dashboardIcon from "../assets/admin1.png";
 import { useUser } from "../store/useUser";
@@ -326,6 +327,14 @@ function WorkerLayout({ children }) {
         <div className="bg-white shadow-lg p-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold">Welcome, Worker</h2>
           <div className="flex items-center space-x-4">
+            <button
+              onClick={() => navigate("/send-notification")}
+              className="relative flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition"
+            >
+              <Bell className="mr-2" />
+              Notification
+            </button>
+            
             <button
               onClick={() => navigate("/editprofile/worker")}
               className="flex items-center text-[#ff7043] px-4 py-2 rounded-lg hover:opacity-90 transition"

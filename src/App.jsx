@@ -49,6 +49,7 @@ import ChildDetails from "./pages/ChildDetails";
 import WorkerViewAnganwadi from "./pages/WorkerViewAnganwadi";
 import WorkerSendBeneficiary from "./pages/WorkerSendBeneficiary";
 import BeneficiarySendWorker from "./pages/BeneficiarySendWorker";
+import SendNotification from "./pages/SendNotification";
 
 
 
@@ -105,6 +106,8 @@ function App() {
 
       <Route path="/worker-send-beneficiary" element={<WorkerSendBeneficiary />} />
       <Route path="/beneficiary-send-message" element={<BeneficiarySendWorker />} />
+
+      <Route path="/send-notification" element={<SendNotification />} />
       </Routes>
    
 
