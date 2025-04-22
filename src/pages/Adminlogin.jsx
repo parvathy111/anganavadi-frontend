@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-
+import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -8,34 +7,44 @@ import {
   Typography,
   Paper,
   Box,
+  AppBar,
+  Toolbar,
+  Grid,
 } from "@mui/material";
+import { ArrowBack, AdminPanelSettings } from "@mui/icons-material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import api from "../config/axiosinstance";
+import dashboardIcon from "../assets/admin1.png";
+
+// Orange color theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#f57c00",
+    },
+    secondary: {
+      main: "#ffcc80",
+    },
+    background: {
+      default: "#fff8e1",
+    },
+    text: {
+      primary: "#333333",
+    },
+  },
+});
 
 const Adminlogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
-    console.log("Username:", username);
-    console.log("Password:", password);
-
     try {
-      const res = await api.post("/admin/login", {
-        username,
-        password,
-      });
-
+      const res = await api.post("/admin/login", { username, password });
       if (res.status === 200) {
-        console.log("Login successful:", res.data);
-        
-        // Save token if needed
         localStorage.setItem("token", res.data.token);
-
-        // Redirect to Admin Dashboard
         navigate("/admin-dashboard");
-      } else {
-        console.log("Login failed: Unexpected response");
       }
     } catch (error) {
       console.error(
@@ -46,44 +55,114 @@ const Adminlogin = () => {
   };
 
   return (
-    <Container maxWidth="xs">
-      <Paper
-        elevation={3}
-        sx={{ padding: 3, marginTop: 8, textAlign: "center" }}
-      >
-        <Typography variant="h5" gutterBottom>
-          Admin Login
-        </Typography>
-        <Box component="form" noValidate autoComplete="off">
-          <TextField
-            label="Username"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+    <ThemeProvider theme={theme}>
+      {/* Header */}
+      <AppBar position="static" color="primary" elevation={3}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <AdminPanelSettings sx={{ marginRight: 1, color: "white" }} />
+            <Typography variant="h6" fontWeight="bold" color="white">
+              CareNest Admin Portal
+            </Typography>
+          </Box>
           <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ marginTop: 2 }}
-            onClick={handleLogin}
+            startIcon={<ArrowBack />}
+            variant="outlined"
+            color="inherit"
+            sx={{
+              borderColor: "white",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#ef6c00",
+              },
+            }}
+            onClick={() => navigate("/")}
           >
-            Login
+            Back to Home
           </Button>
-        </Box>
-      </Paper>
-    </Container>
+        </Toolbar>
+      </AppBar>
+
+      {/* Login Form + Image Grid */}
+      <Container maxWidth="md">
+        <Paper
+          elevation={3}
+          sx={{
+            marginTop: 8,
+            padding: 4,
+          }}
+        >
+          <Grid container spacing={2} alignItems="center">
+            {/* Left: Form */}
+            <Grid item xs={12} md={6}>
+              <Box sx={{ padding: 3 }}>
+                <Typography variant="h5" gutterBottom color="primary" textAlign="center">
+                  Admin Login
+                </Typography>
+                <TextField
+                  label="Username"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <TextField
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  sx={{ marginTop: 2 }}
+                  onClick={handleLogin}
+                >
+                  Login
+                </Button>
+              </Box>
+            </Grid>
+
+            {/* Right: Image */}
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{
+                display: { xs: "none", md: "block" },
+                textAlign: "center",
+              }}
+            >
+              <img src={dashboardIcon} alt="Bottom Image" className="rounded-xl" />
+            </Grid>
+          </Grid>
+        </Paper>
+      </Container>
+
+      {/* Footer */}
+      <Box
+        component="footer"
+        sx={{
+          // backgroundColor: theme.palette.primary.main,
+          color: "orange",
+          marginTop: 10,
+          paddingY: 2,
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="body2">
+          &copy; {new Date().getFullYear()} CareNest Admin Panel. All rights reserved.
+        </Typography>
+        <Typography variant="body2">
+          For authorized personnel only. Activities are monitored and logged.
+        </Typography>
+      </Box>
+    </ThemeProvider>
   );
 };
 

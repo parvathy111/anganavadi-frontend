@@ -103,10 +103,8 @@ function App() {
       <Route path="/beneficiary-stock" element={<ViewBeneficiaryStock />} />
       <Route path="/child-details" element={<ChildDetails />} />
       <Route path="/worker-view-anganwadi" element={<WorkerViewAnganwadi />} />
-
       <Route path="/worker-send-beneficiary" element={<WorkerSendBeneficiary />} />
       <Route path="/beneficiary-send-message" element={<BeneficiarySendWorker />} />
-
       <Route path="/send-notification" element={<SendNotification />} />
       </Routes>
    
